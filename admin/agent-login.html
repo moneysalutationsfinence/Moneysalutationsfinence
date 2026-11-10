@@ -42,7 +42,10 @@ button{background:#123d75;color:white;border:0;font-size:16px}
  mobile:mobile,
 address:document.getElementById("customerAddress").value.trim(),
 district:document.getElementById("customerDistrict").value.trim(),
-pin:document.getElementById("customerPin").value.trim(),
+pin:document.getElementById("customerPin").value.trim()
+ address:address,
+district:district,
+pin:pin,
 <select id="loanType">
 <option value="">Select Loan Type</option>
 <option>Personal Loan</option>
@@ -132,6 +135,9 @@ document.getElementById("addLeadBtn").onclick=async()=>{
  const name=document.getElementById("customerName").value.trim();
  const mobile=document.getElementById("customerMobile").value.trim();
  const loanType=document.getElementById("loanType").value;
+ const address=document.getElementById("customerAddress").value.trim();
+const district=document.getElementById("customerDistrict").value.trim();
+const pin=document.getElementById("customerPin").value.trim();
  const amount=Number(document.getElementById("loanAmount").value);
  const out=document.getElementById("leadMessage");
 
