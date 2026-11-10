@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Leads - Money Solution Finance Services</title>
+<style>
+body{font-family:Arial;background:#eef2f7;margin:0;padding:15px}
+.box{max-width:900px;margin:20px auto;background:white;padding:18px;border-radius:12px;box-shadow:0 2px 10px #bbb}
+h2{text-align:center;color:#123d75}
+button,select{padding:10px;margin:5px;border-radius:6px}
+button{background:#123d75;color:white;border:0}
+input{padding:10px;width:100%;box-sizing:border-box;margin:6px 0}
+.lead{border:1px solid #ccc;border-radius:8px;padding:12px;margin:12px 0}
+.status{font-weight:bold}
+#dashboard{display:none}
+#message{color:#b42318;text-align:center}
+</style>
+</head>
+<body>
+<div class="box" id="loginBox">
+<h2>Admin Leads Login</h2>
+<input id="email" type="email" placeholder="Admin Email">
+<input id="password" type="password" placeholder="Admin Password">
+<button id="loginBtn">Login</button>
+<p id="message"></p>
+</div>
+
+<div class="box" id="dashboard">
+<h2>All Customer Leads</h2>
+<button id="refreshBtn">Refresh Leads</button>
+<div id="leadList">Loading...</div>
+<button id="logoutBtn" style="background:#b42318">Logout</button>
+</div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+ getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+ getFirestore,collection,getDocs,doc,getDoc,updateDoc,query,orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+ authDomain:"money-salutations-fainence.firebaseapp.com",
+ projectId:"money-salutations-fainence",
+ storageBucket:"money-salutations-fainence.firebasestorage.app",
+ messagingSenderId:"891890606664",
+ appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
+ measurementId:"G-HX6NBT529M"
+};
+
+const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const loginBox=document.getElementById("loginBox");
+const dashboard=document.getElementById("dashboard");
+const message=document.getElementById("message");
+
+async function checkAdmin(user){
+ if(user.uid!==ADMIN_UID){
+  message.textContent="यह Account Admin नहीं है।";
+  await signOut(auth);
+  return;
+ }
+ loginBox.style.display="none";
+ dashboard.style.display="block";
+ await loadLeads();
+}
+
+document.getElementById("loginBtn").onclick=async()=>{
+ message.textContent="Login हो रहा है...";
+ try{
+  const result=await signInWithEmailAndPassword(
+   auth,
+   document.getElementById("email").value.trim(),
+   document.getElementById("password").value
+  );
+  await checkAdmin(result.user);
+ }catch(e){
+  message.textContent="Login Error: "+e.message;
+ }
+};
+
+onAuthStateChanged(auth,user=>{
+ if(user) checkAdmin(user);
+});
+
+async function loadLeads(){
+ const area=document.getElementById("leadList");
+ area.textContent="Loading Leads...";
+ try{
+  const result=await getDocs(collection(db,"leads"));
+  area.innerHTML="";
+  if(result.empty){
+   area.textContent="अभी कोई Customer Lead नहीं मिली।";
+   return;
+  }
+
+  for(const item of result.docs){
+   const d=item.data();
+   let agentName="Unknown Agent";
+   try{
+    const agentSnap=await getDoc(doc(db,"agents",d.agentUid));
+    if(agentSnap.exists()) agentName=agentSnap.data().name||agentName;
+   }catch(e){}
+
+   const card=document.createElement("div");
+   card.className="lead";
+
+   const heading=document.createElement("h3");
+   heading.textContent=d.customerName||"-";
+
+   const details=document.createElement("p");
+   details.textContent=
+    "Agent: "+agentName+
+    " | Agent UID: "+(d.agentUid||"-")+
+    "\nMobile: "+(d.mobile||"-")+
+    "\nLoan Type: "+(d.loanType||"-")+
+    "\nLoan Amount: ₹"+(d.loanAmount||0)+
+    "\nCurrent Status: "+(d.status||"pending");
+
+   const select=document.createElement("select");
+   ["pending","processing","approved","rejected"].forEach(status=>{
+    const option=document.createElement("option");
+    option.value=status;
+    option.textContent=status.charAt(0).toUpperCase()+status.slice(1);
+    if((d.status||"pending")===status) option.selected=true;
+    select.appendChild(option);
+   });
+
+   const update=document.createElement("button");
+   update.textContent="Update Status";
+   update.onclick=async()=>{
+    update.disabled=true;
+    try{
+     await updateDoc(doc(db,"leads",item.id),{
+      status:select.value
+     });
+     alert("Status Updated Successfully");
+     await loadLeads();
+    }catch(e){
+     alert("Update Error: "+e.message);
+     update.disabled=false;
+    }
+   };
+
+   card.append(heading,details,select,update);
+   area.appendChild(card);
+  }
+ }catch(e){
+  area.textContent="Leads Error: "+e.message;
+ }
+}
+
+document.getElementById("refreshBtn").onclick=loadLeads;
+document.getElementById("logoutBtn").onclick=async()=>{
+ await signOut(auth);
+ dashboard.style.display="none";
+ loginBox.style.display="block";
+ message.textContent="Logout हो गया।";
+};
+</script>
+</body>
+</html>
