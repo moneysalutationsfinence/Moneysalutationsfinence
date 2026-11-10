@@ -1,1 +1,89 @@
 
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Money Solution Admin</title>
+<style>
+body{font-family:Arial;background:#eef2f7;padding:20px}
+.box{max-width:600px;margin:30px auto;background:white;padding:20px;border-radius:12px}
+input,button{width:100%;padding:13px;margin:8px 0;box-sizing:border-box}
+button{background:#123b70;color:white;border:0;border-radius:6px}
+h2{text-align:center;color:#123b70}
+.item{background:#eee;padding:12px;margin:10px 0}
+</style>
+</head>
+<body>
+<div class="box">
+<h2>Money Solution Finance</h2>
+<div id="login">
+<h3>Admin Login</h3>
+<input id="email" type="email" placeholder="Admin Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<p id="msg"></p>
+</div>
+<div id="dashboard" style="display:none">
+<h3>Admin Dashboard</h3>
+<button onclick="loadData()">Refresh Inquiries</button>
+<div id="list"></div>
+<button onclick="logout()">Logout</button>
+</div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const config={
+apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+authDomain:"money-salutations-fainence.firebaseapp.com",
+projectId:"money-salutations-fainence",
+storageBucket:"money-salutations-fainence.firebasestorage.app",
+messagingSenderId:"891890606664",
+appId:"1:891890606664:web:1d6df6ec8554d523176e7d"
+};
+firebase.initializeApp(config);
+const auth=firebase.auth();
+const db=firebase.firestore();
+const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+function login(){
+auth.signInWithEmailAndPassword(
+document.getElementById("email").value,
+document.getElementById("password").value
+).catch(e=>document.getElementById("msg").innerText=e.message);
+}
+auth.onAuthStateChanged(user=>{
+if(user && user.uid===ADMIN_UID){
+document.getElementById("login").style.display="none";
+document.getElementById("dashboard").style.display="block";
+loadData();
+}else{
+document.getElementById("login").style.display="block";
+document.getElementById("dashboard").style.display="none";
+if(user)auth.signOut();
+}
+});
+async function loadData(){
+const list=document.getElementById("list");
+list.innerText="Loading...";
+try{
+const snap=await db.collection("inquiries").get();
+list.innerHTML="";
+if(snap.empty){list.innerText="Abhi koi inquiry nahi hai.";return;}
+snap.forEach(doc=>{
+const d=doc.data();
+const div=document.createElement("div");
+div.className="item";
+div.textContent="Name: "+(d.name||d.fullName||"-")+
+"\nPhone: "+(d.phone||d.mobile||"-")+
+"\nService: "+(d.service||"-");
+div.style.whiteSpace="pre-wrap";
+list.appendChild(div);
+});
+}catch(e){list.innerText=e.message;}
+}
+function logout(){auth.signOut();}
+</script>
+</body>
+</html>
