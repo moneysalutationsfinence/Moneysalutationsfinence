@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Registration - Money Solution Finance Services</title>
+<style>
+body{font-family:Arial;background:#eef3ff;margin:0;padding:15px}
+.container{max-width:500px;margin:20px auto;background:white;padding:22px;border-radius:14px;box-shadow:0 3px 15px #bbb}
+h2{text-align:center;color:#123c83}
+p{text-align:center;color:#555}
+input,textarea{width:100%;padding:12px;margin:7px 0;box-sizing:border-box;border:1px solid #bbb;border-radius:7px;font-size:15px}
+button{width:100%;padding:14px;background:#123c83;color:white;border:0;border-radius:7px;font-size:17px}
+#message{text-align:center;font-weight:bold;margin-top:15px}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Money Solution Finance Services</h2>
+<p>Agent Registration Form</p>
+
+<form id="agentForm">
+<input id="name" placeholder="Agent Full Name" required>
+<input id="father" placeholder="Father's Name" required>
+<textarea id="address" placeholder="Complete Address" required></textarea>
+<input id="city" placeholder="City" required>
+<input id="district" placeholder="District" required>
+<input id="pin" placeholder="PIN Code" inputmode="numeric" maxlength="6" required>
+<input id="mobile" placeholder="Mobile Number" inputmode="numeric" maxlength="10" required>
+<input id="whatsapp" placeholder="WhatsApp Number" inputmode="numeric" maxlength="10" required>
+<input id="email" type="email" placeholder="Email ID" required>
+<input id="password" type="password" placeholder="Create Password (minimum 6 characters)" minlength="6" required>
+<input id="confirmPassword" type="password" placeholder="Confirm Password" required>
+<label><input type="checkbox" id="consent" required style="width:auto"> I agree to submit my details for agent registration.</label>
+<br><br>
+<button type="submit" id="submitBtn">Register as Agent</button>
+</form>
+<div id="message"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+  authDomain: "money-salutations-fainence.firebaseapp.com",
+  projectId: "money-salutations-fainence",
+  storageBucket: "money-salutations-fainence.firebasestorage.app",
+  messagingSenderId: "891890606664",
+  appId: "1:891890606664:web:1d6df6ec8554d523176e7d",
+  measurementId: "G-HX6NBT529M"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const form = document.getElementById("agentForm");
+const message = document.getElementById("message");
+const button = document.getElementById("submitBtn");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  if (password !== confirmPassword) {
+    message.textContent = "Passwords do not match.";
+    return;
+  }
+
+  const mobile = document.getElementById("mobile").value.trim();
+  const whatsapp = document.getElementById("whatsapp").value.trim();
+  const pin = document.getElementById("pin").value.trim();
+
+  if (!/^[0-9]{10}$/.test(mobile) ||
+      !/^[0-9]{10}$/.test(whatsapp) ||
+      !/^[0-9]{6}$/.test(pin)) {
+    message.textContent = "Please enter valid mobile, WhatsApp and PIN numbers.";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Please wait...";
+  message.textContent = "";
+
+  try {
+    const email = document.getElementById("email").value.trim().toLowerCase();
+
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    const uid = result.user.uid;
+
+    await setDoc(doc(db, "agents", uid), {
+      uid: uid,
+      name: document.getElementById("name").value.trim(),
+      fatherName: document.getElementById("father").value.trim(),
+      address: document.getElementById("address").value.trim(),
+      city: document.getElementById("city").value.trim(),
+      district: document.getElementById("district").value.trim(),
+      pin: pin,
+      mobile: mobile,
+      whatsapp: whatsapp,
+      email: email,
+      status: "pending",
+      createdAt: serverTimestamp()
+    });
+
+    message.textContent = "Registration successful! Admin approval is pending.";
+    form.reset();
+
+  } catch (error) {
+    message.textContent = "Error: " + error.message;
+  } finally {
+    button.disabled = false;
+    button.textContent = "Register as Agent";
+  }
+});
+</script>
+</body>
+</html>
