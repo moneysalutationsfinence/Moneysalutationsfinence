@@ -143,10 +143,9 @@ document.getElementById("addLeadBtn").onclick=async()=>{
    agentUid:currentAgent.uid,
    customerName:name,
    mobile:mobile,
-<input id="customerAddress" placeholder="Customer Full Address">
-<input id="customerDistrict" placeholder="Customer District">
-<input id="customerPin" placeholder="PIN Code" maxlength="6">
-  
+address:document.getElementById("customerAddress").value.trim(),
+district:document.getElementById("customerDistrict").value.trim(),
+pin:document.getElementById("customerPin").value.trim(),
    loanType:loanType,
    loanAmount:amount,
    status:"pending",
