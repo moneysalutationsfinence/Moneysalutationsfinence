@@ -115,14 +115,7 @@ async function loadLeads(){
    const heading=document.createElement("h3");
    heading.textContent=d.customerName||"-";
 
-   const details=document.createElement("p");
-   details.textContent=
-    "Agent: "+agentName+
-    " | Agent UID: "+(d.agentUid||"-")+
-    "\nMobile: "+(d.mobile||"-")+
-    "\nLoan Type: "+(d.loanType||"-")+
-    "\nLoan Amount: ₹"+(d.loanAmount||0)+
-    "\nCurrent Status: "+(d.status||"pending");
+   
 
    const select=document.createElement("select");
    ["pending","processing","approved","rejected"].forEach(status=>{
@@ -132,6 +125,30 @@ async function loadLeads(){
     if((d.status||"pending")===status) option.selected=true;
     select.appendChild(option);
    });
+
+const details=document.createElement("div");
+
+const fields=[
+ ["Agent Name",agentName],
+ ["Agent Mobile",d.agentMobile],
+ ["Agent UID",d.agentUid],
+ ["Customer Name",d.customerName],
+ ["Customer Mobile",d.mobile],
+ ["Customer Address",d.address],
+ ["District",d.district],
+ ["PIN Code",d.pin],
+ ["Loan Type",d.loanType],
+ ["Loan Amount","₹"+(d.loanAmount||0)],
+ ["Current Status",d.status||"pending"]
+];
+
+fields.forEach(([label,value])=>{
+ const p=document.createElement("p");
+ const b=document.createElement("b");
+ b.textContent=label+": ";
+ p.append(b,document.createTextNode(value||"-"));
+ details.appendChild(p);
+});
 
    const update=document.createElement("button");
    update.textContent="Update Status";
