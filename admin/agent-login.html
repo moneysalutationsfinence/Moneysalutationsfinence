@@ -3,43 +3,49 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agent Login - Money Solution Finance Services</title>
 <style>
-body{font-family:Arial;background:#edf2ff;margin:0;padding:15px}
-.container{max-width:450px;margin:35px auto;background:white;padding:22px;border-radius:14px;box-shadow:0 3px 15px #bbb}
-h2{text-align:center;color:#123c83}
-input{width:100%;padding:13px;margin:9px 0;box-sizing:border-box;border:1px solid #bbb;border-radius:7px;font-size:16px}
-button{width:100%;padding:13px;background:#123c83;color:white;border:0;border-radius:7px;font-size:16px;margin-top:10px}
-#message{text-align:center;margin-top:15px;white-space:pre-line;font-weight:bold}
-.hidden{display:none}
-.profile{background:#eef3ff;padding:15px;border-radius:9px;line-height:1.8}
+body{font-family:Arial,sans-serif;background:#eef2f7;margin:0;padding:20px}
+.box{max-width:500px;margin:35px auto;background:white;padding:22px;border-radius:12px;box-shadow:0 2px 12px #bbb}
+h2{text-align:center;color:#123d75}
+input,button{width:100%;padding:13px;margin:9px 0;box-sizing:border-box;border-radius:6px}
+input{border:1px solid #bbb}
+button{background:#123d75;color:white;border:0;font-size:16px}
+.logout{background:#b42318}
+#dashboard{display:none}
+#message{text-align:center;color:#b42318}
 </style>
 </head>
 <body>
-<div class="container">
-<h2>Money Solution Finance Services</h2>
-<h3 style="text-align:center">Agent Login</h3>
 
-<div id="loginBox">
-<input id="email" type="email" placeholder="Registered Email ID" required>
-<input id="password" type="password" placeholder="Password" required>
+<div class="box" id="loginBox">
+<h2>Agent Login</h2>
+<p style="text-align:center">Money Solution Finance Services</p>
+<input type="email" id="email" placeholder="Registered Email">
+<input type="password" id="password" placeholder="Password">
 <button id="loginBtn">Login</button>
+<p id="message"></p>
 </div>
 
-<div id="dashboard" class="hidden">
-<h3>Agent Dashboard</h3>
-<div class="profile" id="profile"></div>
-<button id="logoutBtn">Logout</button>
-</div>
-
-<div id="message"></div>
+<div class="box" id="dashboard">
+<h2>Agent Dashboard</h2>
+<p id="welcome"></p>
+<hr>
+<p><b>Agent Name:</b> <span id="agentName"></span></p>
+<p><b>Mobile:</b> <span id="agentMobile"></span></p>
+<p><b>District:</b> <span id="agentDistrict"></span></p>
+<p><b>Status:</b> <span id="agentStatus"></span></p>
+<hr>
+<p>आपका Agent Dashboard चालू है।</p>
+<p>Customer Leads और Commission की सुविधा अगला चरण में जोड़ी जाएगी।</p>
+<button class="logout" id="logoutBtn">Logout</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
- getAuth, signInWithEmailAndPassword, signOut
+ getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
  getFirestore, doc, getDoc
@@ -62,78 +68,77 @@ const db = getFirestore(app);
 const loginBox = document.getElementById("loginBox");
 const dashboard = document.getElementById("dashboard");
 const message = document.getElementById("message");
-const profile = document.getElementById("profile");
-const loginBtn = document.getElementById("loginBtn");
 
-loginBtn.addEventListener("click", async () => {
- const email = document.getElementById("email").value.trim();
- const password = document.getElementById("password").value;
+async function showAgent(user) {
+  loginBox.style.display = "none";
+  dashboard.style.display = "block";
 
- if (!email || !password) {
-   message.textContent = "Email aur password bhariye.";
-   return;
- }
+  try {
+    const snap = await getDoc(doc(db, "agents", user.uid));
 
- loginBtn.disabled = true;
- loginBtn.textContent = "Please wait...";
- message.textContent = "";
+    if (!snap.exists()) {
+      message.textContent = "Agent profile नहीं मिला।";
+      dashboard.style.display = "none";
+      loginBox.style.display = "block";
+      await signOut(auth);
+      return;
+    }
 
- let user = null;
+    const data = snap.data();
 
- try {
-   const result = await signInWithEmailAndPassword(auth, email, password);
-   user = result.user;
+    if (data.status !== "approved") {
+      dashboard.style.display = "none";
+      loginBox.style.display = "block";
+      message.textContent = data.status === "pending"
+        ? "आपका आवेदन अभी Admin Approval के लिए Pending है।"
+        : "आपका आवेदन Approved नहीं है। Admin से संपर्क करें।";
+      await signOut(auth);
+      return;
+    }
 
-   const agentRef = doc(db, "agents", user.uid);
-   const agentSnap = await getDoc(agentRef);
+    document.getElementById("welcome").textContent =
+      "स्वागत है, " + (data.name || "Agent");
+    document.getElementById("agentName").textContent = data.name || "-";
+    document.getElementById("agentMobile").textContent = data.mobile || "-";
+    document.getElementById("agentDistrict").textContent = data.district || "-";
+    document.getElementById("agentStatus").textContent = "Approved";
 
-   if (!agentSnap.exists()) {
-     await signOut(auth);
-     message.textContent = "Agent registration record nahi mila. Admin se sampark karein.";
-     return;
-   }
+  } catch (error) {
+    dashboard.style.display = "none";
+    loginBox.style.display = "block";
+    message.textContent = "Profile खुलने में समस्या: " + error.message;
+  }
+}
 
-   const agent = agentSnap.data();
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
 
-   if (agent.status !== "approved") {
-     await signOut(auth);
-     message.textContent = agent.status === "pending"
-       ? "Aapka account Pending Approval hai. Admin ki manzoori ka intezar karein."
-       : "Aapka account approved nahi hai. Admin se sampark karein.";
-     return;
-   }
+  if (!email || !password) {
+    message.textContent = "Email और Password भरें।";
+    return;
+  }
 
-   loginBox.classList.add("hidden");
-   dashboard.classList.remove("hidden");
-
-   profile.textContent =
-     "Welcome, " + (agent.name || "") +
-     "\nFather Name: " + (agent.fatherName || "") +
-     "\nMobile: " + (agent.mobile || "") +
-     "\nEmail: " + (agent.email || "") +
-     "\nDistrict: " + (agent.district || "") +
-     "\nAccount Status: APPROVED";
-
-   message.textContent = "Login successful!";
-
- } catch (error) {
-   if (user) {
-     try { await signOut(auth); } catch (e) {}
-   }
-   message.textContent = "Login Error: " + error.message;
- } finally {
-   loginBtn.disabled = false;
-   loginBtn.textContent = "Login";
- }
+  message.textContent = "Login हो रहा है...";
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    await showAgent(result.user);
+  } catch (error) {
+    message.textContent = "Login नहीं हुआ: Email या Password जाँचें।";
+  }
 });
 
 document.getElementById("logoutBtn").addEventListener("click", async () => {
- await signOut(auth);
- dashboard.classList.add("hidden");
- loginBox.classList.remove("hidden");
- profile.textContent = "";
- message.textContent = "Logout successful.";
+  await signOut(auth);
+  dashboard.style.display = "none";
+  loginBox.style.display = "block";
+  message.textContent = "आप Logout हो गए हैं।";
+});
+
+onAuthStateChanged(auth, (user) => {
+  if (user) showAgent(user);
 });
 </script>
 </body>
 </html>
+
