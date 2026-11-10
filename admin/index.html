@@ -4,19 +4,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Money Solution Admin</title>
+<title>Money Solution Admin Dashboard</title>
 <style>
-body{font-family:Arial;background:#eef2f7;padding:20px}
-.box{max-width:600px;margin:30px auto;background:white;padding:20px;border-radius:12px}
-input,button{width:100%;padding:13px;margin:8px 0;box-sizing:border-box}
-button{background:#123b70;color:white;border:0;border-radius:6px}
+body{font-family:Arial;background:#eef2f7;padding:15px;margin:0}
+.box{max-width:700px;margin:20px auto;background:white;padding:18px;border-radius:12px}
 h2{text-align:center;color:#123b70}
-.item{background:#eee;padding:12px;margin:10px 0}
+input,button,select{width:100%;padding:12px;margin:7px 0;box-sizing:border-box}
+button{background:#123b70;color:white;border:0;border-radius:6px;font-size:15px}
+.item{background:#f2f5fa;padding:14px;margin:12px 0;border-radius:9px;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
 <div class="box">
 <h2>Money Solution Finance</h2>
+
 <div id="login">
 <h3>Admin Login</h3>
 <input id="email" type="email" placeholder="Admin Email">
@@ -24,16 +25,19 @@ h2{text-align:center;color:#123b70}
 <button onclick="login()">Login</button>
 <p id="msg"></p>
 </div>
+
 <div id="dashboard" style="display:none">
 <h3>Admin Dashboard</h3>
 <button onclick="loadData()">Refresh Inquiries</button>
-<div id="list"></div>
+<div id="list">Loading...</div>
 <button onclick="logout()">Logout</button>
 </div>
 </div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
 const config={
 apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
@@ -43,16 +47,20 @@ storageBucket:"money-salutations-fainence.firebasestorage.app",
 messagingSenderId:"891890606664",
 appId:"1:891890606664:web:1d6df6ec8554d523176e7d"
 };
+
 firebase.initializeApp(config);
 const auth=firebase.auth();
 const db=firebase.firestore();
 const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+
 function login(){
-auth.signInWithEmailAndPassword(
-document.getElementById("email").value,
-document.getElementById("password").value
-).catch(e=>document.getElementById("msg").innerText=e.message);
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value;
+document.getElementById("msg").innerText="Logging in...";
+auth.signInWithEmailAndPassword(email,password)
+.catch(e=>document.getElementById("msg").innerText=e.message);
 }
+
 auth.onAuthStateChanged(user=>{
 if(user && user.uid===ADMIN_UID){
 document.getElementById("login").style.display="none";
@@ -64,26 +72,71 @@ document.getElementById("dashboard").style.display="none";
 if(user)auth.signOut();
 }
 });
+
+function logout(){auth.signOut();}
+
 async function loadData(){
 const list=document.getElementById("list");
 list.innerText="Loading...";
 try{
 const snap=await db.collection("inquiries").get();
 list.innerHTML="";
-if(snap.empty){list.innerText="Abhi koi inquiry nahi hai.";return;}
+if(snap.empty){
+list.innerText="Abhi koi inquiry nahi hai.";
+return;
+}
 snap.forEach(doc=>{
 const d=doc.data();
 const div=document.createElement("div");
 div.className="item";
-div.textContent="Name: "+(d.name||d.fullName||"-")+
+
+const details=document.createElement("p");
+details.style.whiteSpace="pre-wrap";
+details.textContent=
+"Name: "+(d.name||d.fullName||"-")+
 "\nPhone: "+(d.phone||d.mobile||"-")+
-"\nService: "+(d.service||"-");
-div.style.whiteSpace="pre-wrap";
+"\nService: "+(d.service||"-")+
+"\nAmount: "+(d.amount||"-")+
+"\nMessage: "+(d.message||"-");
+
+const select=document.createElement("select");
+["Pending","Approved","Rejected"].forEach(status=>{
+const option=document.createElement("option");
+option.value=status;
+option.textContent=status;
+select.appendChild(option);
+});
+select.value=["Pending","Approved","Rejected"].includes(d.status)?d.status:"Pending";
+
+const button=document.createElement("button");
+button.textContent="Update Status";
+button.onclick=async()=>{
+button.disabled=true;
+button.textContent="Saving...";
+try{
+await db.collection("inquiries").doc(doc.id).update({
+status:select.value,
+statusUpdatedAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+button.textContent="Updated ✓";
+}catch(e){
+button.textContent="Update Failed";
+alert("Error: "+e.message);
+}finally{
+button.disabled=false;
+}
+};
+
+div.appendChild(details);
+div.appendChild(document.createTextNode("Inquiry Status:"));
+div.appendChild(select);
+div.appendChild(button);
 list.appendChild(div);
 });
-}catch(e){list.innerText=e.message;}
+}catch(e){
+list.innerText="Error: "+e.message;
 }
-function logout(){auth.signOut();}
+}
 </script>
 </body>
 </html>
