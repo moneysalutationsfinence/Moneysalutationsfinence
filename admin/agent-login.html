@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Login - Money Solution Finance Services</title>
+<style>
+body{font-family:Arial;background:#edf2ff;margin:0;padding:15px}
+.container{max-width:450px;margin:35px auto;background:white;padding:22px;border-radius:14px;box-shadow:0 3px 15px #bbb}
+h2{text-align:center;color:#123c83}
+input{width:100%;padding:13px;margin:9px 0;box-sizing:border-box;border:1px solid #bbb;border-radius:7px;font-size:16px}
+button{width:100%;padding:13px;background:#123c83;color:white;border:0;border-radius:7px;font-size:16px;margin-top:10px}
+#message{text-align:center;margin-top:15px;white-space:pre-line;font-weight:bold}
+.hidden{display:none}
+.profile{background:#eef3ff;padding:15px;border-radius:9px;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Money Solution Finance Services</h2>
+<h3 style="text-align:center">Agent Login</h3>
+
+<div id="loginBox">
+<input id="email" type="email" placeholder="Registered Email ID" required>
+<input id="password" type="password" placeholder="Password" required>
+<button id="loginBtn">Login</button>
+</div>
+
+<div id="dashboard" class="hidden">
+<h3>Agent Dashboard</h3>
+<div class="profile" id="profile"></div>
+<button id="logoutBtn">Logout</button>
+</div>
+
+<div id="message"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+ getAuth, signInWithEmailAndPassword, signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+ getFirestore, doc, getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+ apiKey: "AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+ authDomain: "money-salutations-fainence.firebaseapp.com",
+ projectId: "money-salutations-fainence",
+ storageBucket: "money-salutations-fainence.firebasestorage.app",
+ messagingSenderId: "891890606664",
+ appId: "1:891890606664:web:1d6df6ec8554d523176e7d",
+ measurementId: "G-HX6NBT529M"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const loginBox = document.getElementById("loginBox");
+const dashboard = document.getElementById("dashboard");
+const message = document.getElementById("message");
+const profile = document.getElementById("profile");
+const loginBtn = document.getElementById("loginBtn");
+
+loginBtn.addEventListener("click", async () => {
+ const email = document.getElementById("email").value.trim();
+ const password = document.getElementById("password").value;
+
+ if (!email || !password) {
+   message.textContent = "Email aur password bhariye.";
+   return;
+ }
+
+ loginBtn.disabled = true;
+ loginBtn.textContent = "Please wait...";
+ message.textContent = "";
+
+ let user = null;
+
+ try {
+   const result = await signInWithEmailAndPassword(auth, email, password);
+   user = result.user;
+
+   const agentRef = doc(db, "agents", user.uid);
+   const agentSnap = await getDoc(agentRef);
+
+   if (!agentSnap.exists()) {
+     await signOut(auth);
+     message.textContent = "Agent registration record nahi mila. Admin se sampark karein.";
+     return;
+   }
+
+   const agent = agentSnap.data();
+
+   if (agent.status !== "approved") {
+     await signOut(auth);
+     message.textContent = agent.status === "pending"
+       ? "Aapka account Pending Approval hai. Admin ki manzoori ka intezar karein."
+       : "Aapka account approved nahi hai. Admin se sampark karein.";
+     return;
+   }
+
+   loginBox.classList.add("hidden");
+   dashboard.classList.remove("hidden");
+
+   profile.textContent =
+     "Welcome, " + (agent.name || "") +
+     "\nFather Name: " + (agent.fatherName || "") +
+     "\nMobile: " + (agent.mobile || "") +
+     "\nEmail: " + (agent.email || "") +
+     "\nDistrict: " + (agent.district || "") +
+     "\nAccount Status: APPROVED";
+
+   message.textContent = "Login successful!";
+
+ } catch (error) {
+   if (user) {
+     try { await signOut(auth); } catch (e) {}
+   }
+   message.textContent = "Login Error: " + error.message;
+ } finally {
+   loginBtn.disabled = false;
+   loginBtn.textContent = "Login";
+ }
+});
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+ await signOut(auth);
+ dashboard.classList.add("hidden");
+ loginBox.classList.remove("hidden");
+ profile.textContent = "";
+ message.textContent = "Logout successful.";
+});
+</script>
+</body>
+</html>
