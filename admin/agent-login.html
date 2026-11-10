@@ -39,6 +39,10 @@ button{background:#123d75;color:white;border:0;font-size:16px}
 <h2>Add Customer Loan Inquiry</h2>
 <input id="customerName" placeholder="Customer Full Name">
 <input id="customerMobile" placeholder="Customer Mobile Number" maxlength="10">
+ mobile:mobile,
+address:document.getElementById("customerAddress").value.trim(),
+district:document.getElementById("customerDistrict").value.trim(),
+pin:document.getElementById("customerPin").value.trim(),
 <select id="loanType">
 <option value="">Select Loan Type</option>
 <option>Personal Loan</option>
