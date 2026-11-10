@@ -1,1 +1,294 @@
 
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Commission Management</title>
+<style>
+body{font-family:Arial;background:#eef2f7;margin:0;padding:15px}
+.box{max-width:850px;margin:15px auto;background:white;padding:18px;border-radius:12px;box-shadow:0 2px 8px #bbb}
+h2{color:#123d75;text-align:center}
+input,select,button{width:100%;padding:12px;margin:7px 0;box-sizing:border-box;border-radius:6px}
+input,select{border:1px solid #bbb}
+button{background:#123d75;color:white;border:0;font-size:16px}
+.card{border:1px solid #ccc;padding:12px;margin:12px 0;border-radius:8px}
+#dashboard{display:none}
+#message{color:#b42318}
+</style>
+</head>
+<body>
+
+<div class="box" id="loginBox">
+<h2>Admin Commission Login</h2>
+<input id="email" type="email" placeholder="Admin Email">
+<input id="password" type="password" placeholder="Admin Password">
+<button id="loginBtn">Login</button>
+<p id="message"></p>
+</div>
+
+<div class="box" id="dashboard">
+<h2>Commission Management</h2>
+
+<h3>Add New Commission</h3>
+<select id="leadSelect">
+<option value="">Select Customer Lead</option>
+</select>
+
+<input id="agentName" placeholder="Agent Name" readonly>
+<input id="agentMobile" placeholder="Agent Mobile" readonly>
+<input id="customerName" placeholder="Customer Name" readonly>
+<input id="loanAmount" placeholder="Loan Amount" readonly>
+
+<input id="commissionAmount" type="number" min="0" placeholder="Commission Amount ₹">
+
+<select id="paymentStatus">
+<option value="unpaid">Unpaid</option>
+<option value="paid">Paid</option>
+</select>
+
+<button id="saveCommission">Save Commission</button>
+<p id="formMessage"></p>
+
+<hr>
+<h3>Agent-wise Commission Summary</h3>
+<div id="summary"></div>
+
+<hr>
+<h3>All Commission Records</h3>
+<button id="refreshBtn">Refresh Records</button>
+<div id="records"></div>
+
+<button id="logoutBtn" style="background:#b42318">Logout</button>
+</div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+ getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+ getFirestore,collection,getDocs,doc,getDoc,addDoc,updateDoc,serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+ authDomain:"money-salutations-fainence.firebaseapp.com",
+ projectId:"money-salutations-fainence",
+ storageBucket:"money-salutations-fainence.firebasestorage.app",
+ messagingSenderId:"891890606664",
+ appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
+ measurementId:"G-HX6NBT529M"
+};
+
+const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+const loginBox=document.getElementById("loginBox");
+const dashboard=document.getElementById("dashboard");
+const message=document.getElementById("message");
+const leadSelect=document.getElementById("leadSelect");
+let leadsMap={};
+
+document.getElementById("loginBtn").onclick=async()=>{
+ message.textContent="Login हो रहा है...";
+ try{
+  const result=await signInWithEmailAndPassword(
+   auth,
+   document.getElementById("email").value.trim(),
+   document.getElementById("password").value
+  );
+  await checkAdmin(result.user);
+ }catch(e){
+  message.textContent="Login Error: "+e.message;
+ }
+};
+
+onAuthStateChanged(auth,user=>{
+ if(user) checkAdmin(user);
+});
+
+async function checkAdmin(user){
+ if(user.uid!==ADMIN_UID){
+  message.textContent="यह Admin Account नहीं है।";
+  await signOut(auth);
+  return;
+ }
+ loginBox.style.display="none";
+ dashboard.style.display="block";
+ await loadLeads();
+ await loadCommissions();
+}
+
+async function loadLeads(){
+ try{
+  const [leadSnap,agentSnap]=await Promise.all([
+   getDocs(collection(db,"leads")),
+   getDocs(collection(db,"agents"))
+  ]);
+
+  const agents={};
+  agentSnap.forEach(a=>agents[a.id]=a.data());
+
+  leadsMap={};
+  leadSelect.innerHTML='<option value="">Select Customer Lead</option>';
+
+  leadSnap.forEach(item=>{
+   const d=item.data();
+   leadsMap[item.id]={...d,agent:agents[d.agentUid]||{}};
+
+   const option=document.createElement("option");
+   option.value=item.id;
+   option.textContent=(d.customerName||"Customer")+" | "+(agents[d.agentUid]?.name||"Agent")+" | ₹"+(d.loanAmount||0);
+   leadSelect.appendChild(option);
+  });
+ }catch(e){
+  document.getElementById("formMessage").textContent="Lead Error: "+e.message;
+ }
+}
+
+leadSelect.onchange=()=>{
+ const d=leadsMap[leadSelect.value];
+ document.getElementById("agentName").value=d?.agent.name||"";
+ document.getElementById("agentMobile").value=d?.agent.mobile||"";
+ document.getElementById("customerName").value=d?.customerName||"";
+ document.getElementById("loanAmount").value=d?"₹"+(d.loanAmount||0):"";
+};
+
+document.getElementById("saveCommission").onclick=async()=>{
+ const leadId=leadSelect.value;
+ const d=leadsMap[leadId];
+ const amount=Number(document.getElementById("commissionAmount").value);
+ const out=document.getElementById("formMessage");
+
+ if(!d){out.textContent="पहले Customer Lead चुनें।";return;}
+ if(!Number.isFinite(amount)||amount<=0){
+  out.textContent="सही Commission Amount भरें।";return;
+ }
+
+ out.textContent="Saving...";
+ try{
+  await addDoc(collection(db,"commissions"),{
+   leadId:leadId,
+   agentUid:d.agentUid,
+   agentName:d.agent.name||"Unknown",
+   agentMobile:d.agent.mobile||"",
+   customerName:d.customerName||"",
+   customerMobile:d.mobile||"",
+   loanType:d.loanType||"",
+   loanAmount:Number(d.loanAmount)||0,
+   commissionAmount:amount,
+   paymentStatus:document.getElementById("paymentStatus").value,
+   createdAt:serverTimestamp()
+  });
+
+  out.textContent="Commission सफलतापूर्वक सेव हो गया!";
+  document.getElementById("commissionAmount").value="";
+  await loadCommissions();
+ }catch(e){
+  out.textContent="Error: "+e.message;
+ }
+};
+
+async function loadCommissions(){
+ const area=document.getElementById("records");
+ const summary=document.getElementById("summary");
+ area.textContent="Loading...";
+ summary.textContent="Loading...";
+
+ try{
+  const snap=await getDocs(collection(db,"commissions"));
+  area.innerHTML="";
+  summary.innerHTML="";
+
+  if(snap.empty){
+   area.textContent="अभी कोई Commission Record नहीं है।";
+   summary.textContent="अभी कोई रिकॉर्ड नहीं है।";
+   return;
+  }
+
+  const totals={};
+
+  snap.forEach(item=>{
+   const d=item.data();
+   const uid=d.agentUid||"unknown";
+   if(!totals[uid]) totals[uid]={name:d.agentName||"Unknown",total:0,paid:0,unpaid:0};
+
+   const t=totals[uid];
+   const amount=Number(d.commissionAmount)||0;
+   t.total+=amount;
+   if(d.paymentStatus==="paid")t.paid+=amount;
+   else t.unpaid+=amount;
+
+   const card=document.createElement("div");
+   card.className="card";
+
+   const info=document.createElement("div");
+   const fields=[
+    ["Agent",d.agentName],
+    ["Agent Mobile",d.agentMobile],
+    ["Customer",d.customerName],
+    ["Loan Amount","₹"+(d.loanAmount||0)],
+    ["Commission","₹"+amount],
+    ["Payment Status",d.paymentStatus||"unpaid"]
+   ];
+
+   fields.forEach(([label,value])=>{
+    const p=document.createElement("p");
+    const b=document.createElement("b");
+    b.textContent=label+": ";
+    p.append(b,document.createTextNode(value||"-"));
+    info.appendChild(p);
+   });
+
+   const select=document.createElement("select");
+   ["unpaid","paid"].forEach(s=>{
+    const op=document.createElement("option");
+    op.value=s;
+    op.textContent=s.toUpperCase();
+    if((d.paymentStatus||"unpaid")===s)op.selected=true;
+    select.appendChild(op);
+   });
+
+   const btn=document.createElement("button");
+   btn.textContent="Update Payment Status";
+   btn.onclick=async()=>{
+    try{
+     await updateDoc(doc(db,"commissions",item.id),{
+      paymentStatus:select.value
+     });
+     alert("Payment Status Updated");
+     await loadCommissions();
+    }catch(e){alert("Error: "+e.message);}
+   };
+
+   card.append(info,select,btn);
+   area.appendChild(card);
+  });
+
+  Object.values(totals).forEach(t=>{
+   const p=document.createElement("p");
+   p.textContent=t.name+" | Total: ₹"+t.total+
+    " | Paid: ₹"+t.paid+" | Unpaid: ₹"+t.unpaid;
+   summary.appendChild(p);
+  });
+
+ }catch(e){
+  area.textContent="Commission Error: "+e.message;
+  summary.textContent="";
+ }
+}
+
+document.getElementById("refreshBtn").onclick=loadCommissions;
+document.getElementById("logoutBtn").onclick=async()=>{
+ await signOut(auth);
+ dashboard.style.display="none";
+ loginBox.style.display="block";
+ message.textContent="Logout हो गया।";
+};
+</script>
+</body>
+</html>
+
