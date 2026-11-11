@@ -149,6 +149,8 @@ const pin=document.getElementById("customerPin").value.trim();
  try{
   await addDoc(collection(db,"leads"),{
    agentUid:currentAgent.uid,
+   agentName:currentAgent.name||"",
+   agentMobile:currentAgent.mobile||"",
    customerName:name,
    mobile:mobile,
 address:document.getElementById("customerAddress").value.trim(),
