@@ -103,12 +103,18 @@ async function loadLeads(){
 
   for(const item of result.docs){
    const d=item.data();
-   let agentName="Unknown Agent";
-   try{
-    const agentSnap=await getDoc(doc(db,"agents",d.agentUid));
-    if(agentSnap.exists()) agentName=agentSnap.data().name||agentName;
-   }catch(e){}
+   
+let agentName="Unknown Agent";
+let agentMobile=d.agentMobile||"-";
 
+try{
+ const agentSnap=await getDoc(doc(db,"agents",d.agentUid));
+ if(agentSnap.exists()){
+  const agentData=agentSnap.data();
+  agentName=agentData.name||agentName;
+  agentMobile=agentData.mobile||agentMobile;
+ }
+}catch(e){}
    const card=document.createElement("div");
    card.className="lead";
 
@@ -128,8 +134,8 @@ async function loadLeads(){
 
 const details=document.createElement("div");
 
-const fields=[
- ["Agent Name",agentName],
+const fields=
+ ["Agent Mobile",agentMobile],
  ["Agent Mobile",d.agentMobile],
  ["Agent UID",d.agentUid],
  ["Customer Name",d.customerName],
