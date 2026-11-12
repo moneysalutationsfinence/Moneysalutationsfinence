@@ -15,31 +15,25 @@ nav{display:flex;overflow-x:auto;background:white;position:sticky;top:0;z-index:
 nav a{padding:12px 13px;color:#073b72;text-decoration:none;white-space:nowrap;font-weight:bold;font-size:14px}
 main{max-width:900px;margin:auto;padding:10px}
 .poster{text-align:center;margin:8px auto 12px}
-.poster img{width:100%;max-width:650px;max-height:280px;object-fit:contain;border-radius:10px}
+.poster img{width:100%;max-width:650px;max-height:360px;object-fit:contain;border-radius:10px}
 .card{background:white;padding:15px;border-radius:12px;margin:10px 0;box-shadow:0 2px 9px #0000000d}
 h2{color:#073b72;margin:0 0 12px;font-size:21px}
 p{line-height:1.5}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 .grid p{background:#eef5ff;padding:12px;margin:0;border-radius:8px;text-align:center}
 input,select,textarea,button{width:100%;padding:12px;margin:6px 0;border:1px solid #ccd4df;border-radius:8px;font-size:16px}
-button{background:#0878d1;color:white;border:0;font-weight:bold}
-footer{background:#073b72;color:white;text-align:center;padding:16px;margin-top:12px}
-@media(max-width:480px){
-header h1{font-size:20px}
-main{padding:8px}
-.poster img{max-height:230px}
-.card{padding:13px;margin:9px 0}
-}
+button{background:#0878d1;color:white;border:0;font-weight:bold;cursor:pointer}
+.small{font-size:13px;color:#596579}
+@media(max-width:480px){header h1{font-size:20px}.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header>
 <h1>Money Solution Finance Services</h1>
-<p>Loan • Insurance • Banking Services</p>
-<p>📞 Call: 8881850249</p>
-<p>🟢 WhatsApp: 9450933936</p>
+<p>DSA Office • Loan • Insurance • Banking Services</p>
+<p>Call: 8881850249</p>
+<p>WhatsApp: 9450933936</p>
 </header>
-
 <nav>
 <a href="#home">Home</a>
 <a href="#loans">Loan Services</a>
@@ -48,70 +42,70 @@ main{padding:8px}
 <a href="#contact">Contact</a>
 <a href="admin/">Admin Login</a>
 </nav>
-
 <main>
 <div class="poster">
-<img src="assets/Money%20Solution%20Finance%20Loan%20Services%20Poster.png"
-alt="Money Solution Finance Services Poster">
+<img src="assets/Money%20Solution%20Finance%20Loan%20Services%20Poster.png" alt="Money Solution Finance Poster">
 </div>
-
 <section id="home" class="card">
 <h2>आपका स्वागत है</h2>
 <p>लोन, इंश्योरेंस और बैंकिंग सेवाओं के लिए अपनी जानकारी भेजें। हमारी टीम आपसे संपर्क करेगी।</p>
-<p>सेवाएँ संबंधित बैंक/NBFC/बीमा कंपनी की पात्रता और स्वीकृति के अधीन हैं।</p>
+<p class="small">सेवाएँ संबंधित बैंक/NBFC की पात्रता और स्वीकृति के अधीन हैं।</p>
 </section>
-
 <section id="loans" class="card">
 <h2>Loan Services</h2>
 <div class="grid">
-<p>Personal Loan</p>
-<p>Business Loan</p>
-<p>Home Loan</p>
-<p>Loan Against Property</p>
-<p>Vehicle Loan</p>
-<p>MSME Finance</p>
+<p>Personal Loan</p><p>Business Loan</p>
+<p>Home Loan</p><p>Loan Against Property</p>
+<p>Vehicle Loan</p><p>MSME Finance</p>
 </div>
 </section>
-
 <section id="other" class="card">
 <h2>Other Financial Services</h2>
 <div class="grid">
-<p>Life & General Insurance</p>
+<p>Life &amp; General Insurance</p>
 <p>Health Insurance</p>
 <p>Banking Services</p>
 <p>Credit Card Inquiry</p>
 </div>
 </section>
-
 <section id="inquiry" class="card">
 <h2>Customer Inquiry Form</h2>
 <form id="inq">
-<input name="name" placeholder="पूरा नाम" required>
-<input name="phone" placeholder="मोबाइल नंबर" required>
+<input name="name" maxlength="80" placeholder="पूरा नाम" required>
+<input name="phone" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10 अंकों का मोबाइल नंबर" required>
+<input name="address" maxlength="250" placeholder="पूरा पता" required>
+<input name="district" maxlength="80" placeholder="जिला" required>
+<input name="pin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="6 अंकों का PIN Code" required>
 <select name="service" required>
 <option value="">सेवा चुनें</option>
 <option>Personal Loan</option>
 <option>Business Loan</option>
 <option>Home Loan</option>
-<option>Insurance</option>
-<option>Banking</option>
+<option>Loan Against Property</option>
+<option>Vehicle Loan</option>
+<option>MSME Finance</option>
+<option>Life &amp; General Insurance</option>
+<option>Health Insurance</option>
+<option>Banking Services</option>
+<option>Credit Card Inquiry</option>
 <option>Other</option>
 </select>
-<textarea name="message" placeholder="अपनी जरूरत / जानकारी"></textarea>
-<button type="submit">Inquiry भेजें</button>
+<input name="loanAmount" type="number" min="0" placeholder="कितना Loan चाहिए? (₹)">
+<textarea name="message" maxlength="1000" placeholder="अतिरिक्त जानकारी"></textarea>
+<button id="sendBtn" type="submit">Inquiry भेजें</button>
 </form>
-<p id="msg"></p>
+<p id="msg" role="status"></p>
+<p class="small">आपकी जानकारी केवल अधिकृत Admin टीम को दिखाई देगी।</p>
 </section>
-
 <section id="contact" class="card">
 <h2>Contact Us</h2>
 <p>Call: <a href="tel:8881850249">8881850249</a></p>
 <p>WhatsApp: <a href="https://wa.me/919450933936">9450933936</a></p>
 </section>
 </main>
-
-<footer>Money Solution Finance Services</footer>
-
+<footer style="background:#073b72;color:white;text-align:center;padding:16px">
+Money Solution Finance Services • DSA Office
+</footer>
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {getFirestore,collection,addDoc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
@@ -119,25 +113,49 @@ import {firebaseConfig} from './firebase-config-module.js';
 
 const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
+const form=document.getElementById('inq');
+const msg=document.getElementById('msg');
+const btn=document.getElementById('sendBtn');
 
-document.getElementById('inq').addEventListener('submit',async e=>{
+form.addEventListener('submit',async e=>{
 e.preventDefault();
-const f=new FormData(e.target);
+const f=new FormData(form);
+const phone=String(f.get('phone')||'').trim();
+const pin=String(f.get('pin')||'').trim();
+
+if(!/^[0-9]{10}$/.test(phone)){
+msg.textContent='सही 10 अंकों का मोबाइल नंबर लिखें।';return;
+}
+if(!/^[0-9]{6}$/.test(pin)){
+msg.textContent='सही 6 अंकों का PIN Code लिखें।';return;
+}
+
 const data={
-name:f.get('name'),
-phone:f.get('phone'),
-service:f.get('service'),
-message:f.get('message'),
+name:String(f.get('name')).trim(),
+phone:phone,
+address:String(f.get('address')).trim(),
+district:String(f.get('district')).trim(),
+pin:pin,
+service:String(f.get('service')).trim(),
+loanAmount:String(f.get('loanAmount')||'').trim(),
+message:String(f.get('message')||'').trim(),
 createdAt:serverTimestamp(),
 status:'New'
 };
+
+btn.disabled=true;
+btn.textContent='भेजा जा रहा है...';
+
 try{
 await addDoc(collection(db,'inquiries'),data);
-document.getElementById('msg').textContent='आपकी Inquiry सेव हो गई है।';
-e.target.reset();
-}catch(err){
-document.getElementById('msg').textContent='Inquiry सेव नहीं हुई: '+err.message;
+msg.textContent='धन्यवाद! आपकी Inquiry सफलतापूर्वक भेज दी गई है।';
+form.reset();
+}catch(error){
+console.error(error);
+msg.textContent='Inquiry नहीं भेजी जा सकी। कृपया दोबारा प्रयास करें।';
 }
+btn.disabled=false;
+btn.textContent='Inquiry भेजें';
 });
 </script>
 </body>
