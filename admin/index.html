@@ -1,207 +1,332 @@
 
-<html
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Money Solution Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Money Solution Finance - Admin</title>
 <style>
-body{font-family:Arial;background:#eef2f7;padding:15px;margin:0}
-.box{max-width:700px;margin:20px auto;background:white;padding:18px;border-radius:12px}
-h2{text-align:center;color:#123b70}
-input,button,select{width:100%;padding:12px;margin:7px 0;box-sizing:border-box}
-button{background:#123b70;color:white;border:0;border-radius:6px;font-size:15px}
-.item{background:#f2f5fa;padding:14px;margin:12px 0;border-radius:9px;overflow-wrap:anywhere}
-</style
-
-```
-<style>
-body{
- background:linear-gradient(135deg,#e0f2fe,#fce7f3,#fef3c7);
- font-family:Arial,sans-serif;
+*{box-sizing:border-box}
+body{margin:0;padding:14px;background:#eef3f9;font-family:Arial,sans-serif;color:#172033}
+.wrap{max-width:1050px;margin:18px auto}
+.panel{background:white;padding:18px;border-radius:14px;box-shadow:0 3px 14px #0001;margin-bottom:14px}
+h1,h2{color:#123b70;margin-top:0}
+.login{max-width:430px;margin:7vh auto}
+input,select,textarea,button{font:inherit;padding:11px;border:1px solid #cbd5e1;border-radius:8px;width:100%;margin:5px 0}
+button{background:#123b70;color:white;border:0;font-weight:bold;cursor:pointer}
+button.danger{background:#b42318}
+button.secondary{background:#475569}
+.row{display:grid;grid-template-columns:2fr 1fr;gap:10px}
+.tools{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}
+.item{border:1px solid #dbe3ed;border-radius:11px;padding:14px;margin:12px 0;background:#fbfdff;overflow-wrap:anywhere}
+.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 16px}
+.details p{margin:4px 0;line-height:1.45}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.muted{color:#64748b;font-size:13px}
+#dashboard{display:none}
+.error{color:#b42318}
+dialog{border:0;border-radius:12px;max-width:560px;width:calc(100% - 24px);box-shadow:0 10px 40px #0004}
+dialog::backdrop{background:#0007}
+.dialog-actions{display:flex;gap:8px}
+@media(max-width:650px){
+.row,.tools,.details,.actions{grid-template-columns:1fr}
+.panel{padding:13px}
+.wrap{margin:5px auto}
 }
-header,.header,.navbar{
- background:linear-gradient(90deg,#092c73,#087fba,#12a875)!important;
- color:white!important;
-}
-h1,h2,h3{
- color:#123b70;
-}
-button,.btn{
- background:linear-gradient(90deg,#ff512f,#dd2476,#7b2ff7)!important;
- color:white!important;
- border:0!important;
- border-radius:25px!important;
- padding:12px 20px!important;
-}
-.card,.service-card,.service-box{
- background:white;
- border-radius:15px;
- box-shadow:0 4px 15px #999;
- padding:15px;
-}
-a{color:#0759a5;}
-footer{
- background:linear-gradient(90deg,#123b70,#7b2ff7);
- color:white;
- padding:20px;
-}
-</style>
-<style>
-body{
- background:linear-gradient(135deg,#e0f2fe,#fce7f3,#fef3c7);
- font-family:Arial,sans-serif;
-}
-header,.header,.navbar{
- background:linear-gradient(90deg,#092c73,#087fba,#12a875)!important;
- color:white!important;
-}
-h1,h2,h3{
- color:#123b70;
-}
-button,.btn{
- background:linear-gradient(90deg,#ff512f,#dd2476,#7b2ff7)!important;
- color:white!important;
- border:0!important;
- border-radius:25px!important;
- padding:12px 20px!important;
-}
-.card,.service-card,.service-box{
- background:white;
- border-radius:15px;
- box-shadow:0 4px 15px #999;
- padding:15px;
-}
-a{color:#0759a5;}
-footer{
- background:linear-gradient(90deg,#123b70,#7b2ff7);
- color:white;
- padding:20px:
- <style>
 </style>
 </head>
 <body>
-<div class="box">
+<div class="wrap">
+<section class="panel login" id="loginBox">
 <h2>Money Solution Finance</h2>
-
-<div id="login">
 <h3>Admin Login</h3>
-<input id="email" type="email" placeholder="Admin Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
-<p id="msg"></p>
+<form id="loginForm">
+<input id="email" type="email" placeholder="Admin Email" required>
+<input id="password" type="password" placeholder="Password" required>
+<button type="submit" id="loginBtn">Login</button>
+</form>
+<p id="loginMsg" class="error"></p>
+</section>
+
+<section id="dashboard">
+<div class="panel">
+<div class="row">
+<div>
+<h1>Customer Inquiries</h1>
+<p class="muted">Admin Customer Management</p>
+</div>
+<div>
+<button class="secondary" id="refreshBtn">Refresh</button>
+<button class="danger" id="logoutBtn">Logout</button>
+</div>
 </div>
 
-<div id="dashboard" style="display:none">
-<h3>Admin Dashboard</h3>
-<button onclick="loadData()">Refresh Inquiries</button>
-<div id="list">Loading...</div>
-<button onclick="logout()">Logout</button>
+<div class="tools">
+<input id="search" placeholder="नाम, मोबाइल, जिला या सेवा खोजें">
+<select id="statusFilter">
+<option value="">सभी Status</option>
+<option>New</option>
+<option>Contacted</option>
+<option>Follow-up</option>
+<option>Closed</option>
+</select>
+<input id="dateFilter" type="date">
 </div>
+
+<p id="count" class="muted"></p>
+<p id="listMsg" class="muted"></p>
+<div id="list"></div>
 </div>
+</section>
+</div>
+
+<dialog id="editDialog">
+<form id="editForm">
+<h2>Inquiry Edit करें</h2>
+<input type="hidden" id="editId">
+<label>नाम<input id="editName" required></label>
+<label>मोबाइल<input id="editPhone" required maxlength="10"></label>
+<label>पता<input id="editAddress"></label>
+<label>जिला<input id="editDistrict"></label>
+<label>PIN Code<input id="editPin"></label>
+<label>सेवा / Loan Type<input id="editService" required></label>
+<label>Loan Amount<input id="editAmount" type="number"></label>
+<label>Message<textarea id="editMessage"></textarea></label>
+<label>Status
+<select id="editStatus">
+<option>New</option>
+<option>Contacted</option>
+<option>Follow-up</option>
+<option>Closed</option>
+</select>
+</label>
+<label>Follow-up Date<input id="editFollow" type="date"></label>
+<div class="dialog-actions">
+<button type="submit" id="saveEdit">Save Changes</button>
+<button type="button" class="secondary" id="cancelEdit">Cancel</button>
+</div>
+<p id="editMsg" class="error"></p>
+</form>
+</dialog>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
 <script>
-const config={
+const firebaseConfig={
 apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
 authDomain:"money-salutations-fainence.firebaseapp.com",
 projectId:"money-salutations-fainence",
 storageBucket:"money-salutations-fainence.firebasestorage.app",
 messagingSenderId:"891890606664",
-appId:"1:891890606664:web:1d6df6ec8554d523176e7d"
+appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
+measurementId:"G-HX6NBT529M"
 };
 
-firebase.initializeApp(config);
+firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth();
 const db=firebase.firestore();
 const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+let records=[];
+const $=id=>document.getElementById(id);
 
-function login(){
-const email=document.getElementById("email").value.trim();
-const password=document.getElementById("password").value;
-document.getElementById("msg").innerText="Logging in...";
-auth.signInWithEmailAndPassword(email,password)
-.catch(e=>document.getElementById("msg").innerText=e.message);
+function dateText(v){
+if(!v)return "-";
+if(typeof v==="string")return v;
+if(v.toDate)return v.toDate().toLocaleString("en-IN");
+return String(v);
 }
 
-auth.onAuthStateChanged(user=>{
-if(user && user.uid===ADMIN_UID){
-document.getElementById("login").style.display="none";
-document.getElementById("dashboard").style.display="block";
-loadData();
-}else{
-document.getElementById("login").style.display="block";
-document.getElementById("dashboard").style.display="none";
-if(user)auth.signOut();
+$("loginForm").addEventListener("submit",async e=>{
+e.preventDefault();
+$("loginMsg").textContent="Login हो रहा है...";
+try{
+await auth.signInWithEmailAndPassword(
+$("email").value.trim(),
+$("password").value
+);
+}catch(err){
+$("loginMsg").textContent="Login नहीं हुआ: "+err.message;
 }
 });
 
-function logout(){auth.signOut();}
+auth.onAuthStateChanged(async user=>{
+if(user && user.uid===ADMIN_UID){
+$("loginBox").style.display="none";
+$("dashboard").style.display="block";
+await loadData();
+}else{
+$("dashboard").style.display="none";
+$("loginBox").style.display="block";
+if(user){
+await auth.signOut();
+$("loginMsg").textContent="यह Account Admin नहीं है।";
+}
+}
+});
+
+$("logoutBtn").onclick=()=>auth.signOut();
+$("refreshBtn").onclick=loadData;
+$("search").addEventListener("input",render);
+$("statusFilter").addEventListener("change",render);
+$("dateFilter").addEventListener("change",render);
 
 async function loadData(){
-const list=document.getElementById("list");
-list.innerText="Loading...";
+$("listMsg").textContent="Inquiries लोड हो रही हैं...";
+$("list").innerHTML="";
 try{
 const snap=await db.collection("inquiries").get();
-list.innerHTML="";
-if(snap.empty){
-list.innerText="Abhi koi inquiry nahi hai.";
+records=snap.docs.map(doc=>({id:doc.id,...doc.data()}));
+records.sort((a,b)=>{
+const ta=a.createdAt?.toMillis?a.createdAt.toMillis():0;
+const tb=b.createdAt?.toMillis?b.createdAt.toMillis():0;
+return tb-ta;
+});
+$("listMsg").textContent="";
+render();
+}catch(e){
+$("listMsg").textContent="डेटा नहीं खुला: "+e.message;
+}
+}
+
+function render(){
+const q=$("search").value.trim().toLowerCase();
+const st=$("statusFilter").value;
+const fd=$("dateFilter").value;
+const filtered=records.filter(d=>{
+const hay=[
+d.name,d.fullName,d.phone,d.mobile,d.address,
+d.district,d.pin,d.service,d.loanType,d.message
+].join(" ").toLowerCase();
+return (!q||hay.includes(q)) &&
+(!st||(d.status||"New")===st) &&
+(!fd||(d.followUpDate||"")===fd);
+});
+
+$("count").textContent="कुल "+filtered.length+" Inquiry";
+$("list").innerHTML="";
+
+if(!filtered.length){
+$("list").textContent="कोई Inquiry नहीं मिली।";
 return;
 }
-snap.forEach(doc=>{
-const d=doc.data();
-const div=document.createElement("div");
-div.className="item";
 
-const details=document.createElement("p");
-details.style.whiteSpace="pre-wrap";
-details.textContent=
-"Name: "+(d.name||d.fullName||"-")+
-"\nPhone: "+(d.phone||d.mobile||"-")+
-"\nService: "+(d.service||"-")+
-"\nAmount: "+(d.amount||"-")+
-"\nMessage: "+(d.message||"-");
+filtered.forEach(d=>{
+const card=document.createElement("article");
+card.className="item";
 
-const select=document.createElement("select");
-["Pending","Approved","Rejected"].forEach(status=>{
-const option=document.createElement("option");
-option.value=status;
-option.textContent=status;
-select.appendChild(option);
+const title=document.createElement("h3");
+title.textContent=(d.name||d.fullName||"Customer")+" — "+(d.phone||d.mobile||"-");
+
+const details=document.createElement("div");
+details.className="details";
+
+const fields=[
+["सेवा",d.service||d.loanType],
+["Loan Amount",(d.loanAmount||d.amount)?("₹"+(d.loanAmount||d.amount)):"-"],
+["पता",d.address],["जिला",d.district],["PIN Code",d.pin],
+["Message",d.message],["Inquiry Date",dateText(d.createdAt)],
+["Status",d.status||"New"],["Follow-up Date",d.followUpDate||"नियत नहीं"]
+];
+
+fields.forEach(([k,v])=>{
+const p=document.createElement("p");
+const b=document.createElement("b");
+b.textContent=k+": ";
+p.append(b,document.createTextNode(v||"-"));
+details.appendChild(p);
 });
-select.value=["Pending","Approved","Rejected"].includes(d.status)?d.status:"Pending";
 
-const button=document.createElement("button");
-button.textContent="Update Status";
-button.onclick=async()=>{
-button.disabled=true;
-button.textContent="Saving...";
+const actions=document.createElement("div");
+actions.className="actions";
+
+const edit=document.createElement("button");
+edit.textContent="Edit / Follow-up";
+edit.onclick=()=>openEdit(d);
+
+const del=document.createElement("button");
+del.textContent="Delete";
+del.className="danger";
+del.onclick=()=>deleteInquiry(d.id);
+
+const status=document.createElement("select");
+["New","Contacted","Follow-up","Closed"].forEach(s=>{
+const o=document.createElement("option");
+o.value=s;o.textContent=s;
+if((d.status||"New")===s)o.selected=true;
+status.appendChild(o);
+});
+
+status.onchange=async()=>{
 try{
-await db.collection("inquiries").doc(doc.id).update({
-status:select.value,
-statusUpdatedAt:firebase.firestore.FieldValue.serverTimestamp()
-});
-button.textContent="Updated ✓";
-}catch(e){
-button.textContent="Update Failed";
-alert("Error: "+e.message);
-}finally{
-button.disabled=false;
-}
+await db.collection("inquiries").doc(d.id).update({status:status.value});
+d.status=status.value;
+render();
+}catch(e){alert("Status update नहीं हुआ: "+e.message);}
 };
 
-div.appendChild(details);
-div.appendChild(document.createTextNode("Inquiry Status:"));
-div.appendChild(select);
-div.appendChild(button);
-list.appendChild(div);
+actions.append(status,edit,del);
+card.append(title,details,actions);
+$("list").appendChild(card);
 });
+}
+
+function openEdit(d){
+$("editId").value=d.id;
+$("editName").value=d.name||d.fullName||"";
+$("editPhone").value=d.phone||d.mobile||"";
+$("editAddress").value=d.address||"";
+$("editDistrict").value=d.district||"";
+$("editPin").value=d.pin||"";
+$("editService").value=d.service||d.loanType||"";
+$("editAmount").value=d.loanAmount||d.amount||"";
+$("editMessage").value=d.message||"";
+$("editStatus").value=d.status||"New";
+$("editFollow").value=d.followUpDate||"";
+$("editMsg").textContent="";
+$("editDialog").showModal();
+}
+
+$("cancelEdit").onclick=()=>$("editDialog").close();
+
+$("editForm").addEventListener("submit",async e=>{
+e.preventDefault();
+const id=$("editId").value;
+const phone=$("editPhone").value.trim();
+if(!/^[0-9]{10}$/.test(phone)){
+$("editMsg").textContent="मोबाइल नंबर 10 अंकों का होना चाहिए।";
+return;
+}
+$("saveEdit").disabled=true;
+try{
+await db.collection("inquiries").doc(id).update({
+name:$("editName").value.trim(),
+phone,
+address:$("editAddress").value.trim(),
+district:$("editDistrict").value.trim(),
+pin:$("editPin").value.trim(),
+service:$("editService").value.trim(),
+loanAmount:$("editAmount").value,
+message:$("editMessage").value.trim(),
+status:$("editStatus").value,
+followUpDate:$("editFollow").value,
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+$("editDialog").close();
+await loadData();
+}catch(err){
+$("editMsg").textContent="Save नहीं हुआ: "+err.message;
+}
+$("saveEdit").disabled=false;
+});
+
+async function deleteInquiry(id){
+if(!confirm("क्या आप इस Inquiry को हमेशा के लिए Delete करना चाहते हैं?"))return;
+try{
+await db.collection("inquiries").doc(id).delete();
+await loadData();
 }catch(e){
-list.innerText="Error: "+e.message;
+alert("Delete नहीं हुआ: "+e.message);
 }
 }
 </script>
