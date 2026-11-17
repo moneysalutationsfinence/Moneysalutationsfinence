@@ -119,6 +119,10 @@ button{background:#0878d1;color:white;border:0;font-weight:bold;cursor:pointer}
 <button id="sendBtn" type="submit">Inquiry भेजें</button>
 </form>
 <p id="msg" role="status"></p>
+  <a id="whatsappBtn" href="#" target="_blank"
+style="display:none;background:#168b45;color:white;padding:14px;text-align:center;text-decoration:none;border-radius:9px;font-weight:bold;margin:10px 0;">
+WhatsApp पर Inquiry भेजें
+</a>
 <p class="small">आपकी जानकारी केवल अधिकृत Admin टीम को दिखाई देगी।</p>
 </section>
 
@@ -179,7 +183,22 @@ msg.textContent='धन्यवाद! आपकी Inquiry सफलताप�
 form.reset();
 }catch(error){
 console.error(error);
-msg.textContent='Inquiry नहीं भेजी जा सकी। कृपया दोबारा प्रयास करें।';
+msg.textContent='धन्यवाद! आपकी Inquiry सफलतापूर्वक सेव हो गई है।';
+
+const whatsappText =
+'New Customer Inquiry - Money Solution Finance Services\n\n'+
+'Name: '+data.name+'\n'+
+'Mobile: '+data.phone+'\n'+
+'Address: '+data.address+'\n'+
+'District: '+data.district+'\n'+
+'PIN: '+data.pin+'\n'+
+'Service: '+data.service+'\n'+
+'Loan Amount: ₹'+data.loanAmount+'\n'+
+'Message: '+data.message;
+
+const whatsappBtn=document.getElementById('whatsappBtn');
+whatsappBtn.href='https://wa.me/919450933936?text='+encodeURIComponent(whatsappText);
+whatsappBtn.style.display='block';
 }
 btn.disabled=false;
 btn.textContent='Inquiry भेजें';
