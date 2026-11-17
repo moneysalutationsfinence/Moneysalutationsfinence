@@ -148,7 +148,7 @@ return;
 }
 agentData=snap.data();
 show("cardName",agentData.name||"Agent");
-show("cardId",user.uid.slice(-8).toUpperCase());
+show("cardId",agentData.agentCode||user.uid.slice(-8).toUpperCase());
 show("cardMobile",agentData.mobile||"");
 show("cardEmail",user.email||"");
 show("cardStatus","APPROVED");
