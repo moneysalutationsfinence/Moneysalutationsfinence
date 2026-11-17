@@ -228,6 +228,8 @@ btn.disabled=false;
 }
 });
 
+
+
 async function loadLeads(uid){
 const box=document.getElementById("leads");
 try{
@@ -238,14 +240,32 @@ snap.forEach(doc=>{
 const d=doc.data();
 const div=document.createElement("div");
 div.className="item";
+
 const title=document.createElement("b");
 title.textContent=d.customerName||"Customer";
-const details=document.createElement("p");
-details.textContent="Mobile: "+(d.mobile||"")+" | Address: "+(d.address||"")+" | District: "+(d.district||"")+" | PIN: "+(d.pin||"")+" | Loan: "+(d.loanType||"")+" | Amount: ₹"+(d.loanAmount||0);
+
+const mobile=document.createElement("p");
+mobile.textContent="Mobile: "+(d.mobile||"नहीं दिया");
+
+const address=document.createElement("p");
+address.textContent="पूरा पता: "+(d.address||"पता उपलब्ध नहीं");
+
+const district=document.createElement("p");
+district.textContent="जिला: "+(d.district||"नहीं दिया");
+
+const pin=document.createElement("p");
+pin.textContent="PIN: "+(d.pin||"नहीं दिया");
+
+const loan=document.createElement("p");
+loan.textContent="Loan: "+(d.loanType||"");
+
+const amount=document.createElement("p");
+amount.textContent="Amount: ₹"+(d.loanAmount||0);
+
 const status=document.createElement("p");
-status.className="small";
 status.textContent="Status: "+(d.status||"pending");
-div.append(title,details,status);
+
+div.append(title,mobile,address,district,pin,loan,amount,status);
 box.appendChild(div);
 });
 }catch(e){box.textContent="Leads Error: "+e.message;}
