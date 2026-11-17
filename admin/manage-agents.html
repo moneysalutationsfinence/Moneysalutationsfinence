@@ -27,6 +27,7 @@ input,select{max-width:100%}
 <p>Admin Agent & Commission Management</p>
 <button onclick="logout()" class="red">Logout</button>
 </header>
+
 <main>
 <div class="card" id="loginBox">
 <h3>Admin Login</h3>
@@ -66,6 +67,7 @@ input,select{max-width:100%}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
 const firebaseConfig={
 apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
@@ -76,33 +78,56 @@ messagingSenderId:"891890606664",
 appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
 measurementId:"G-HX6NBT529M"
 };
+
 firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth(),db=firebase.firestore();
+
+const auth=firebase.auth();
+const db=firebase.firestore();
 const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+
 let agentList=[];
 
-function el(id){return document.getElementById(id)}
-function safe(v){return String(v??"-")}
+function el(id){
+return document.getElementById(id);
+}
+
+function safe(v){
+return String(v??"-");
+}
+
 function addText(parent,text,tag="p"){
-const x=document.createElement(tag);x.textContent=text;parent.appendChild(x);return x;
+const x=document.createElement(tag);
+x.textContent=text;
+parent.appendChild(x);
+return x;
 }
 
 async function login(){
 el("loginMsg").textContent="Login हो रहा है...";
 try{
-await auth.signInWithEmailAndPassword(el("email").value.trim(),el("password").value);
-}catch(e){el("loginMsg").textContent=e.message}
+await auth.signInWithEmailAndPassword(
+el("email").value.trim(),
+el("password").value
+);
+}catch(e){
+el("loginMsg").textContent="Login Error: "+e.message;
+}
 }
 
 auth.onAuthStateChanged(async user=>{
 if(user && user.uid===ADMIN_UID){
 el("loginBox").style.display="none";
 el("panel").style.display="block";
-await loadAgents();await loadLeads();await loadCommissions();
+await loadAgents();
+await loadLeads();
+await loadCommissions();
 }else{
 el("panel").style.display="none";
 el("loginBox").style.display="block";
-if(user){await auth.signOut();el("loginMsg").textContent="यह Admin Account नहीं है।";}
+if(user){
+await auth.signOut();
+el("loginMsg").textContent="यह Admin Account नहीं है।";
+}
 }
 });
 
@@ -113,19 +138,25 @@ box.textContent="Loading...";
 try{
 const snap=await db.collection("agents").get();
 
-agentList=snap.docs.map(d=>({id:d.id,...d.data()}));
+agentList=snap.docs.map(d=>({
+id:d.id,
+...d.data()
+}));
 
 let maxNo=1000;
 
 agentList.forEach(a=>{
 const n=parseInt(String(a.agentCode||"").replace("AGT",""));
-if(Number.isFinite(n)) maxNo=Math.max(maxNo,n);
+if(Number.isFinite(n)){
+maxNo=Math.max(maxNo,n);
+}
 });
 
 for(const a of agentList){
 if(!a.agentCode){
 maxNo++;
 a.agentCode="AGT"+maxNo;
+
 await db.collection("agents").doc(a.id).update({
 agentCode:a.agentCode
 });
@@ -145,9 +176,7 @@ const card=document.createElement("div");
 card.className="item";
 
 addText(card,"नाम: "+safe(a.name),"b");
-const ag=agentList.find(a=>a.id===d.agentUid);
-const ag=agentList.find(a=>a.id===d.agentUid);
-addText(card,"Agent: "+safe(d.agentName)+" | ID: "+safe(ag?.agentCode||d.agentUid),"b");
+addText(card,"Agent ID: "+a.agentCode);
 addText(card,"मोबाइल: "+safe(a.mobile));
 addText(card,"Email: "+safe(a.email));
 addText(card,"Status: "+safe(a.status));
@@ -178,71 +207,68 @@ el("agentSelect").appendChild(o);
 box.textContent="Agent Error: "+e.message;
 }
 }
-const box=el("agents");box.textContent="Loading...";
-try{
-const snap=await db.collection("agents").get();
-agentList=snap.docs.map(d=>({id:d.id,...d.data()}));
-box.innerHTML="";
-el("agentSelect").innerHTML='<option value="">Agent चुनें</option>';
-if(!agentList.length){box.textContent="कोई Agent नहीं मिला।";return;}
-agentList.forEach(a=>{
-const card=document.createElement("div");card.className="item";
-addText(card,"नाम: "+safe(a.name),"b");
-addText(card,"Agent ID: "+a.id);
-addText(card,"मोबाइल: "+safe(a.mobile));
-addText(card,"Email: "+safe(a.email));
-addText(card,"Status: "+safe(a.status));
-const row=document.createElement("div");row.className="row";
-["approved","rejected","pending"].forEach(status=>{
-const b=document.createElement("button");
-b.textContent=status.toUpperCase();
-b.className=status==="approved"?"green":status==="rejected"?"red":"";
-b.onclick=()=>changeAgent(a.id,status);
-row.appendChild(b);
-});
-card.appendChild(row);box.appendChild(card);
-if(a.status==="approved"){
-const o=document.createElement("option");
-o.value=a.id;o.textContent=(a.name||a.email||a.id)+" ("+a.id.slice(-6)+")";
-el("agentSelect").appendChild(o);
-}
-});
-}catch(e){box.textContent="Agent Error: "+e.message;}
-}
 
 async function changeAgent(id,status){
 if(!confirm("Agent का Status "+status+" करना चाहते हैं?"))return;
+
 try{
-await db.collection("agents").doc(id).update({status:status});
+await db.collection("agents").doc(id).update({
+status:status
+});
 alert("Agent Status अपडेट हो गया।");
 await loadAgents();
-}catch(e){alert("Update Error: "+e.message);}
+}catch(e){
+alert("Update Error: "+e.message);
+}
 }
 
 async function loadLeads(){
-const box=el("leads");box.textContent="Loading...";
+const box=el("leads");
+box.textContent="Loading...";
+
 try{
 const snap=await db.collection("leads").get();
 box.innerHTML="";
-if(snap.empty){box.textContent="अभी कोई Lead नहीं है।";return;}
+
+if(snap.empty){
+box.textContent="अभी कोई Lead नहीं है।";
+return;
+}
+
 snap.forEach(doc=>{
-const d=doc.data(),card=document.createElement("div");card.className="item";
+const d=doc.data();
+const card=document.createElement("div");
+card.className="item";
+
+const ag=agentList.find(a=>a.id===d.agentUid);
+const shortId=ag?.agentCode||d.agentUid;
+
 addText(card,"Customer: "+safe(d.customerName),"b");
 addText(card,"Mobile: "+safe(d.mobile));
-addText(card,"Agent: "+safe(d.agentName)+" | Agent ID: "+safe(d.agentUid));
+addText(card,"Agent: "+safe(d.agentName)+" | Agent ID: "+safe(shortId));
 addText(card,"Loan: "+safe(d.loanType)+" | Amount: ₹"+safe(d.loanAmount));
 addText(card,"Address: "+safe(d.address)+", "+safe(d.district));
 addText(card,"Status: "+safe(d.status));
+
 box.appendChild(card);
 });
-}catch(e){box.textContent="Lead Error: "+e.message;}
+
+}catch(e){
+box.textContent="Lead Error: "+e.message;
+}
 }
 
 async function addCommission(){
 const uid=el("agentSelect").value;
 const amount=Number(el("amount").value);
-if(!uid||!amount||amount<=0){el("commissionMsg").textContent="Agent और सही Commission Amount चुनें।";return;}
+
+if(!uid||!amount||amount<=0){
+el("commissionMsg").textContent="Agent और सही Commission Amount चुनें।";
+return;
+}
+
 const agent=agentList.find(a=>a.id===uid);
+
 try{
 await db.collection("commissions").add({
 agentUid:uid,
@@ -251,39 +277,70 @@ amount:amount,
 status:"Unpaid",
 createdAt:firebase.firestore.FieldValue.serverTimestamp()
 });
+
 el("commissionMsg").textContent="Commission सफलतापूर्वक जोड़ दिया गया।";
 el("amount").value="";
 await loadCommissions();
-}catch(e){el("commissionMsg").textContent="Error: "+e.message;}
+
+}catch(e){
+el("commissionMsg").textContent="Error: "+e.message;
+}
 }
 
 async function loadCommissions(){
-const box=el("commissions");box.textContent="Loading...";
+const box=el("commissions");
+box.textContent="Loading...";
+
 try{
 const snap=await db.collection("commissions").get();
 box.innerHTML="";
-if(snap.empty){box.textContent="अभी कोई Commission नहीं है।";return;}
+
+if(snap.empty){
+box.textContent="अभी कोई Commission नहीं है।";
+return;
+}
+
 snap.forEach(doc=>{
-const d=doc.data(),card=document.createElement("div");card.className="item";
-addText(card,"Agent: "+safe(d.agentName)+" | ID: "+safe(d.agentUid),"b");
+const d=doc.data();
+const card=document.createElement("div");
+card.className="item";
+
+const ag=agentList.find(a=>a.id===d.agentUid);
+const shortId=ag?.agentCode||d.agentUid;
+
+addText(card,"Agent: "+safe(d.agentName)+" | ID: "+safe(shortId),"b");
 addText(card,"Commission: ₹"+safe(d.amount||d.commission));
 addText(card,"Payment Status: "+safe(d.status||d.paymentStatus));
+
 const b=document.createElement("button");
 b.textContent=(d.status==="Paid"||d.paymentStatus==="Paid")?"Mark Unpaid":"Mark Paid";
 b.className="green";
+
 b.onclick=async()=>{
 const next=(d.status==="Paid"||d.paymentStatus==="Paid")?"Unpaid":"Paid";
+
 try{
-await db.collection("commissions").doc(doc.id).update({status:next});
-await loadCommissions();
-}catch(e){alert("Payment Status Update Error: "+e.message);}
-};
-card.appendChild(b);box.appendChild(card);
+await db.collection("commissions").doc(doc.id).update({
+status:next
 });
-}catch(e){box.textContent="Commission Error: "+e.message;}
+await loadCommissions();
+}catch(e){
+alert("Payment Status Update Error: "+e.message);
+}
+};
+
+card.appendChild(b);
+box.appendChild(card);
+});
+
+}catch(e){
+box.textContent="Commission Error: "+e.message;
+}
 }
 
-async function logout(){await auth.signOut();}
+async function logout(){
+await auth.signOut();
+}
 </script>
 </body>
 </html>
