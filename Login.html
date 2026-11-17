@@ -1,1 +1,72 @@
 
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Login - Money Solution Finance</title>
+<style>
+body{font-family:Arial;background:#eef3ff;margin:0;padding:20px}
+.box{max-width:400px;margin:50px auto;background:white;padding:25px;border-radius:14px;box-shadow:0 3px 15px #bbb}
+h2{text-align:center;color:#123c83}
+input,button{width:100%;box-sizing:border-box;padding:14px;margin:10px 0;border-radius:7px;font-size:16px}
+input{border:1px solid #bbb}
+button{background:#123c83;color:white;border:0}
+#msg{text-align:center;color:#c00}
+</style>
+</head>
+<body>
+<div class="box">
+<h2>Money Solution Finance Services</h2>
+<h3>Agent Login</h3>
+<form id="loginForm">
+<input id="email" type="email" placeholder="Agent Email" required>
+<input id="password" type="password" placeholder="Password" required>
+<button id="btn">Login</button>
+</form>
+<p id="msg"></p>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig={
+apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+authDomain:"money-salutations-fainence.firebaseapp.com",
+projectId:"money-salutations-fainence",
+storageBucket:"money-salutations-fainence.firebasestorage.app",
+messagingSenderId:"891890606664",
+appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
+measurementId:"G-HX6NBT529M"
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
+const db=firebase.firestore();
+
+document.getElementById("loginForm").addEventListener("submit",async e=>{
+e.preventDefault();
+const msg=document.getElementById("msg");
+const btn=document.getElementById("btn");
+btn.disabled=true;
+msg.textContent="Please wait...";
+try{
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value;
+const result=await auth.signInWithEmailAndPassword(email,password);
+const uid=result.user.uid;
+const snap=await db.collection("agents").doc(uid).get();
+if(!snap.exists || snap.data().status!=="approved"){
+await auth.signOut();
+throw new Error("Admin approval pending. Please contact Admin.");
+}
+window.location.href="dashboard.html";
+}catch(err){
+msg.textContent=err.message;
+}finally{
+btn.disabled=false;
+}
+});
+</script>
+</body>
+</html>
+
