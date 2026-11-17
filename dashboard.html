@@ -1,1 +1,281 @@
 
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Dashboard - Money Solution Finance</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f1f4fa;margin:0;color:#222}
+header{background:#123c83;color:white;padding:18px;text-align:center}
+.container{max-width:850px;margin:auto;padding:15px}
+.card{background:white;padding:18px;margin:15px 0;border-radius:12px;box-shadow:0 2px 9px #ccc}
+h3{color:#123c83}
+input,select,button{width:100%;padding:12px;margin:7px 0;border:1px solid #ccc;border-radius:7px;font-size:15px}
+button{background:#123c83;color:white;border:0;font-weight:bold;cursor:pointer}
+.logout{background:#c62828}
+.item{border-bottom:1px solid #ddd;padding:12px 0}
+.small{color:#666;font-size:13px}
+.idcard{max-width:420px;margin:15px auto;background:#fff;border:3px solid #123c83;border-radius:14px;overflow:hidden;text-align:center}
+.idhead{background:#123c83;color:white;padding:15px}
+.idhead h3{color:white;margin:5px}
+.idbody{padding:18px}
+.photo{width:105px;height:115px;border:2px solid #123c83;border-radius:8px;object-fit:cover;background:#eee}
+.idname{font-size:21px;font-weight:bold;color:#123c83;margin:10px}
+.idfoot{background:#123c83;color:white;padding:10px;font-size:13px}
+.iddetails{text-align:left;line-height:1.9;font-size:14px}
+@media print{
+body{background:white}
+body *{visibility:hidden}
+#printArea,#printArea *{visibility:visible}
+#printArea{position:absolute;left:0;top:0;width:100%}
+.idcard{margin:0 auto;box-shadow:none;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.noPrint{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<header>
+<h2>Money Solution Finance Services</h2>
+<p>Agent Dashboard</p>
+<button class="logout noPrint" onclick="logout()">Logout</button>
+</header>
+
+<div class="container" id="main" style="display:none">
+
+<div class="card noPrint">
+<h3>मेरा Agent ID Card</h3>
+<div id="printArea">
+<div class="idcard">
+<div class="idhead">
+<h3>MONEY SOLUTION</h3>
+<div>FINANCE SERVICES</div>
+<strong>AUTHORIZED AGENT ID CARD</strong>
+</div>
+<div class="idbody">
+<img id="cardPhoto" class="photo" alt="Agent Photo">
+<div class="idname" id="cardName">Agent Name</div>
+<div class="iddetails">
+<b>Agent ID:</b> <span id="cardId"></span><br>
+<b>Mobile:</b> <span id="cardMobile"></span><br>
+<b>Email:</b> <span id="cardEmail"></span><br>
+<b>Status:</b> <span id="cardStatus">APPROVED</span>
+</div>
+</div>
+<div class="idfoot">Money Solution Finance Services DSA Office</div>
+</div>
+</div>
+<label>अपनी फोटो चुनें:</label>
+<input type="file" id="photoInput" accept="image/*">
+<button class="noPrint" onclick="window.print()">Download / Print ID Card (PDF)</button>
+<p class="small noPrint">PDF सेव करने के लिए Print विकल्प में Save as PDF चुनें।</p>
+</div>
+
+<div class="card noPrint">
+<h3>नई Customer Lead जोड़ें</h3>
+<form id="leadForm">
+<input id="customerName" placeholder="Customer Name" required>
+<input id="mobile" placeholder="Mobile Number (10 Digit)" maxlength="10" required>
+<input id="address" placeholder="पूरा Address" required>
+<input id="district" placeholder="District" required>
+<input id="pin" placeholder="PIN Code" required>
+<select id="loanType" required>
+<option value="">Loan Type चुनें</option>
+<option>Personal Loan</option>
+<option>Business Loan</option>
+<option>Home Loan</option>
+<option>Loan Against Property</option>
+<option>Vehicle Loan</option>
+<option>MSME Finance</option>
+</select>
+<input id="loanAmount" type="number" placeholder="Loan Amount" required>
+<button type="submit" id="saveBtn">Submit Lead</button>
+<p id="leadMsg"></p>
+</form>
+</div>
+
+<div class="card noPrint">
+<h3>मेरी Customer Leads</h3>
+<div id="leads">Loading...</div>
+</div>
+
+<div class="card noPrint">
+<h3>मेरी Commission</h3>
+<div id="commissions">Loading...</div>
+</div>
+</div>
+
+<p id="message" style="text-align:center;padding:20px">Checking Login...</p>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig={
+apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+authDomain:"money-salutations-fainence.firebaseapp.com",
+projectId:"money-salutations-fainence",
+storageBucket:"money-salutations-fainence.firebasestorage.app",
+messagingSenderId:"891890606664",
+appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
+measurementId:"G-HX6NBT529M"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
+const db=firebase.firestore();
+let agentData={};
+
+function show(id,value){
+document.getElementById(id).textContent=value||"";
+}
+
+auth.onAuthStateChanged(async user=>{
+if(!user){
+location.href="Login.html";
+return;
+}
+try{
+const snap=await db.collection("agents").doc(user.uid).get();
+if(!snap.exists || snap.data().status!=="approved"){
+await auth.signOut();
+alert("Agent approval नहीं है। Admin से संपर्क करें।");
+location.href="Login.html";
+return;
+}
+agentData=snap.data();
+show("cardName",agentData.name||"Agent");
+show("cardId",user.uid.slice(-8).toUpperCase());
+show("cardMobile",agentData.mobile||"");
+show("cardEmail",user.email||"");
+show("cardStatus","APPROVED");
+document.getElementById("message").style.display="none";
+document.getElementById("main").style.display="block";
+loadSavedPhoto(user.uid);
+loadLeads(user.uid);
+loadCommissions(user.uid);
+}catch(e){
+show("message","Error: "+e.message);
+}
+});
+
+function loadSavedPhoto(uid){
+try{
+const photo=localStorage.getItem("agentPhoto_"+uid);
+if(photo)document.getElementById("cardPhoto").src=photo;
+}catch(e){}
+}
+
+document.getElementById("photoInput").addEventListener("change",e=>{
+const file=e.target.files[0];
+if(!file)return;
+if(!file.type.startsWith("image/")){
+alert("कृपया फोटो चुनें।");return;
+}
+if(file.size>2*1024*1024){
+alert("कृपया 2 MB से छोटी फोटो चुनें।");return;
+}
+const reader=new FileReader();
+reader.onload=()=>{
+const uid=auth.currentUser.uid;
+document.getElementById("cardPhoto").src=reader.result;
+try{
+localStorage.setItem("agentPhoto_"+uid,reader.result);
+}catch(err){
+alert("फोटो इस मोबाइल में सेव नहीं हो सकी। फोटो चुनकर ID Card प्रिंट करें।");
+}
+};
+reader.readAsDataURL(file);
+});
+
+document.getElementById("leadForm").addEventListener("submit",async e=>{
+e.preventDefault();
+const user=auth.currentUser;
+if(!user)return;
+const msg=document.getElementById("leadMsg");
+const btn=document.getElementById("saveBtn");
+const mobile=document.getElementById("mobile").value.trim();
+if(!/^[0-9]{10}$/.test(mobile)){
+msg.textContent="सही 10 अंकों का Mobile Number डालें";return;
+}
+btn.disabled=true;
+msg.textContent="Saving...";
+try{
+await db.collection("leads").add({
+agentUid:user.uid,
+agentName:agentData.name||"",
+agentMobile:agentData.mobile||"",
+customerName:document.getElementById("customerName").value.trim(),
+mobile:mobile,
+address:document.getElementById("address").value.trim(),
+district:document.getElementById("district").value.trim(),
+pin:document.getElementById("pin").value.trim(),
+loanType:document.getElementById("loanType").value,
+loanAmount:Number(document.getElementById("loanAmount").value),
+status:"pending",
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+msg.textContent="Lead सफलतापूर्वक सेव हो गई।";
+e.target.reset();
+loadLeads(user.uid);
+}catch(err){
+msg.textContent="Error: "+err.message;
+}finally{
+btn.disabled=false;
+}
+});
+
+async function loadLeads(uid){
+const box=document.getElementById("leads");
+try{
+const snap=await db.collection("leads").where("agentUid","==",uid).get();
+if(snap.empty){box.textContent="अभी कोई Lead नहीं है।";return;}
+box.innerHTML="";
+snap.forEach(doc=>{
+const d=doc.data();
+const div=document.createElement("div");
+div.className="item";
+const title=document.createElement("b");
+title.textContent=d.customerName||"Customer";
+const details=document.createElement("p");
+details.textContent="Mobile: "+(d.mobile||"")+" | Loan: "+(d.loanType||"")+" | Amount: ₹"+(d.loanAmount||0);
+const status=document.createElement("p");
+status.className="small";
+status.textContent="Status: "+(d.status||"pending");
+div.append(title,details,status);
+box.appendChild(div);
+});
+}catch(e){box.textContent="Leads Error: "+e.message;}
+}
+
+async function loadCommissions(uid){
+const box=document.getElementById("commissions");
+try{
+const snap=await db.collection("commissions").where("agentUid","==",uid).get();
+if(snap.empty){box.textContent="अभी कोई Commission नहीं है।";return;}
+box.innerHTML="";
+snap.forEach(doc=>{
+const d=doc.data();
+const div=document.createElement("div");
+div.className="item";
+const title=document.createElement("b");
+title.textContent="Commission: ₹"+(d.amount??d.commission??0);
+const status=document.createElement("p");
+status.textContent="Payment Status: "+(d.status||d.paymentStatus||"Not specified");
+div.append(title,status);
+box.appendChild(div);
+});
+}catch(e){box.textContent="Commission Error: "+e.message;}
+}
+
+async function logout(){
+await auth.signOut();
+location.href="Login.html";
+}
+</script>
+</body>
+</html>
+
