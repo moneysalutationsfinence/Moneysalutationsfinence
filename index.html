@@ -5,59 +5,57 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Money Solution Finance Services</title>
+
 <style>
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{margin:0;font-family:Arial,sans-serif;background:#f1f5fb;color:#172033}
+
 header{
 background:linear-gradient(120deg,#061b49,#0756a5,#00a6a6);
-color:white;
-padding:28px 12px;
-text-align:center;
+color:white;padding:28px 12px;text-align:center;
 border-bottom:5px solid #f5bd32;
 }
-
 header h1{
-font-size:29px;
-font-weight:900;
-letter-spacing:1px;
-margin:0 0 10px;
-color:#ffffff;
-text-shadow:2px 3px 5px #00152e;
+font-size:29px;font-weight:900;letter-spacing:1px;
+margin:0 0 10px;color:white;text-shadow:2px 3px 5px #00152e;
 }
+header p{margin:7px;font-size:15px;font-weight:bold}
 
-header p{
-margin:7px;
-font-size:15px;
-font-weight:bold;
+nav{
+display:flex;overflow-x:auto;background:white;position:sticky;
+top:0;z-index:5;box-shadow:0 2px 8px #0002
 }
-nav{display:flex;overflow-x:auto;background:white;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #0002}
 nav a{padding:13px;color:#073b72;text-decoration:none;white-space:nowrap;font-weight:bold;font-size:14px}
 nav a:hover{background:#e7f2ff}
+
 main{max-width:1000px;margin:auto;padding:12px}
-.poster{text-align:center;margin:10px auto 16px}
+
 .poster{
-width:100%;
-max-width:700px;
-margin:12px auto;
-padding:8px;
-background:white;
-border:3px solid #0878d1;
-border-radius:12px;
+width:100%;max-width:700px;margin:12px auto;padding:8px;
+background:white;border:3px solid #0878d1;border-radius:12px;
+}
+.poster img{
+display:block;width:100%;height:130px;max-height:none;
+object-fit:contain;border-radius:7px;
 }
 
-.poster img{
-display:block;
-width:100%;
-height:130px;
-max-height:none;
-object-fit:contain;
-border-radius:7px;
-}
 .card{background:white;padding:17px;border-radius:14px;margin:13px 0;box-shadow:0 3px 12px #00000012}
 h2{color:#073b72;margin:0 0 14px;font-size:22px}
 p{line-height:1.5}
+
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.service{min-height:95px;display:flex;align-items:center;justify-content:center;text-align:center;padding:15px;border-radius:12px;color:white;font-weight:bold;font-size:16px;box-shadow:0 3px 8px #0002}
+
+.service{
+min-height:95px;display:flex;align-items:center;justify-content:center;
+text-align:center;padding:15px;border-radius:12px;color:white;
+font-weight:bold;font-size:16px;box-shadow:0 3px 8px #0002;
+text-decoration:none;cursor:pointer;
+transition:transform .2s,box-shadow .2s;
+}
+.service:hover{transform:translateY(-5px);box-shadow:0 7px 16px #0004}
+.service:active{transform:scale(.97)}
+
 .loan1{background:linear-gradient(135deg,#0878d1,#21a5ed)}
 .loan2{background:linear-gradient(135deg,#087f5b,#20b486)}
 .loan3{background:linear-gradient(135deg,#7540b8,#a36be0)}
@@ -68,18 +66,35 @@ p{line-height:1.5}
 .other2{background:linear-gradient(135deg,#18804b,#4ab978)}
 .other3{background:linear-gradient(135deg,#8b4aa8,#bd75cf)}
 .other4{background:linear-gradient(135deg,#bd6a12,#edaa38)}
-input,select,textarea,button{width:100%;padding:12px;margin:6px 0;border:1px solid #ccd4df;border-radius:8px;font-size:16px}
+
+input,select,textarea,button{
+width:100%;padding:12px;margin:6px 0;border:1px solid #ccd4df;
+border-radius:8px;font-size:16px
+}
 button{background:#0878d1;color:white;border:0;font-weight:bold;cursor:pointer}
-.agent-btn{display:block;background:linear-gradient(120deg,#0878d1,#13a5c7);color:white;text-align:center;text-decoration:none;padding:14px;margin:12px 0;border-radius:9px;font-size:17px;font-weight:bold}
+.agent-btn{
+display:block;background:linear-gradient(120deg,#0878d1,#13a5c7);
+color:white;text-align:center;text-decoration:none;padding:14px;
+margin:12px 0;border-radius:9px;font-size:17px;font-weight:bold
+}
 .small{font-size:13px;color:#596579}
-@media(max-width:650px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.service{font-size:14px;min-height:85px}header h1{font-size:21px}}
-@media(max-width:360px){.grid{grid-template-columns:1fr}}
+
+@media(max-width:650px){
+.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.service{font-size:14px;min-height:85px}
+header h1{font-size:23px}
+}
+@media(max-width:360px){
+.grid{grid-template-columns:1fr}
+}
 </style>
 </head>
+
 <body>
+
 <header>
 <h1>Money Solution Finance Services</h1>
-<p>DSA Office • Loan • Insurance • Banking Services</p>
+<p>DSA OFFICE • LOAN • INSURANCE • BANKING SERVICES</p>
 <p>Call: 8881850249</p>
 <p>WhatsApp: 9450933936</p>
 </header>
@@ -95,6 +110,7 @@ button{background:#0878d1;color:white;border:0;font-weight:bold;cursor:pointer}
 </nav>
 
 <main>
+
 <div class="poster">
 <img src="assets/Money%20Solution%20Finance%20Loan%20Services%20Poster%20(1).png" alt="Money Solution Finance Services Banner">
 </div>
@@ -110,38 +126,40 @@ button{background:#0878d1;color:white;border:0;font-weight:bold;cursor:pointer}
 <h2>Loan Services</h2>
 <div class="grid">
 <a href="#inquiry" class="service loan1" data-service="Personal Loan">Personal Loan</a>
-<div class="service loan2">Business Loan</div>
-<div class="service loan3">Home Loan</div>
-<div class="service loan4">Loan Against Property</div>
-<div class="service loan5">Vehicle Loan</div>
-<div class="service loan6">MSME Finance</div>
+<a href="#inquiry" class="service loan2" data-service="Business Loan">Business Loan</a>
+<a href="#inquiry" class="service loan3" data-service="Home Loan">Home Loan</a>
+<a href="#inquiry" class="service loan4" data-service="Loan Against Property">Loan Against Property</a>
+<a href="#inquiry" class="service loan5" data-service="Vehicle Loan">Vehicle Loan</a>
+<a href="#inquiry" class="service loan6" data-service="MSME Finance">MSME Finance</a>
 </div>
 </section>
 
 <section id="other" class="card">
 <h2>Other Financial Services</h2>
 <div class="grid">
-<div class="service other1">Life &amp; General Insurance</div>
-<div class="service other2">Health Insurance</div>
-<div class="service other3">Banking Services</div>
-<div class="service other4">Credit Card Inquiry</div>
+<a href="#inquiry" class="service other1" data-service="Life &amp; General Insurance">Life &amp; General Insurance</a>
+<a href="#inquiry" class="service other2" data-service="Health Insurance">Health Insurance</a>
+<a href="#inquiry" class="service other3" data-service="Banking Services">Banking Services</a>
+<a href="#inquiry" class="service other4" data-service="Credit Card Inquiry">Credit Card Inquiry</a>
 </div>
 </section>
 
 <section id="inquiry" class="card">
 <h2>Customer Inquiry Form</h2>
-  <a href="https://wa.me/919450933936"
-target="_blank"
+
+<a href="https://wa.me/919450933936" target="_blank"
 style="display:block;background:#168b45;color:white;padding:14px;text-align:center;text-decoration:none;border-radius:9px;font-weight:bold;margin:12px 0;">
 🟢 WhatsApp पर सीधे संपर्क करें
 </a>
+
 <form id="inq">
 <input name="name" maxlength="80" placeholder="पूरा नाम" required>
 <input name="phone" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10 अंकों का मोबाइल नंबर" required>
 <input name="address" maxlength="250" placeholder="पूरा पता" required>
 <input name="district" maxlength="80" placeholder="जिला" required>
 <input name="pin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="6 अंकों का PIN Code" required>
-<select name="service" required>
+
+<select name="service" id="serviceSelect" required>
 <option value="">सेवा चुनें</option>
 <option>Personal Loan</option>
 <option>Business Loan</option>
@@ -155,34 +173,31 @@ style="display:block;background:#168b45;color:white;padding:14px;text-align:cent
 <option>Credit Card Inquiry</option>
 <option>Other</option>
 </select>
+
 <input name="loanAmount" type="number" min="0" placeholder="कितना Loan चाहिए? (₹)">
 <textarea name="message" maxlength="1000" placeholder="अतिरिक्त जानकारी"></textarea>
 <button id="sendBtn" type="submit">Inquiry भेजें</button>
 </form>
+
 <p id="msg" role="status"></p>
-  <a id="whatsappBtn" href="#" target="_blank"
+
+<a id="whatsappBtn" href="#" target="_blank"
 style="display:none;background:#168b45;color:white;padding:14px;text-align:center;text-decoration:none;border-radius:9px;font-weight:bold;margin:10px 0;">
 🟢 WhatsApp पर Inquiry भेजें
 </a>
-  <a id="whatsappBtn" href="#" target="_blank"
-style="display:none;background:#168b45;color:white;padding:14px;text-align:center;text-decoration:none;border-radius:9px;font-weight:bold;margin:10px 0;">
-WhatsApp पर Inquiry भेजें
-</a>
+
 <p class="small">आपकी जानकारी केवल अधिकृत Admin टीम को दिखाई देगी।</p>
 </section>
 
 <section id="contact" class="card">
 <h2>Contact Us</h2>
 <p>Call: <a href="tel:8881850249">8881850249</a></p>
-
 <p>WhatsApp: <a href="https://wa.me/919450933936">9450933936</a></p>
-
 <p>Email: <a href="mailto:mohammedsuhel669@gmail.com">mohammedsuhel669@gmail.com</a></p>
-
 <p>Address: आशियाना अपार्टमेंट, फ्लैट नंबर 502, घसियारी मंडी, लखनऊ, उत्तर प्रदेश</p>
-
 <p>PIN Code: 226001</p>
 </section>
+
 </main>
 
 <footer style="background:#073b72;color:white;text-align:center;padding:16px">
@@ -199,18 +214,29 @@ const db=getFirestore(app);
 const form=document.getElementById('inq');
 const msg=document.getElementById('msg');
 const btn=document.getElementById('sendBtn');
+const serviceSelect=document.getElementById('serviceSelect');
+
+// Service box पर क्लिक करने से Inquiry Form में सेवा अपने-आप चुनेगी
+document.querySelectorAll('.service[data-service]').forEach(service=>{
+service.addEventListener('click',()=>{
+serviceSelect.value=service.getAttribute('data-service');
+});
+});
 
 form.addEventListener('submit',async e=>{
 e.preventDefault();
+
 const f=new FormData(form);
 const phone=String(f.get('phone')||'').trim();
 const pin=String(f.get('pin')||'').trim();
 
 if(!/^[0-9]{10}$/.test(phone)){
-msg.textContent='सही 10 अंकों का मोबाइल नंबर लिखें।';return;
+msg.textContent='सही 10 अंकों का मोबाइल नंबर लिखें।';
+return;
 }
 if(!/^[0-9]{6}$/.test(pin)){
-msg.textContent='सही 6 अंकों का PIN Code लिखें।';return;
+msg.textContent='सही 6 अंकों का PIN Code लिखें।';
+return;
 }
 
 const data={
@@ -246,8 +272,10 @@ const whatsappText =
 'Message: '+data.message;
 
 const whatsappBtn=document.getElementById('whatsappBtn');
+if(whatsappBtn){
 whatsappBtn.href='https://wa.me/919450933936?text='+encodeURIComponent(whatsappText);
 whatsappBtn.style.display='block';
+}
 
 form.reset();
 
@@ -260,5 +288,6 @@ btn.disabled=false;
 btn.textContent='Inquiry भेजें';
 });
 </script>
+
 </body>
 </html>
