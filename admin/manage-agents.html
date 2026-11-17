@@ -107,6 +107,77 @@ if(user){await auth.signOut();el("loginMsg").textContent="यह Admin Account �
 });
 
 async function loadAgents(){
+const box=el("agents");
+box.textContent="Loading...";
+
+try{
+const snap=await db.collection("agents").get();
+
+agentList=snap.docs.map(d=>({id:d.id,...d.data()}));
+
+let maxNo=1000;
+
+agentList.forEach(a=>{
+const n=parseInt(String(a.agentCode||"").replace("AGT",""));
+if(Number.isFinite(n)) maxNo=Math.max(maxNo,n);
+});
+
+for(const a of agentList){
+if(!a.agentCode){
+maxNo++;
+a.agentCode="AGT"+maxNo;
+await db.collection("agents").doc(a.id).update({
+agentCode:a.agentCode
+});
+}
+}
+
+box.innerHTML="";
+el("agentSelect").innerHTML='<option value="">Agent चुनें</option>';
+
+if(!agentList.length){
+box.textContent="कोई Agent नहीं मिला।";
+return;
+}
+
+agentList.forEach(a=>{
+const card=document.createElement("div");
+card.className="item";
+
+addText(card,"नाम: "+safe(a.name),"b");
+const ag=agentList.find(a=>a.id===d.agentUid);
+const ag=agentList.find(a=>a.id===d.agentUid);
+addText(card,"Agent: "+safe(d.agentName)+" | ID: "+safe(ag?.agentCode||d.agentUid),"b");
+addText(card,"मोबाइल: "+safe(a.mobile));
+addText(card,"Email: "+safe(a.email));
+addText(card,"Status: "+safe(a.status));
+
+const row=document.createElement("div");
+row.className="row";
+
+["approved","rejected","pending"].forEach(status=>{
+const b=document.createElement("button");
+b.textContent=status.toUpperCase();
+b.className=status==="approved"?"green":status==="rejected"?"red":"";
+b.onclick=()=>changeAgent(a.id,status);
+row.appendChild(b);
+});
+
+card.appendChild(row);
+box.appendChild(card);
+
+if(a.status==="approved"){
+const o=document.createElement("option");
+o.value=a.id;
+o.textContent=(a.name||a.email||"Agent")+" ("+a.agentCode+")";
+el("agentSelect").appendChild(o);
+}
+});
+
+}catch(e){
+box.textContent="Agent Error: "+e.message;
+}
+}
 const box=el("agents");box.textContent="Loading...";
 try{
 const snap=await db.collection("agents").get();
