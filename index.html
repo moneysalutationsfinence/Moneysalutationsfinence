@@ -201,11 +201,8 @@ btn.textContent='भेजा जा रहा है...';
 
 try{
 await addDoc(collection(db,'inquiries'),data);
+
 msg.textContent='धन्यवाद! आपकी Inquiry सफलतापूर्वक भेज दी गई है।';
-form.reset();
-}catch(error){
-console.error(error);
-msg.textContent='धन्यवाद! आपकी Inquiry सफलतापूर्वक सेव हो गई है।';
 
 const whatsappText =
 'New Customer Inquiry - Money Solution Finance Services\n\n'+
@@ -221,7 +218,14 @@ const whatsappText =
 const whatsappBtn=document.getElementById('whatsappBtn');
 whatsappBtn.href='https://wa.me/919450933936?text='+encodeURIComponent(whatsappText);
 whatsappBtn.style.display='block';
+
+form.reset();
+
+}catch(error){
+console.error(error);
+msg.textContent='Inquiry नहीं भेजी जा सकी। कृपया दोबारा प्रयास करें।';
 }
+
 btn.disabled=false;
 btn.textContent='Inquiry भेजें';
 });
