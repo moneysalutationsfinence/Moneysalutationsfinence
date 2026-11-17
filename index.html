@@ -7,36 +7,37 @@
 <title>Money Solution Finance Services</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f6fb;color:#172033}
-header{background:#073b72;color:white;padding:18px 12px;text-align:center}
-header h1{font-size:23px;margin:0 0 7px}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f5fb;color:#172033}
+header{background:linear-gradient(120deg,#073b72,#0878d1,#13a5c7);color:white;padding:22px 12px;text-align:center}
+header h1{font-size:25px;margin:0 0 8px}
 header p{margin:5px;font-size:14px}
-nav{display:flex;overflow-x:auto;background:white;position:sticky;top:0;z-index:5;box-shadow:0 2px 6px #0002}
-nav a{padding:12px 13px;color:#073b72;text-decoration:none;white-space:nowrap;font-weight:bold;font-size:14px}
-main{max-width:900px;margin:auto;padding:10px}
-.poster{text-align:center;margin:8px auto 12px}
-.poster img{width:100%;max-width:650px;max-height:360px;object-fit:contain;border-radius:10px}
-.card{background:white;padding:15px;border-radius:12px;margin:10px 0;box-shadow:0 2px 9px #0000000d}
-h2{color:#073b72;margin:0 0 12px;font-size:21px}
+nav{display:flex;overflow-x:auto;background:white;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #0002}
+nav a{padding:13px;color:#073b72;text-decoration:none;white-space:nowrap;font-weight:bold;font-size:14px}
+nav a:hover{background:#e7f2ff}
+main{max-width:1000px;margin:auto;padding:12px}
+.poster{text-align:center;margin:10px auto 16px}
+.poster img{width:100%;max-width:850px;max-height:420px;object-fit:contain;border-radius:12px;box-shadow:0 4px 15px #0002}
+.card{background:white;padding:17px;border-radius:14px;margin:13px 0;box-shadow:0 3px 12px #00000012}
+h2{color:#073b72;margin:0 0 14px;font-size:22px}
 p{line-height:1.5}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.grid p{background:#eef5ff;padding:12px;margin:0;border-radius:8px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.service{min-height:95px;display:flex;align-items:center;justify-content:center;text-align:center;padding:15px;border-radius:12px;color:white;font-weight:bold;font-size:16px;box-shadow:0 3px 8px #0002}
+.loan1{background:linear-gradient(135deg,#0878d1,#21a5ed)}
+.loan2{background:linear-gradient(135deg,#087f5b,#20b486)}
+.loan3{background:linear-gradient(135deg,#7540b8,#a36be0)}
+.loan4{background:linear-gradient(135deg,#d15b16,#f49a32)}
+.loan5{background:linear-gradient(135deg,#bd3158,#ed6685)}
+.loan6{background:linear-gradient(135deg,#176b91,#27a9bc)}
+.other1{background:linear-gradient(135deg,#075e9b,#249bd2)}
+.other2{background:linear-gradient(135deg,#18804b,#4ab978)}
+.other3{background:linear-gradient(135deg,#8b4aa8,#bd75cf)}
+.other4{background:linear-gradient(135deg,#bd6a12,#edaa38)}
 input,select,textarea,button{width:100%;padding:12px;margin:6px 0;border:1px solid #ccd4df;border-radius:8px;font-size:16px}
 button{background:#0878d1;color:white;border:0;font-weight:bold;cursor:pointer}
-  .agent-btn{
-display:block;
-background:#0878d1;
-color:white;
-text-align:center;
-text-decoration:none;
-padding:14px;
-margin:12px 0;
-border-radius:8px;
-font-size:17px;
-font-weight:bold;
-}
+.agent-btn{display:block;background:linear-gradient(120deg,#0878d1,#13a5c7);color:white;text-align:center;text-decoration:none;padding:14px;margin:12px 0;border-radius:9px;font-size:17px;font-weight:bold}
 .small{font-size:13px;color:#596579}
-@media(max-width:480px){header h1{font-size:20px}.grid{grid-template-columns:1fr}}
+@media(max-width:650px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.service{font-size:14px;min-height:85px}header h1{font-size:21px}}
+@media(max-width:360px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -46,42 +47,51 @@ font-weight:bold;
 <p>Call: 8881850249</p>
 <p>WhatsApp: 9450933936</p>
 </header>
+
 <nav>
 <a href="#home">Home</a>
 <a href="#loans">Loan Services</a>
 <a href="#other">Other Services</a>
 <a href="#inquiry">Customer Inquiry</a>
 <a href="#contact">Contact</a>
-  <a href="agent-register.html">Add Agent</a>
+<a href="agent-register.html">Add Agent</a>
 <a href="admin/">Admin Login</a>
 </nav>
+
 <main>
 <div class="poster">
-<img src="assets/Money%20Solution%20Finance%20Loan%20Services%20Poster.png" alt="Money Solution Finance Poster">
+<img src="assets/banner.jpg" alt="Money Solution Finance Services Banner">
 </div>
+
 <section id="home" class="card">
 <h2>आपका स्वागत है</h2>
 <p>लोन, इंश्योरेंस और बैंकिंग सेवाओं के लिए अपनी जानकारी भेजें। हमारी टीम आपसे संपर्क करेगी।</p>
 <p class="small">सेवाएँ संबंधित बैंक/NBFC की पात्रता और स्वीकृति के अधीन हैं।</p>
-  <a href="agent-register.html" class="agent-btn">Add Agent / एजेंट रजिस्ट्रेशन</a>
+<a href="agent-register.html" class="agent-btn">Add Agent / एजेंट रजिस्ट्रेशन</a>
 </section>
+
 <section id="loans" class="card">
 <h2>Loan Services</h2>
 <div class="grid">
-<p>Personal Loan</p><p>Business Loan</p>
-<p>Home Loan</p><p>Loan Against Property</p>
-<p>Vehicle Loan</p><p>MSME Finance</p>
+<div class="service loan1">Personal Loan</div>
+<div class="service loan2">Business Loan</div>
+<div class="service loan3">Home Loan</div>
+<div class="service loan4">Loan Against Property</div>
+<div class="service loan5">Vehicle Loan</div>
+<div class="service loan6">MSME Finance</div>
 </div>
 </section>
+
 <section id="other" class="card">
 <h2>Other Financial Services</h2>
 <div class="grid">
-<p>Life &amp; General Insurance</p>
-<p>Health Insurance</p>
-<p>Banking Services</p>
-<p>Credit Card Inquiry</p>
+<div class="service other1">Life &amp; General Insurance</div>
+<div class="service other2">Health Insurance</div>
+<div class="service other3">Banking Services</div>
+<div class="service other4">Credit Card Inquiry</div>
 </div>
 </section>
+
 <section id="inquiry" class="card">
 <h2>Customer Inquiry Form</h2>
 <form id="inq">
@@ -111,15 +121,18 @@ font-weight:bold;
 <p id="msg" role="status"></p>
 <p class="small">आपकी जानकारी केवल अधिकृत Admin टीम को दिखाई देगी।</p>
 </section>
+
 <section id="contact" class="card">
 <h2>Contact Us</h2>
 <p>Call: <a href="tel:8881850249">8881850249</a></p>
 <p>WhatsApp: <a href="https://wa.me/919450933936">9450933936</a></p>
 </section>
 </main>
+
 <footer style="background:#073b72;color:white;text-align:center;padding:16px">
 Money Solution Finance Services • DSA Office
 </footer>
+
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {getFirestore,collection,addDoc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
