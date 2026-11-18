@@ -130,7 +130,7 @@ currentAgent={uid:user.uid,...snap.data()};
 $("loginBox").style.display="none";
 $("dashboard").style.display="block";
 $("welcome").textContent="Welcome "+(currentAgent.name||"Agent");
-$("agentId").textContent=currentAgent.uid;
+$("agentId").textContent=currentAgent.agentId || "Admin Approval के बाद मिलेगा";
 $("agentStatus").textContent=(currentAgent.status||"pending").toUpperCase();
 
 const fields=[
