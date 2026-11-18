@@ -317,7 +317,28 @@ const form=document.getElementById('inq');
 const msg=document.getElementById('msg');
 const btn=document.getElementById('sendBtn');
 const serviceSelect=document.getElementById('serviceSelect');
+// तीन डॉट Menu खोलना और बंद करना
+const menuBox=document.getElementById('menuBox');
+const menuDots=document.getElementById('menuDots');
 
+menuDots.addEventListener('click',()=>{
+menuBox.classList.toggle('open');
+});
+
+// सेवा चुनकर Inquiry Form खोलना
+document.querySelectorAll('.menu-list a[data-service]').forEach(link=>{
+link.addEventListener('click',()=>{
+serviceSelect.value=link.getAttribute('data-service');
+menuBox.classList.remove('open');
+});
+});
+
+// बाहर क्लिक करने पर Menu बंद करना
+document.addEventListener('click',e=>{
+if(!menuBox.contains(e.target)){
+menuBox.classList.remove('open');
+}
+});
 // Service box पर क्लिक करने से Inquiry Form में सेवा अपने-आप चुनेगी
 document.querySelectorAll('.service[data-service]').forEach(service=>{
 service.addEventListener('click',()=>{
