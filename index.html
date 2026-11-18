@@ -11,121 +11,80 @@
 html{scroll-behavior:smooth}
 body{margin:0;font-family:Arial,sans-serif;background:#f1f5fb;color:#172033}
 
+/* MAIN HEADER */
 header{
 background:linear-gradient(120deg,#061b49,#0756a5,#00a6a6);
-color:white;padding:28px 12px;text-align:center;
+color:white;padding:25px 12px;text-align:center;
 border-bottom:5px solid #f5bd32;
 }
 header h1{
-font-size:36px;
-font-weight:900;
-letter-spacing:1.5px;
-margin:0 0 12px;
-color:#ffffff;
-text-shadow:2px 3px 6px #00152e;
+font-size:36px;font-weight:900;letter-spacing:1.5px;
+margin:0 0 12px;color:white;text-shadow:2px 3px 6px #00152e;
 }
-
-header p{
-margin:7px;
-font-size:15px;
-font-weight:bold;
-}
-
+header p{margin:7px;font-size:15px;font-weight:bold}
 header p:first-of-type{
-color:#ffdf55;
-font-size:17px;
-font-weight:900;
+color:#ffdf55;font-size:17px;font-weight:900;
 text-shadow:1px 1px 3px #333;
 }
-@media(max-width:650px){
-header h1{font-size:27px;}
-header p:first-of-type{font-size:14px;}
-}
+
+/* NAVIGATION */
 nav{
-display:flex;overflow-x:auto;background:white;position:sticky;
-top:0;z-index:5;box-shadow:0 2px 8px #0002
-}.menu-box{
-position:relative;
-margin-left:auto;
+display:flex;align-items:center;gap:3px;
+background:white;position:sticky;top:0;z-index:100;
+box-shadow:0 3px 10px #0002;padding:4px;
 }
+nav>a{
+padding:11px 10px;color:#073b72;text-decoration:none;
+font-weight:bold;white-space:nowrap;font-size:14px;
+}
+nav>a:hover{background:#e7f2ff;border-radius:8px}
 
+/* THREE DOT MENU */
+.menu-box{position:relative;margin-left:auto;flex-shrink:0}
 .menu-dots{
-background:#073b72;
-color:white;
-font-size:28px;
-font-weight:bold;
-border:0;
-padding:7px 16px;
-width:auto;
-cursor:pointer;
+background:linear-gradient(135deg,#073b72,#0878d1);
+color:white;font-size:28px;font-weight:bold;border:0;
+border-radius:10px;padding:5px 16px;width:auto;cursor:pointer;
 }
-
 .menu-list{
-display:none;
-position:absolute;
-right:0;
-top:48px;
-width:240px;
-max-height:75vh;
-overflow-y:auto;
-background:white;
-box-shadow:0 5px 20px #0004;
-border-radius:12px;
-z-index:999;
+display:none;position:absolute;right:0;top:48px;width:255px;
+max-height:75vh;overflow-y:auto;background:white;
+box-shadow:0 8px 25px #0003;border-radius:14px;z-index:9999;
 }
-
 .menu-list a{
-display:block;
-padding:13px;
-color:#073b72;
-text-decoration:none;
-font-weight:bold;
-border-bottom:1px solid #eee;
+display:block;padding:14px;color:#073b72;font-weight:bold;
+text-decoration:none;border-bottom:1px solid #eee;
 }
+.menu-list a:hover{background:#e7f2ff}
+.menu-box.open .menu-list{display:block}
 
-.menu-list a:hover{
-background:#e8f3ff;
-}
-
-.menu-box.open .menu-list{
-display:block;
-}
-nav a{padding:13px;color:#073b72;text-decoration:none;white-space:nowrap;font-weight:bold;font-size:14px}
-nav a:hover{background:#e7f2ff}
-
+/* MAIN */
 main{max-width:1000px;margin:auto;padding:12px}
 
+/* POSTER */
 .poster{
-width:100%;
-max-width:100%;
-margin:12px auto;
-padding:5px;
-background:white;
-border:3px solid #0878d1;
-border-radius:16px;
-overflow:hidden;
+width:100%;max-width:100%;margin:12px auto;padding:5px;
+background:white;border:3px solid #0878d1;border-radius:16px;overflow:hidden;
 }
-
 .poster img{
-display:block;
-width:100%;
-height:100px;
-object-fit:contain;
-border-radius:11px;
+display:block;width:100%;height:100px;object-fit:contain;border-radius:11px;
 }
 
-.card{background:white;padding:17px;border-radius:14px;margin:13px 0;box-shadow:0 3px 12px #00000012}
+/* CARDS */
+.card{
+background:white;padding:17px;border-radius:14px;margin:13px 0;
+box-shadow:0 3px 12px #00000012;
+}
 h2{color:#073b72;margin:0 0 14px;font-size:22px}
 p{line-height:1.5}
 
+/* SERVICE BOXES */
 .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-
 .service{
 min-height:95px;display:flex;align-items:center;justify-content:center;
 text-align:center;padding:15px;border-radius:12px;color:white;
 font-weight:bold;font-size:16px;box-shadow:0 3px 8px #0002;
-text-decoration:none;cursor:pointer;
-transition:transform .2s,box-shadow .2s;
+text-decoration:none;cursor:pointer;transition:transform .2s,box-shadow .2s;
 }
 .service:hover{transform:translateY(-5px);box-shadow:0 7px 16px #0004}
 .service:active{transform:scale(.97)}
@@ -141,6 +100,7 @@ transition:transform .2s,box-shadow .2s;
 .other3{background:linear-gradient(135deg,#8b4aa8,#bd75cf)}
 .other4{background:linear-gradient(135deg,#bd6a12,#edaa38)}
 
+/* FORMS */
 input,select,textarea,button{
 width:100%;padding:12px;margin:6px 0;border:1px solid #ccd4df;
 border-radius:8px;font-size:16px
@@ -153,10 +113,13 @@ margin:12px 0;border-radius:9px;font-size:17px;font-weight:bold
 }
 .small{font-size:13px;color:#596579}
 
+/* MOBILE */
 @media(max-width:650px){
+header h1{font-size:27px}
+header p:first-of-type{font-size:14px}
+nav>a{padding:11px 8px;font-size:13px}
 .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 .service{font-size:14px;min-height:85px}
-header h1{font-size:23px}
 }
 @media(max-width:360px){
 .grid{grid-template-columns:1fr}
@@ -174,22 +137,16 @@ header h1{font-size:23px}
 </header>
 
 <nav>
-<a href="#home">Home</a>
-<a href="#loans">Loan Services</a>
-<a href="#other">Other Services</a>
-<a href="#inquiry">Customer Inquiry</a>
-<a href="#contact">Contact</a>
-<a href="agent-register.html">Add Agent</a>
-l Login</a>
-
-<a href="admin/">Admin Login</a>
+<a href="#home">🏠 Home</a>
+<a href="#loans">💰 Loans</a>
+<a href="#inquiry">📝 Inquiry</a>
 
 <div class="menu-box" id="menuBox">
 <button type="button" class="menu-dots" id="menuDots">⋮</button>
 
 <div class="menu-list">
-
 <a href="#home">🏠 Home</a>
+<a href="#loans">💰 Loan Services</a>
 
 <a href="#inquiry" data-service="Personal Loan">Personal Loan</a>
 <a href="#inquiry" data-service="Business Loan">Business Loan</a>
@@ -198,23 +155,24 @@ l Login</a>
 <a href="#inquiry" data-service="Vehicle Loan">Vehicle Loan</a>
 <a href="#inquiry" data-service="MSME Finance">MSME Finance</a>
 
-<a href="#inquiry" data-service="Life &amp; General Insurance">Life Insurance</a>
+<a href="#other">Insurance &amp; Banking</a>
+<a href="#inquiry" data-service="Life &amp; General Insurance">Life &amp; General Insurance</a>
 <a href="#inquiry" data-service="Health Insurance">Health Insurance</a>
 <a href="#inquiry" data-service="Banking Services">Banking Services</a>
-<a href="#inquiry" data-service="Credit Card Inquiry">Credit Card</a>
+<a href="#inquiry" data-service="Credit Card Inquiry">Credit Card Inquiry</a>
 
 <a href="#inquiry">📝 Customer Inquiry</a>
-<a href="#contact">📞 Contact</a>
-<a href="agent-register.html">Add Agent</a>
-<a href="admin/">Admin Login</a>
-
+<a href="#contact">📞 Contact Us</a>
+<a href="agent-register.html">👤 Add Agent</a>
+<a href="admin/">🔐 Admin Login</a>
 </div>
 </div>
 </nav>
+
 <main>
 
 <div class="poster">
-<img src="assets/Money%20Solution%20Finance%20Loan%20Services%20Poster%20(1).png" alt="Money Solution Finance Services Banner">
+<img src="assets/Money%20Solution%20Finance%20Loan%20Services%20Poster%20(1).png" alt="Money Solution Finance Services Poster">
 </div>
 
 <section id="home" class="card">
@@ -317,7 +275,8 @@ const form=document.getElementById('inq');
 const msg=document.getElementById('msg');
 const btn=document.getElementById('sendBtn');
 const serviceSelect=document.getElementById('serviceSelect');
-// तीन डॉट Menu खोलना और बंद करना
+
+// तीन डॉट मेनू
 const menuBox=document.getElementById('menuBox');
 const menuDots=document.getElementById('menuDots');
 
@@ -325,7 +284,7 @@ menuDots.addEventListener('click',()=>{
 menuBox.classList.toggle('open');
 });
 
-// सेवा चुनकर Inquiry Form खोलना
+// मेनू से सेवा चुनना
 document.querySelectorAll('.menu-list a[data-service]').forEach(link=>{
 link.addEventListener('click',()=>{
 serviceSelect.value=link.getAttribute('data-service');
@@ -333,13 +292,14 @@ menuBox.classList.remove('open');
 });
 });
 
-// बाहर क्लिक करने पर Menu बंद करना
+// बाहर क्लिक करने पर मेनू बंद
 document.addEventListener('click',e=>{
 if(!menuBox.contains(e.target)){
 menuBox.classList.remove('open');
 }
 });
-// Service box पर क्लिक करने से Inquiry Form में सेवा अपने-आप चुनेगी
+
+// रंगीन Service Box से Inquiry
 document.querySelectorAll('.service[data-service]').forEach(service=>{
 service.addEventListener('click',()=>{
 serviceSelect.value=service.getAttribute('data-service');
