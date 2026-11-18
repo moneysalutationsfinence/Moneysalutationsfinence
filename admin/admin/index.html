@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Money Solution Admin Panel</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f1f4f9;margin:0;color:#222}
+header{background:#102d56;color:white;padding:18px;text-align:center}
+.container{max-width:1100px;margin:auto;padding:15px}
+.card{background:white;padding:16px;margin:12px 0;border-radius:12px;box-shadow:0 2px 8px #0001}
+input,select,button{padding:11px;margin:5px 0;border:1px solid #ccc;border-radius:7px;box-sizing:border-box}
+input,select{width:100%}
+button{background:#135dcc;color:white;border:0;cursor:pointer}
+button.red{background:#c62828}
+button.green{background:#178447}
+.tabs{display:flex;flex-wrap:wrap;gap:5px}
+.tabs button{flex:1}
+.item{border:1px solid #ddd;padding:12px;border-radius:8px;margin:10px 0;overflow-wrap:anywhere}
+.hidden{display:none}
+.small{font-size:13px;color:#555}
+</style>
+</head>
+<body>
+<header>
+<h2>Money Solution Finance Services</h2>
+<p>Admin Control Panel</p>
+</header>
+
+<div class="container">
+<div class="card" id="loginBox">
+<h3>Admin Login</h3>
+<input id="email" type="email" placeholder="Admin Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<p id="msg"></p>
+</div>
+
+<div id="panel" class="hidden">
+<div class="card">
+<button onclick="logout()">Logout</button>
+<h3>Admin Dashboard</h3>
+<div class="tabs">
+<button onclick="showTab('inquiries')">Customer Inquiries</button>
+<button onclick="showTab('agents')">Agents</button>
+<button onclick="showTab('leads')">Agent Leads</button>
+</div>
+</div>
+
+<div id="inquiries" class="card">
+<h3>Customer Inquiries</h3>
+<input id="searchInquiry" placeholder="नाम / मोबाइल से Search" oninput="loadInquiries()">
+<div id="inquiryList"></div>
+</div>
+
+<div id="agents" class="card hidden">
+<h3>Agent Management</h3>
+<input id="searchAgent" placeholder="Agent Search" oninput="loadAgents()">
+<div id="agentList"></div>
+</div>
+
+<div id="leads" class="card hidden">
+<h3>Agent Leads</h3>
+<input id="searchLead" placeholder="Customer / Mobile Search" oninput="loadLeads()">
+<div id="leadList"></div>
+</div>
+</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig={
+apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+authDomain:"money-salutations-fainence.firebaseapp.com",
+projectId:"money-salutations-fainence",
+storageBucket:"money-salutations-fainence.firebasestorage.app",
+messagingSenderId:"891890606664",
+appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
+measurementId:"G-HX6NBT529M"
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(),db=firebase.firestore();
+const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function msg(t){$("msg").textContent=t;}
+async function login(){
+try{
+msg("Login हो रहा है...");
+const c=await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);
+if(c.user.uid!==ADMIN_UID){await auth.signOut();msg("यह Admin Account नहीं है।");return;}
+$("loginBox").classList.add("hidden");$("panel").classList.remove("hidden");
+showTab("inquiries");
+}catch(e){msg("Login असफल: "+e.message);}
+}
+async function logout(){await auth.signOut();location.reload();}
+auth.onAuthStateChanged(async u=>{
+if(u){
+if(u.uid===ADMIN_UID){
+$("loginBox").classList.add("hidden");$("panel").classList.remove("hidden");showTab("inquiries");
+}else{await auth.signOut();}
+}
+});
+function showTab(t){
+["inquiries","agents","leads"].forEach(x=>$(x).classList.toggle("hidden",x!==t));
+if(t==="inquiries")loadInquiries();
+if(t==="agents")loadAgents();
+if(t==="leads")loadLeads();
+}
+function dateValue(v){
+if(!v)return "";
+if(v.toDate)return v.toDate().toISOString().slice(0,10);
+return String(v).slice(0,10);
+}
+async function loadInquiries(){
+const box=$("inquiryList"),q=$("searchInquiry").value.toLowerCase();box.innerHTML="लोड हो रहा है...";
+try{
+const snap=await db.collection("inquiries").get();
+box.innerHTML="";
+snap.forEach(doc=>{
+const d=doc.data(),hay=(d.name+" "+d.phone).toLowerCase();
+if(q&&!hay.includes(q))return;
+box.insertAdjacentHTML("beforeend",`<div class="item">
+<b>${esc(d.name||"नाम नहीं")}</b> — ${esc(d.phone||"")}
+<p>${esc(d.service||"")} | ₹${esc(d.loanAmount||"")}</p>
+<p>${esc(d.address||"")} ${esc(d.district||"")} ${esc(d.pin||"")}</p>
+<p>${esc(d.message||"")}</p>
+<label>Status</label><select id="is-${doc.id}">
+${["New","Contacted","Processing","Approved","Rejected","Closed"].map(s=>`<option ${d.status===s?"selected":""}>${s}</option>`).join("")}
+</select>
+<label>Follow-up Date</label><input type="date" id="if-${doc.id}" value="${dateValue(d.followUpDate)}">
+<label>Customer Name</label><input id="in-${doc.id}" value="${esc(d.name||"")}">
+<label>Mobile</label><input id="ip-${doc.id}" value="${esc(d.phone||"")}">
+<button class="green" onclick="saveInquiry('${doc.id}')">Save Update</button>
+<button class="red" onclick="deleteInquiry('${doc.id}')">Delete</button>
+</div>`);
+});
+if(!box.innerHTML)box.innerHTML="कोई Inquiry नहीं मिली";
+}catch(e){box.innerHTML="Error: "+esc(e.message);}
+}
+async function saveInquiry(id){
+try{
+await db.collection("inquiries").doc(id).update({
+status:$("is-"+id).value,
+followUpDate:$("if-"+id).value||null,
+name:$("in-"+id).value.trim(),
+phone:$("ip-"+id).value.trim()
+});
+alert("Inquiry अपडेट हो गई");loadInquiries();
+}catch(e){alert("Error: "+e.message);}
+}
+async function deleteInquiry(id){
+if(!confirm("यह Inquiry Delete करें?"))return;
+try{await db.collection("inquiries").doc(id).delete();loadInquiries();}
+catch(e){alert(e.message);}
+}
+async function loadAgents(){
+const box=$("agentList"),q=$("searchAgent").value.toLowerCase();box.innerHTML="लोड हो रहा है...";
+try{
+const snap=await db.collection("agents").get();box.innerHTML="";
+snap.forEach(doc=>{
+const d=doc.data(),hay=(d.name+" "+d.mobile+" "+d.email).toLowerCase();
+if(q&&!hay.includes(q))return;
+box.insertAdjacentHTML("beforeend",`<div class="item">
+<b>${esc(d.name||"")}</b><p>${esc(d.mobile||"")} | ${esc(d.email||"")}</p>
+<p>${esc(d.address||"")} ${esc(d.city||"")} ${esc(d.district||"")}</p>
+<p>स्थिति: ${esc(d.status||"pending")}</p>
+<select id="as-${doc.id}"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select>
+<button class="green" onclick="saveAgent('${doc.id}')">Status Save</button>
+<button class="red" onclick="deleteAgent('${doc.id}')">Delete Agent</button>
+</div>`);
+$("as-"+doc.id).value=d.status||"pending";
+});
+}catch(e){box.innerHTML="Error: "+esc(e.message);}
+}
+async function saveAgent(id){
+try{await db.collection("agents").doc(id).update({status:$("as-"+id).value});alert("Agent Status अपडेट हो गया");loadAgents();}
+catch(e){alert(e.message);}
+}
+async function deleteAgent(id){
+if(!confirm("Agent का Firestore प्रोफाइल हटाएँ? Auth account अलग से नहीं हटेगा।"))return;
+try{await db.collection("agents").doc(id).delete();loadAgents();}
+catch(e){alert(e.message);}
+}
+async function loadLeads(){
+const box=$("leadList"),q=$("searchLead").value.toLowerCase();box.innerHTML="लोड हो रहा है...";
+try{
+const snap=await db.collection("leads").get();box.innerHTML="";
+snap.forEach(doc=>{
+const d=doc.data(),hay=(d.customerName+" "+d.mobile+" "+d.agentName).toLowerCase();
+if(q&&!hay.includes(q))return;
+box.insertAdjacentHTML("beforeend",`<div class="item">
+<b>Customer: ${esc(d.customerName||"")}</b><p>Mobile: ${esc(d.mobile||"")}</p>
+<p>Agent: ${esc(d.agentName||"")} (${esc(d.agentMobile||"")})</p>
+<p>${esc(d.address||"")} ${esc(d.district||"")} ${esc(d.pin||"")}</p>
+<p>Loan: ${esc(d.loanType||"")} | ₹${esc(d.loanAmount||"")}</p>
+<label>Status</label><select id="ls-${doc.id}">
+${["New","Contacted","Processing","Approved","Rejected","Closed"].map(s=>`<option ${d.status===s?"selected":""}>${s}</option>`).join("")}
+</select>
+<label>Follow-up</label><input type="date" id="lf-${doc.id}" value="${dateValue(d.followUpDate)}">
+<button class="green" onclick="saveLead('${doc.id}')">Save</button>
+<button class="red" onclick="deleteLead('${doc.id}')">Delete</button>
+</div>`);
+});
+}catch(e){box.innerHTML="Error: "+esc(e.message);}
+}
+async function saveLead(id){
+try{await db.collection("leads").doc(id).update({status:$("ls-"+id).value,followUpDate:$("lf-"+id).value||null});alert("Lead अपडेट हो गई");loadLeads();}
+catch(e){alert(e.message);}
+}
+async function deleteLead(id){
+if(!confirm("Lead Delete करें?"))return;
+try{await db.collection("leads").doc(id).delete();loadLeads();}
+catch(e){alert(e.message);}
+}
+</script>
+</body>
+</html>
