@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == "mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+    }
+    function isApprovedAgent() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/agents/$(request.auth.uid))
+        && get(/databases/$(database)/documents/agents/$(request.auth.uid)).data.status == "approved";
+    }
+    match /inquiries/{id} {
+      // Backward-compatible: existing homepage inquiry form fields/data remain usable.
+      // New homepage form should send customerConsent=true; if supplied, it must be true.
+      allow create: if request.resource.data.keys().size() > 0
+        && request.resource.data.keys().size() <= 25
+        && (!('customerConsent' in request.resource.data.keys())
+            || request.resource.data.customerConsent == true);
+      allow read, update, delete: if isAdmin();
+    }
+    match /agents/{agentId} {
+      allow create: if request.auth != null && request.auth.uid == agentId
+        && request.resource.data.uid == agentId
+        && request.resource.data.status == "pending"
+        && request.resource.data.memberType == "referral_agent"
+        && request.resource.data.keys().hasAll(["uid","name","fatherName","address","city","district","pin","mobile","whatsapp","email","status","memberType","createdAt"])
+        && request.resource.data.keys().hasOnly(["uid","name","fatherName","address","city","district","pin","mobile","whatsapp","email","status","memberType","createdAt"]);
+      allow get: if isAdmin() || (request.auth != null && request.auth.uid == agentId);
+      allow list: if isAdmin();
+      allow update, delete: if isAdmin();
+    }
+    match /leads/{leadId} {
+      allow create: if isApprovedAgent()
+        && request.resource.data.agentUid == request.auth.uid
+        && request.resource.data.customerConsent == true
+        && request.resource.data.status == "New"
+        && request.resource.data.keys().hasAll(["agentUid","agentName","agentMobile","customerName","mobile","address","district","pin","loanType","loanAmount","customerConsent","status","createdAt"])
+        && request.resource.data.keys().hasOnly(["agentUid","agentName","agentMobile","customerName","mobile","address","district","pin","loanType","loanAmount","customerConsent","status","createdAt"])
+        && request.resource.data.mobile is string && request.resource.data.mobile.matches('^[0-9]{10}$')
+        && request.resource.data.pin is string && request.resource.data.pin.matches('^[0-9]{6}$')
+        && request.resource.data.customerConsent == true;
+      allow read: if isAdmin() || (isApprovedAgent() && resource.data.agentUid == request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+    match /commissions/{id} {
+      allow read: if isAdmin() || (isApprovedAgent() && resource.data.agentUid == request.auth.uid);
+      allow create, update, delete: if isAdmin();
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

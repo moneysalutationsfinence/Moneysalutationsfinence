@@ -1,0 +1,28 @@
+HOMEPAGE index.html MEIN YE CHANGES KAREIN
+
+1) THREE DOT MENU: purane Add Agent aur Admin Login links ke aas-paas ye lines rakhein:
+<a href="agent-register.html">👤 Agent Registration</a>
+<a href="agent-login.html">🔐 Agent Login</a>
+<a href="admin/">🛡️ Admin Login</a>
+<a href="privacy-policy.html">🔒 Privacy Policy</a>
+
+2) CUSTOMER INQUIRY FORM: message textarea ke baad aur submit button se pehle ye checkbox add karein:
+<label style="display:block;margin:12px 0;font-size:14px;line-height:1.5">
+  <input type="checkbox" name="customerConsent" required style="width:auto">
+  मैं सहमत हूँ कि मेरी जानकारी Money Solution Finance Services द्वारा मेरी Inquiry पर संपर्क करने और मेरी सहमति के अनुसार संबंधित बैंक/NBFC या वित्तीय सेवा प्रदाता तक भेजने के लिए उपयोग की जा सकती है।
+</label>
+
+3) index.html KE JAVASCRIPT DATA OBJECT MEIN message property ke baad ye field add karein:
+customerConsent: f.get('customerConsent') === 'on',
+
+4) CONTACT US SECTION MEIN PIN Code ke neeche add karein:
+<p><strong>MSME/Udyam Registration No.:</strong> UDYAM-UP-26-0005042</p>
+
+5) FOOTER ko is tarah update karein (purana footer text replace karein):
+<footer style="background:#073b72;color:white;text-align:center;padding:16px">
+  Money Solution Finance Services • DSA Office<br>
+  MSME/Udyam Registration No.: UDYAM-UP-26-0005042<br>
+  <a href="privacy-policy.html" style="color:white">Privacy Policy</a>
+</footer>
+
+NOTE: Homepage ke baaki design, poster path, Firebase config aur inquiry code ko na badlein. Naye form mein consent checkbox aur customerConsent field jodein. Updated Firestore Rules purane inquiry documents ko delete nahi karte aur purane form ke create flow ko bhi backward-compatible rakhte hain; naye form se consent true aana chahiye.
