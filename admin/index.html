@@ -18,6 +18,7 @@ button:disabled{opacity:.5}
 .danger{background:#b42318}
 .secondary{background:#475569}
 .green{background:#168044}
+.orange{background:#b76b08}
 .tabs,.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .tools{display:grid;grid-template-columns:2fr 1fr;gap:8px}
 .item{border:1px solid #dbe3ed;border-radius:11px;padding:14px;margin:12px 0;background:#fbfdff;overflow-wrap:anywhere}
@@ -39,6 +40,7 @@ dialog::backdrop{background:#0007}
 </head>
 <body>
 <div class="wrap">
+
 <section class="panel login" id="loginBox">
 <h2>Money Solution Finance</h2>
 <h3>Admin Login</h3>
@@ -67,8 +69,10 @@ dialog::backdrop{background:#0007}
 <input id="search" placeholder="नाम, मोबाइल, जिला या सेवा खोजें">
 <select id="statusFilter">
 <option value="">सभी Status</option>
-<option>New</option><option>Contacted</option>
-<option>Follow-up</option><option>Closed</option>
+<option>New</option>
+<option>Contacted</option>
+<option>Follow-up</option>
+<option>Closed</option>
 </select>
 </div>
 <p id="count" class="muted"></p>
@@ -80,7 +84,7 @@ dialog::backdrop{background:#0007}
 <h2>Registered Agents</h2>
 <button class="secondary" id="refreshAgents">Refresh Agents</button>
 <div class="tools">
-<input id="agentSearch" placeholder="Agent नाम, मोबाइल, Email या जिला खोजें">
+<input id="agentSearch" placeholder="Agent ID, नाम, मोबाइल, Email या जिला खोजें">
 <select id="agentStatus">
 <option value="">सभी Agents</option>
 <option value="pending">Pending</option>
@@ -118,6 +122,7 @@ dialog::backdrop{background:#0007}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
 const firebaseConfig={
 apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
@@ -128,6 +133,7 @@ messagingSenderId:"891890606664",
 appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
 measurementId:"G-HX6NBT529M"
 };
+
 firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(),db=firebase.firestore();
 const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
@@ -135,27 +141,44 @@ const $=id=>document.getElementById(id);
 let records=[],agents=[];
 
 $("loginForm").onsubmit=async e=>{
-e.preventDefault();$("loginMsg").textContent="Login हो रहा है...";
-try{await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value)}
-catch(err){$("loginMsg").textContent="Login नहीं हुआ: "+err.message}
+e.preventDefault();
+$("loginMsg").textContent="Login हो रहा है...";
+try{
+await auth.signInWithEmailAndPassword(
+$("email").value.trim(),
+$("password").value
+);
+}catch(err){
+$("loginMsg").textContent="Login नहीं हुआ: "+err.message;
+}
 };
 
 auth.onAuthStateChanged(async user=>{
 if(user&&user.uid===ADMIN_UID){
-$("loginBox").style.display="none";$("dashboard").style.display="block";
-await loadData();await loadAgents();
+$("loginBox").style.display="none";
+$("dashboard").style.display="block";
+await loadData();
+await loadAgents();
 }else{
-$("dashboard").style.display="none";$("loginBox").style.display="block";
-if(user){await auth.signOut();$("loginMsg").textContent="यह Account Admin नहीं है।"}
+$("dashboard").style.display="none";
+$("loginBox").style.display="block";
+if(user){
+await auth.signOut();
+$("loginMsg").textContent="यह Account Admin नहीं है।";
+}
 }
 });
+
 $("logoutBtn").onclick=()=>auth.signOut();
 
 $("inquiryTab").onclick=()=>{
-$("inquirySection").style.display="block";$("agentsSection").style.display="none";
+$("inquirySection").style.display="block";
+$("agentsSection").style.display="none";
 };
+
 $("agentTab").onclick=()=>{
-$("inquirySection").style.display="none";$("agentsSection").style.display="block";
+$("inquirySection").style.display="none";
+$("agentsSection").style.display="block";
 loadAgents();
 };
 
@@ -176,32 +199,76 @@ $("listMsg").textContent="Inquiries लोड हो रही हैं...";
 try{
 const snap=await db.collection("inquiries").get();
 records=snap.docs.map(x=>({id:x.id,...x.data()}));
-records.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
-$("listMsg").textContent="";renderInquiries();
-}catch(e){$("listMsg").textContent="डेटा नहीं खुला: "+e.message}
+records.sort((a,b)=>
+(b.createdAt?.toMillis?.()||0)-
+(a.createdAt?.toMillis?.()||0)
+);
+$("listMsg").textContent="";
+renderInquiries();
+}catch(e){
+$("listMsg").textContent="डेटा नहीं खुला: "+e.message;
+}
 }
 
 function renderInquiries(){
-const q=$("search").value.trim().toLowerCase(),st=$("statusFilter").value;
+const q=$("search").value.trim().toLowerCase();
+const st=$("statusFilter").value;
 const arr=records.filter(d=>{
-const s=[d.name,d.fullName,d.phone,d.mobile,d.address,d.district,d.pin,d.service,d.loanType,d.message].join(" ").toLowerCase();
+const s=[
+d.name,d.fullName,d.phone,d.mobile,d.address,d.district,
+d.pin,d.service,d.loanType,d.message
+].join(" ").toLowerCase();
 return (!q||s.includes(q))&&(!st||(d.status||"New")===st);
 });
-$("count").textContent="कुल "+arr.length+" Inquiry";$("list").innerHTML="";
-if(!arr.length){$("list").textContent="कोई Inquiry नहीं मिली।";return}
+
+$("count").textContent="कुल "+arr.length+" Inquiry";
+$("list").innerHTML="";
+
+if(!arr.length){
+$("list").textContent="कोई Inquiry नहीं मिली।";
+return;
+}
+
 arr.forEach(d=>{
-const card=document.createElement("article");card.className="item";
-const h=document.createElement("h3");h.textContent=(d.name||d.fullName||"Customer")+" — "+(d.phone||d.mobile||"-");
-const info=document.createElement("div");info.className="details";
+const card=document.createElement("article");
+card.className="item";
+
+const h=document.createElement("h3");
+h.textContent=(d.name||d.fullName||"Customer")+" — "+(d.phone||d.mobile||"-");
+
+const info=document.createElement("div");
+info.className="details";
+
 [
-["सेवा",d.service||d.loanType],["Loan Amount",d.loanAmount||d.amount],
-["पता",d.address],["जिला",d.district],["PIN",d.pin],
-["Message",d.message],["Date",dateText(d.createdAt)],["Status",d.status||"New"],
+["सेवा",d.service||d.loanType],
+["Loan Amount",d.loanAmount||d.amount],
+["पता",d.address],
+["जिला",d.district],
+["PIN",d.pin],
+["Message",d.message],
+["Date",dateText(d.createdAt)],
+["Status",d.status||"New"],
 ["Follow-up",d.followUpDate]
-].forEach(([k,v])=>{const p=document.createElement("p");p.textContent=k+": "+(v||"-");info.append(p)});
-const del=document.createElement("button");del.className="danger";del.textContent="Delete Inquiry";
-del.onclick=async()=>{if(confirm("Inquiry Delete करें?")){try{await db.collection("inquiries").doc(d.id).delete();await loadData()}catch(e){alert(e.message)}}};
-card.append(h,info,del);$("list").append(card);
+].forEach(([k,v])=>{
+const p=document.createElement("p");
+p.textContent=k+": "+(v||"-");
+info.append(p);
+});
+
+const del=document.createElement("button");
+del.className="danger";
+del.textContent="Delete Inquiry";
+del.onclick=async()=>{
+if(confirm("Inquiry Delete करें?")){
+try{
+await db.collection("inquiries").doc(d.id).delete();
+await loadData();
+}catch(e){alert(e.message);}
+}
+};
+
+card.append(h,info,del);
+$("list").append(card);
 });
 }
 
@@ -210,81 +277,242 @@ $("agentMsg").textContent="Agents लोड हो रहे हैं...";
 try{
 const snap=await db.collection("agents").get();
 agents=snap.docs.map(x=>({id:x.id,...x.data()}));
-agents.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
-$("agentMsg").textContent="";renderAgents();
-}catch(e){$("agentMsg").textContent="Agents नहीं खुले: "+e.message}
+agents.sort((a,b)=>
+(b.createdAt?.toMillis?.()||0)-
+(a.createdAt?.toMillis?.()||0)
+);
+$("agentMsg").textContent="";
+renderAgents();
+}catch(e){
+$("agentMsg").textContent="Agents नहीं खुले: "+e.message;
+}
+}
+
+/* नाम से Agent ID का शुरुआती अक्षर */
+function makeAgentPrefix(name){
+const words=String(name||"")
+.trim()
+.toUpperCase()
+.split(/\s+/)
+.filter(Boolean);
+
+let prefix="";
+
+if(words.length>=2){
+prefix=words[0].charAt(0)+words[1].charAt(0);
+}else if(words.length===1){
+prefix=words[0].replace(/[^A-Z]/g,"").slice(0,2);
+}
+
+prefix=prefix.replace(/[^A-Z]/g,"");
+return prefix.length===2?prefix:"MS";
+}
+
+/* Transaction से क्रमवार और यूनिक Agent ID */
+async function issueAgentId(id,status="approved"){
+const agentRef=db.collection("agents").doc(id);
+const counterRef=db.collection("counters").doc("agentSerial");
+
+return await db.runTransaction(async transaction=>{
+const agentSnap=await transaction.get(agentRef);
+
+if(!agentSnap.exists){
+throw new Error("Agent Profile नहीं मिला।");
+}
+
+const agent=agentSnap.data();
+
+if(status==="approved"&&agent.agentId){
+transaction.update(agentRef,{
+status:"approved",
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+return agent.agentId;
+}
+
+if(status!=="approved"){
+transaction.update(agentRef,{
+status:status,
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+return null;
+}
+
+const counterSnap=await transaction.get(counterRef);
+const lastNumber=counterSnap.exists?
+Number(counterSnap.data().lastNumber||0):0;
+
+const nextNumber=lastNumber+1;
+const serial=String(nextNumber).padStart(3,"0");
+const agentId=makeAgentPrefix(agent.name)+"-"+serial;
+
+transaction.set(counterRef,{
+lastNumber:nextNumber,
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+},{merge:true});
+
+transaction.update(agentRef,{
+agentId:agentId,
+status:"approved",
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+
+return agentId;
+});
 }
 
 function renderAgents(){
-const q=$("agentSearch").value.trim().toLowerCase(),st=$("agentStatus").value;
+const q=$("agentSearch").value.trim().toLowerCase();
+const st=$("agentStatus").value;
+
 const arr=agents.filter(a=>{
-const s=[a.name,a.mobile,a.email,a.district,a.city,a.uid].join(" ").toLowerCase();
+const s=[
+a.agentId,a.name,a.mobile,a.email,a.district,a.city,a.uid
+].join(" ").toLowerCase();
+
 return (!q||s.includes(q))&&(!st||a.status===st);
 });
+
 $("agentCount").textContent="कुल "+arr.length+" Agents";
 $("agentList").innerHTML="";
-if(!arr.length){$("agentList").textContent="कोई Agent नहीं मिला।";return}
-arr.forEach(a=>{
-const card=document.createElement("article");card.className="item";
-const h=document.createElement("h3");h.textContent=(a.name||"Agent")+" ("+(a.status||"pending")+")";
-const info=document.createElement("div");info.className="details";
-[
-["Agent ID",a.uid||a.id],["पिता का नाम",a.fatherName],["मोबाइल",a.mobile],
-["WhatsApp",a.whatsapp],["Email",a.email],["पता",a.address],
-["शहर",a.city],["जिला",a.district],["PIN",a.pin],
-["Registration",dateText(a.createdAt)]
-].forEach(([k,v])=>{const p=document.createElement("p");p.textContent=k+": "+(v||"-");info.append(p)});
 
-const actions=document.createElement("div");actions.className="actions";
-const approve=document.createElement("button");approve.className="green";approve.textContent="Approve";
+if(!arr.length){
+$("agentList").textContent="कोई Agent नहीं मिला।";
+return;
+}
+
+arr.forEach(a=>{
+const card=document.createElement("article");
+card.className="item";
+
+const h=document.createElement("h3");
+h.textContent=(a.name||"Agent")+" ("+(a.status||"pending")+")";
+
+const info=document.createElement("div");
+info.className="details";
+
+[
+["Agent ID",a.agentId||"अभी जारी नहीं हुई"],
+["पिता का नाम",a.fatherName],
+["मोबाइल",a.mobile],
+["WhatsApp",a.whatsapp],
+["Email",a.email],
+["पता",a.address],
+["शहर",a.city],
+["जिला",a.district],
+["PIN",a.pin],
+["Registration",dateText(a.createdAt)]
+].forEach(([k,v])=>{
+const p=document.createElement("p");
+p.textContent=k+": "+(v||"-");
+info.append(p);
+});
+
+const actions=document.createElement("div");
+actions.className="actions";
+
+const approve=document.createElement("button");
+approve.className="green";
+approve.textContent="Approve और ID जारी करें";
 approve.onclick=()=>changeAgentStatus(a.id,"approved");
-const reject=document.createElement("button");reject.className="secondary";reject.textContent="Reject";
+
+const reject=document.createElement("button");
+reject.className="secondary";
+reject.textContent="Reject";
 reject.onclick=()=>changeAgentStatus(a.id,"rejected");
-const edit=document.createElement("button");edit.textContent="Edit";
+
+const edit=document.createElement("button");
+edit.textContent="Edit";
 edit.onclick=()=>openAgentEdit(a);
-const del=document.createElement("button");del.className="danger";del.textContent="Delete Profile";
+
+const del=document.createElement("button");
+del.className="danger";
+del.textContent="Delete Profile";
 del.onclick=()=>deleteAgent(a.id);
+
 actions.append(approve,reject,edit,del);
-card.append(h,info,actions);$("agentList").append(card);
+
+/* पुराने Approved एजेंट जिनकी ID नहीं है */
+if(a.status==="approved"&&!a.agentId){
+const issue=document.createElement("button");
+issue.className="orange";
+issue.textContent="Generate Agent ID";
+issue.onclick=()=>changeAgentStatus(a.id,"approved");
+actions.append(issue);
+}
+
+card.append(h,info,actions);
+$("agentList").append(card);
 });
 }
 
 async function changeAgentStatus(id,status){
-if(!confirm("Agent Status "+status+" करना चाहते हैं?"))return;
+const msg=status==="approved"?
+"Agent को Approve करके नई Agent ID जारी करना चाहते हैं?":
+"Agent Status "+status+" करना चाहते हैं?";
+
+if(!confirm(msg))return;
+
 try{
-await db.collection("agents").doc(id).update({status,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+const agentId=await issueAgentId(id,status);
+if(agentId){
+alert("Agent Approved!\nAgent ID: "+agentId);
+}
 await loadAgents();
-}catch(e){alert("Status update नहीं हुआ: "+e.message)}
+}catch(e){
+alert("Status update नहीं हुआ: "+e.message);
+}
 }
 
 function openAgentEdit(a){
-$("aUid").value=a.id;$("aName").value=a.name||"";
-$("aFather").value=a.fatherName||"";$("aAddress").value=a.address||"";
-$("aCity").value=a.city||"";$("aDistrict").value=a.district||"";
-$("aPin").value=a.pin||"";$("aMobile").value=a.mobile||"";
-$("aWhatsapp").value=a.whatsapp||"";$("agentEditMsg").textContent="";
+$("aUid").value=a.id;
+$("aName").value=a.name||"";
+$("aFather").value=a.fatherName||"";
+$("aAddress").value=a.address||"";
+$("aCity").value=a.city||"";
+$("aDistrict").value=a.district||"";
+$("aPin").value=a.pin||"";
+$("aMobile").value=a.mobile||"";
+$("aWhatsapp").value=a.whatsapp||"";
+$("agentEditMsg").textContent="";
 $("agentDialog").showModal();
 }
+
 $("closeAgentDialog").onclick=()=>$("agentDialog").close();
 
 $("agentForm").onsubmit=async e=>{
-e.preventDefault();const id=$("aUid").value;
+e.preventDefault();
+const id=$("aUid").value;
+
 try{
 await db.collection("agents").doc(id).update({
-name:$("aName").value.trim(),fatherName:$("aFather").value.trim(),
-address:$("aAddress").value.trim(),city:$("aCity").value.trim(),
-district:$("aDistrict").value.trim(),pin:$("aPin").value.trim(),
-mobile:$("aMobile").value.trim(),whatsapp:$("aWhatsapp").value.trim(),
+name:$("aName").value.trim(),
+fatherName:$("aFather").value.trim(),
+address:$("aAddress").value.trim(),
+city:$("aCity").value.trim(),
+district:$("aDistrict").value.trim(),
+pin:$("aPin").value.trim(),
+mobile:$("aMobile").value.trim(),
+whatsapp:$("aWhatsapp").value.trim(),
 updatedAt:firebase.firestore.FieldValue.serverTimestamp()
 });
-$("agentDialog").close();await loadAgents();
-}catch(err){$("agentEditMsg").textContent="Save नहीं हुआ: "+err.message}
+
+$("agentDialog").close();
+await loadAgents();
+}catch(err){
+$("agentEditMsg").textContent="Save नहीं हुआ: "+err.message;
+}
 };
 
 async function deleteAgent(id){
 if(!confirm("Agent Profile Firestore से Delete होगा। Authentication Account अपने आप Delete नहीं होगा। जारी रखें?"))return;
-try{await db.collection("agents").doc(id).delete();await loadAgents()}
-catch(e){alert("Delete नहीं हुआ: "+e.message)}
+
+try{
+await db.collection("agents").doc(id).delete();
+await loadAgents();
+}catch(e){
+alert("Delete नहीं हुआ: "+e.message);
+}
 }
 </script>
 </body>
