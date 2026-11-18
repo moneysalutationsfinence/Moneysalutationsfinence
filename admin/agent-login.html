@@ -4,46 +4,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Agent Dashboard - Money Solution Finance Services</title>
+<title>Agent Login - Money Solution Finance Services</title>
 <style>
-body{font-family:Arial;background:#eef2f7;margin:0;padding:15px}
-.box{max-width:600px;margin:20px auto;background:white;padding:18px;border-radius:12px;box-shadow:0 2px 10px #bbb}
+body{font-family:Arial;background:#eef2f7;margin:0;padding:15px;color:#172033}
+.box{max-width:650px;margin:20px auto;background:white;padding:18px;border-radius:12px;box-shadow:0 2px 10px #bbb}
 h2{text-align:center;color:#123d75}
-input,select,button{width:100%;padding:12px;margin:8px 0;box-sizing:border-box;border-radius:6px}
+input,select,button{width:100%;padding:12px;margin:8px 0;box-sizing:border-box;border-radius:6px;font-size:15px}
 input,select{border:1px solid #bbb}
-button{background:#123d75;color:white;border:0;font-size:16px}
+button{background:#123d75;color:white;border:0}
 .logout{background:#b42318}
-.lead{border:1px solid #ccc;padding:12px;margin:10px 0;border-radius:8px}
+.lead{border:1px solid #ccc;padding:12px;margin:10px 0;border-radius:8px;overflow-wrap:anywhere}
 #dashboard{display:none}
 #message{text-align:center;color:#b42318}
+.details p{overflow-wrap:anywhere}
+.status{padding:12px;background:#fff4d6;border-radius:8px}
 </style>
 </head>
 <body>
 
 <div class="box" id="loginBox">
-<h2>Agent Login</h2>
-<p style="text-align:center">Money Solution Finance Services</p>
-<input type="email" id="email" placeholder="Registered Email">
-<input type="password" id="password" placeholder="Password">
-<button id="loginBtn">Login</button>
+<h2>Money Solution Finance Services</h2>
+<h3>Agent Login</h3>
+<form id="loginForm">
+<input type="email" id="email" placeholder="Registered Email" required>
+<input type="password" id="password" placeholder="Password" required>
+<button type="submit" id="loginBtn">Login</button>
+</form>
 <p id="message"></p>
 </div>
 
 <div class="box" id="dashboard">
 <h2>Agent Dashboard</h2>
-<p id="welcome"></p>
-<p><b>Mobile:</b> <span id="agentMobile"></span></p>
-<p><b>Status:</b> Approved</p>
+<h3 id="welcome"></h3>
+<div class="status"><b>Approval Status:</b> <span id="agentStatus"></span></div>
 
+<h3>My Agent ID</h3>
+<p id="agentId" style="overflow-wrap:anywhere;font-weight:bold"></p>
+
+<hr>
+<h3>मेरी Registration Details</h3>
+<div id="myDetails" class="details"></div>
+
+<div id="leadArea">
 <hr>
 <h2>Add Customer Loan Inquiry</h2>
 <input id="customerName" placeholder="Customer Full Name">
 <input id="customerMobile" placeholder="Customer Mobile Number" maxlength="10">
- 
 <input id="customerAddress" placeholder="Customer Full Address">
 <input id="customerDistrict" placeholder="Customer District">
 <input id="customerPin" placeholder="PIN Code" maxlength="6">
-
 <select id="loanType">
 <option value="">Select Loan Type</option>
 <option>Personal Loan</option>
@@ -54,176 +63,171 @@ button{background:#123d75;color:white;border:0;font-size:16px}
 <option>Other Loan</option>
 </select>
 <input id="loanAmount" type="number" placeholder="Loan Amount">
-<button id="addLeadBtn">Submit Customer Lead</button>
+<button id="addLeadBtn" type="button">Submit Customer Lead</button>
 <p id="leadMessage"></p>
 
 <hr>
 <h2>My Customer Leads</h2>
-<button id="refreshBtn">Refresh Leads</button>
-<div id="myLeads">Loading...</div>
+<button id="refreshBtn" type="button">Refresh Leads</button>
+<div id="myLeads"></div>
+</div>
 
-<button class="logout" id="logoutBtn">Logout</button>
+<button class="logout" id="logoutBtn" type="button">Logout</button>
 </div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
- getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut
+getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
- getFirestore,doc,getDoc,collection,addDoc,
- query,where,getDocs,serverTimestamp
+getFirestore,doc,getDoc,collection,addDoc,
+query,where,getDocs,serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig={
- apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
- authDomain:"money-salutations-fainence.firebaseapp.com",
- projectId:"money-salutations-fainence",
- storageBucket:"money-salutations-fainence.firebasestorage.app",
- messagingSenderId:"891890606664",
- appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
- measurementId:"G-HX6NBT529M"
+apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+authDomain:"money-salutations-fainence.firebaseapp.com",
+projectId:"money-salutations-fainence",
+storageBucket:"money-salutations-fainence.firebasestorage.app",
+messagingSenderId:"891890606664",
+appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
+measurementId:"G-HX6NBT529M"
 };
-
 const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-const db=getFirestore(app);
+const auth=getAuth(app),db=getFirestore(app);
+const $=id=>document.getElementById(id);
 let currentAgent=null;
 
-const loginBox=document.getElementById("loginBox");
-const dashboard=document.getElementById("dashboard");
-const message=document.getElementById("message");
-
-async function openDashboard(user){
- try{
-  const snap=await getDoc(doc(db,"agents",user.uid));
-  if(!snap.exists() || snap.data().status!=="approved"){
-   message.textContent="Agent Approval अभी नहीं मिला है।";
-   await signOut(auth);
-   return;
-  }
-  currentAgent={uid:user.uid,...snap.data()};
-  loginBox.style.display="none";
-  dashboard.style.display="block";
-  document.getElementById("welcome").textContent="Welcome "+(currentAgent.name||"Agent");
-  document.getElementById("agentMobile").textContent=currentAgent.mobile||"-";
-  await loadLeads();
- }catch(e){
-  message.textContent="Error: "+e.message;
- }
-}
-
-document.getElementById("loginBtn").onclick=async()=>{
- const email=document.getElementById("email").value.trim();
- const password=document.getElementById("password").value;
- message.textContent="Please wait...";
- try{
-  const result=await signInWithEmailAndPassword(auth,email,password);
-  await openDashboard(result.user);
- }catch(e){
-  message.textContent="Login Error: "+e.message;
- }
+$("loginForm").onsubmit=async e=>{
+e.preventDefault();
+$("message").textContent="Login हो रहा है...";
+$("loginBtn").disabled=true;
+try{
+await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);
+}catch(err){$("message").textContent="Login Error: "+err.message}
+$("loginBtn").disabled=false;
 };
 
-onAuthStateChanged(auth,user=>{
- if(user) openDashboard(user);
+onAuthStateChanged(auth,async user=>{
+if(!user){
+currentAgent=null;
+$("dashboard").style.display="none";
+$("loginBox").style.display="block";
+return;
+}
+await openDashboard(user);
 });
 
-document.getElementById("addLeadBtn").onclick=async()=>{
- const name=document.getElementById("customerName").value.trim();
- const mobile=document.getElementById("customerMobile").value.trim();
- const loanType=document.getElementById("loanType").value;
- const address=document.getElementById("customerAddress").value.trim();
-const district=document.getElementById("customerDistrict").value.trim();
-const pin=document.getElementById("customerPin").value.trim();
- const amount=Number(document.getElementById("loanAmount").value);
- const out=document.getElementById("leadMessage");
+async function openDashboard(user){
+try{
+const snap=await getDoc(doc(db,"agents",user.uid));
+if(!snap.exists()){
+$("message").textContent="Agent Profile नहीं मिला। Admin से संपर्क करें।";
+await signOut(auth);return;
+}
+currentAgent={uid:user.uid,...snap.data()};
+$("loginBox").style.display="none";
+$("dashboard").style.display="block";
+$("welcome").textContent="Welcome "+(currentAgent.name||"Agent");
+$("agentId").textContent=currentAgent.uid;
+$("agentStatus").textContent=(currentAgent.status||"pending").toUpperCase();
 
- if(!currentAgent){out.textContent="पहले Agent Login करें";return;}
- if(!name || !/^[0-9]{10}$/.test(mobile) || !loanType || !Number.isFinite(amount) || amount<=0){
-  out.textContent="सभी जानकारी सही भरें। मोबाइल 10 अंक का होना चाहिए।";
-  return;
- }
+const fields=[
+["पूरा नाम",currentAgent.name],["पिता का नाम",currentAgent.fatherName],
+["मोबाइल",currentAgent.mobile],["WhatsApp",currentAgent.whatsapp],
+["Email",currentAgent.email],["पता",currentAgent.address],
+["शहर",currentAgent.city],["जिला",currentAgent.district],
+["PIN Code",currentAgent.pin],
+["Registration Date",currentAgent.createdAt?.toDate?.().toLocaleDateString("en-IN")||"-"]
+];
+$("myDetails").innerHTML="";
+fields.forEach(([label,value])=>{
+const p=document.createElement("p");
+const b=document.createElement("b");
+b.textContent=label+": ";
+p.append(b,document.createTextNode(value||"-"));
+$("myDetails").append(p);
+});
 
- out.textContent="Lead जमा हो रही है...";
- try{
-  await addDoc(collection(db,"leads"),{
-   agentUid:currentAgent.uid,
-   agentName:currentAgent.name||"",
-   agentMobile:currentAgent.mobile||"",
-   customerName:name,
-   mobile:mobile,
-address:document.getElementById("customerAddress").value.trim(),
-district:document.getElementById("customerDistrict").value.trim(),
-pin:document.getElementById("customerPin").value.trim(),
-   loanType:loanType,
-   loanAmount:amount,
-   status:"pending",
-   createdAt:serverTimestamp()
-  });
-  out.textContent="Customer Lead सफलतापूर्वक जमा हो गई!";
-  document.getElementById("customerName").value="";
-  document.getElementById("customerMobile").value="";
-  document.getElementById("loanType").value="";
-  document.getElementById("loanAmount").value="";
-  await loadLeads();
- }catch(e){
-  out.textContent="Lead Error: "+e.message;
- }
+if(currentAgent.status==="approved"){
+$("leadArea").style.display="block";
+await loadLeads();
+}else{
+$("leadArea").style.display="none";
+$("message").textContent="";
+const note=document.createElement("p");
+note.className="status";
+note.textContent=currentAgent.status==="rejected"
+?"आपकी Registration Reject हुई है। Admin से संपर्क करें।"
+:"आपकी Registration Admin Approval के लिए Pending है। Approval मिलने के बाद Customer Leads जमा कर सकेंगे।";
+$("myDetails").append(note);
+}
+}catch(e){
+$("message").textContent="Dashboard Error: "+e.message;
+}
+}
+
+$("addLeadBtn").onclick=async()=>{
+const name=$("customerName").value.trim();
+const mobile=$("customerMobile").value.trim();
+const loanType=$("loanType").value;
+const amount=Number($("loanAmount").value);
+const out=$("leadMessage");
+if(!currentAgent||currentAgent.status!=="approved"){
+out.textContent="Admin Approval जरूरी है।";return;
+}
+if(!name||!/^[0-9]{10}$/.test(mobile)||!loanType||!Number.isFinite(amount)||amount<=0){
+out.textContent="सभी जरूरी जानकारी सही भरें। मोबाइल 10 अंक का होना चाहिए।";return;
+}
+out.textContent="Lead जमा हो रही है...";
+$("addLeadBtn").disabled=true;
+try{
+await addDoc(collection(db,"leads"),{
+agentUid:currentAgent.uid,
+agentName:currentAgent.name||"",
+agentMobile:currentAgent.mobile||"",
+customerName:name,mobile,
+address:$("customerAddress").value.trim(),
+district:$("customerDistrict").value.trim(),
+pin:$("customerPin").value.trim(),
+loanType,loanAmount:amount,status:"pending",
+createdAt:serverTimestamp()
+});
+out.textContent="Customer Lead सफलतापूर्वक जमा हो गई!";
+["customerName","customerMobile","customerAddress","customerDistrict","customerPin","loanAmount"].forEach(id=>$(id).value="");
+$("loanType").value="";
+await loadLeads();
+}catch(e){out.textContent="Lead Error: "+e.message}
+$("addLeadBtn").disabled=false;
 };
 
 async function loadLeads(){
- if(!currentAgent)return;
- const area=document.getElementById("myLeads");
- area.textContent="Loading...";
- try{
-  const q=query(collection(db,"leads"),where("agentUid","==",currentAgent.uid));
-  const result=await getDocs(q);
-  area.innerHTML="";
-  if(result.empty){area.textContent="अभी कोई Customer Lead नहीं है।";return;}
-  result.forEach(item=>{
-   const d=item.data();
-   const card=document.createElement("div");
-   card.className="lead";
-   const title=document.createElement("b");
-   title.textContent=d.customerName||"-";
-   
-const details=document.createElement("div");
-details.innerHTML="";
-const fields=[
- ["Customer Mobile",d.mobile],
- ["Customer Address",d.address],
- ["District",d.district],
- ["PIN Code",d.pin],
- ["Loan Type",d.loanType],
- ["Loan Amount","₹"+(d.loanAmount||0)],
- ["Loan Status",d.status||"pending"]
-];
-fields.forEach(([label,value])=>{
- const p=document.createElement("p");
- const b=document.createElement("b");
- b.textContent=label+": ";
- p.append(b,document.createTextNode(value||"-"));
- details.appendChild(p);
+if(!currentAgent||currentAgent.status!=="approved")return;
+const area=$("myLeads");area.textContent="Loading...";
+try{
+const q=query(collection(db,"leads"),where("agentUid","==",currentAgent.uid));
+const result=await getDocs(q);
+area.innerHTML="";
+if(result.empty){area.textContent="अभी कोई Customer Lead नहीं है।";return}
+result.forEach(item=>{
+const d=item.data(),card=document.createElement("div");
+card.className="lead";
+const h=document.createElement("b");h.textContent=d.customerName||"-";
+card.append(h);
+[
+["Mobile",d.mobile],["Address",d.address],["District",d.district],
+["PIN",d.pin],["Loan Type",d.loanType],
+["Loan Amount","₹"+(d.loanAmount||0)],["Status",d.status||"pending"]
+].forEach(([k,v])=>{
+const p=document.createElement("p");p.textContent=k+": "+(v||"-");card.append(p);
 });
-
-   card.append(title,details);
-   area.appendChild(card);
-  });
- }catch(e){
-  area.textContent="Leads Error: "+e.message;
- }
+area.append(card);
+});
+}catch(e){area.textContent="Leads Error: "+e.message}
 }
-
-document.getElementById("refreshBtn").onclick=loadLeads;
-
-document.getElementById("logoutBtn").onclick=async()=>{
- await signOut(auth);
- currentAgent=null;
- dashboard.style.display="none";
- loginBox.style.display="block";
- message.textContent="Logout हो गया।";
-};
+$("refreshBtn").onclick=loadLeads;
+$("logoutBtn").onclick=async()=>{await signOut(auth)};
 </script>
 </body>
 </html>
