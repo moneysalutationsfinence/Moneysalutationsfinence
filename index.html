@@ -3,394 +3,615 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Money Solution Finance Services</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Money Solution Finance - Admin</title>
 <style>
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,sans-serif;background:#f1f5fb;color:#172033}
-
-/* MAIN HEADER */
-header{
-background:linear-gradient(120deg,#061b49,#0756a5,#00a6a6);
-color:white;padding:25px 12px;text-align:center;
-border-bottom:5px solid #f5bd32;
-}
-
-header h1{
-font-size:44px;
-font-weight:900;
-letter-spacing:2px;
-margin:0 0 15px;
-color:#ffdf55;
-text-shadow:2px 3px 6px #00152e;
-}
-
-header p{margin:7px;font-size:15px;font-weight:bold}
-header p:first-of-type{
-color:#ffdf55;font-size:17px;font-weight:900;
-text-shadow:1px 1px 3px #333;
-}
-
-/* NAVIGATION */
-nav{
-display:flex;align-items:center;gap:3px;
-background:white;position:sticky;top:0;z-index:100;
-box-shadow:0 3px 10px #0002;padding:4px;
-}
-nav>a{
-padding:11px 10px;color:#073b72;text-decoration:none;
-font-weight:bold;white-space:nowrap;font-size:14px;
-}
-nav>a:hover{background:#e7f2ff;border-radius:8px}
-
-/* THREE DOT MENU */
-.menu-box{position:relative;margin-left:auto;flex-shrink:0}
-.menu-dots{
-background:linear-gradient(135deg,#073b72,#0878d1);
-color:white;font-size:28px;font-weight:bold;border:0;
-border-radius:10px;padding:5px 16px;width:auto;cursor:pointer;
-}
-.menu-list{
-display:none;position:absolute;right:0;top:48px;width:255px;
-max-height:75vh;overflow-y:auto;background:white;
-box-shadow:0 8px 25px #0003;border-radius:14px;z-index:9999;
-}
-.menu-list a{
-display:block;padding:14px;color:#073b72;font-weight:bold;
-text-decoration:none;border-bottom:1px solid #eee;
-}
-.menu-list a:hover{background:#e7f2ff}
-.menu-box.open .menu-list{display:block}
-
-/* MAIN */
-main{max-width:1000px;margin:auto;padding:12px}
-
-  
-
-  
-
-
-.poster img{
-  display:block;
-  width:100%;
-  height:auto;
-  max-height:350px;
-  object-fit:contain;
-  margin:auto;
-}
-
-
-.
-
-
-
-/* CARDS */
-.card{
-background:white;padding:17px;border-radius:14px;margin:13px 0;
-box-shadow:0 3px 12px #00000012;
-}
-h2{color:#073b72;margin:0 0 14px;font-size:22px}
-p{line-height:1.5}
-
-/* SERVICE BOXES */
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.service{
-min-height:95px;display:flex;align-items:center;justify-content:center;
-text-align:center;padding:15px;border-radius:12px;color:white;
-font-weight:bold;font-size:16px;box-shadow:0 3px 8px #0002;
-text-decoration:none;cursor:pointer;transition:transform .2s,box-shadow .2s;
-}
-.service:hover{transform:translateY(-5px);box-shadow:0 7px 16px #0004}
-.service:active{transform:scale(.97)}
-
-.loan1{background:linear-gradient(135deg,#0878d1,#21a5ed)}
-.loan2{background:linear-gradient(135deg,#087f5b,#20b486)}
-.loan3{background:linear-gradient(135deg,#7540b8,#a36be0)}
-.loan4{background:linear-gradient(135deg,#d15b16,#f49a32)}
-.loan5{background:linear-gradient(135deg,#bd3158,#ed6685)}
-.loan6{background:linear-gradient(135deg,#176b91,#27a9bc)}
-.other1{background:linear-gradient(135deg,#075e9b,#249bd2)}
-.other2{background:linear-gradient(135deg,#18804b,#4ab978)}
-.other3{background:linear-gradient(135deg,#8b4aa8,#bd75cf)}
-.other4{background:linear-gradient(135deg,#bd6a12,#edaa38)}
-
-/* FORMS */
-input,select,textarea,button{
-width:100%;padding:12px;margin:6px 0;border:1px solid #ccd4df;
-border-radius:8px;font-size:16px
-}
-button{background:#0878d1;color:white;border:0;font-weight:bold;cursor:pointer}
-.agent-btn{
-display:block;background:linear-gradient(120deg,#0878d1,#13a5c7);
-color:white;text-align:center;text-decoration:none;padding:14px;
-margin:12px 0;border-radius:9px;font-size:17px;font-weight:bold
-}
-.small{font-size:13px;color:#596579}
-
-/* MOBILE */
+body{margin:0;padding:12px;background:#eef3f9;font-family:Arial,sans-serif;color:#172033}
+.wrap{max-width:1150px;margin:15px auto}
+.panel{background:white;padding:18px;border-radius:14px;box-shadow:0 3px 14px #0001;margin-bottom:14px}
+h1,h2{color:#123b70;margin-top:0}
+input,select,textarea,button{font:inherit;padding:11px;border:1px solid #cbd5e1;border-radius:8px;width:100%;margin:5px 0}
+button{background:#123b70;color:white;border:0;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5}
+.danger{background:#b42318}
+.secondary{background:#475569}
+.green{background:#168044}
+.orange{background:#b76b08}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tools{display:grid;grid-template-columns:2fr 1fr;gap:8px}
+.actions{display:flex;flex-wrap:wrap;gap:7px}
+.actions button{flex:1;min-width:120px}
+.item{border:1px solid #dbe3ed;border-radius:11px;padding:14px;margin:12px 0;background:#fbfdff;overflow-wrap:anywhere}
+.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 16px}
+.details p{margin:4px 0;line-height:1.45}
+.muted{color:#64748b;font-size:13px}
+#dashboard,#agentsSection,#partnersSection{display:none}
+.error{color:#b42318}
+.success{color:#168044}
+.login{max-width:430px;margin:7vh auto}
+dialog{border:0;border-radius:12px;max-width:560px;width:calc(100% - 24px);box-shadow:0 10px 40px #0004}
+dialog::backdrop{background:#0007}
+label{display:block;font-weight:bold;margin-top:8px}
+.badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#e4f3ff;color:#07518c;font-size:12px}
 @media(max-width:650px){
-header h1{font-size:32px}
-  header p:first-of-type{font-size:14px}
-nav>a{padding:11px 8px;font-size:13px}
-.grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.service{font-size:14px;min-height:85px}
-}
-@media(max-width:360px){
-.grid{grid-template-columns:1fr}
+.tabs{grid-template-columns:repeat(2,1fr)}
+.tools,.details{grid-template-columns:1fr}
+.panel{padding:13px}
+.wrap{margin:5px auto}
 }
 </style>
 </head>
-
 <body>
+<div class="wrap">
 
-<header>
-<h1>Money Solution Finance Services</h1>
-<p>DSA OFFICE • LOAN • INSURANCE • BANKING SERVICES</p>
-<p>Call: 8881850249</p>
-<p>WhatsApp: 9450933936</p>
-</header>
-
-<nav>
-<a href="#home">🏠 Home</a>
-<a href="#loans">💰 Loans</a>
-<a href="#inquiry">📝 Inquiry</a>
-
-<div class="menu-box" id="menuBox">
-<button type="button" class="menu-dots" id="menuDots">⋮</button>
-
-<div class="menu-list">
-<a href="#home">🏠 Home</a>
-<a href="#loans">💰 Loan Services</a>
-
-<a href="#inquiry" data-service="Personal Loan">Personal Loan</a>
-<a href="#inquiry" data-service="Business Loan">Business Loan</a>
-<a href="#inquiry" data-service="Home Loan">Home Loan</a>
-<a href="#inquiry" data-service="Loan Against Property">Loan Against Property</a>
-<a href="#inquiry" data-service="Vehicle Loan">Vehicle Loan</a>
-<a href="#inquiry" data-service="MSME Finance">MSME Finance</a>
-
-<a href="#other">Insurance &amp; Banking</a>
-<a href="#inquiry" data-service="Life &amp; General Insurance">Life &amp; General Insurance</a>
-<a href="#inquiry" data-service="Health Insurance">Health Insurance</a>
-<a href="#inquiry" data-service="Banking Services">Banking Services</a>
-<a href="#inquiry" data-service="Credit Card Inquiry">Credit Card Inquiry</a>
-
-<a href="#inquiry">📝 Customer Inquiry</a>
-<a href="#contact">📞 Contact Us</a>
-<a href="agent-login.html">👤 Agent Login</a>
-<a href="agent-login.html">🏦 DSA Login</a>
-<a href="agent-register.html">➕ Agent / DSA Registration</a>
-<a href="admin/">🔐 Admin Login</a>
-</div>
-</div>
-
-
-</nav>
-
-<main>
-
-<div class="poster">
-<img src="assets/Money%20Solution%20Finance%20Loan%20Services%20Poster%20(1).png" alt="Money Solution Finance Services Poster">
-</div>
-
-<section id="home" class="card">
-<h2>आपका स्वागत है</h2>
-<p>लोन, इंश्योरेंस और बैंकिंग सेवाओं के लिए अपनी जानकारी भेजें। हमारी टीम आपसे संपर्क करेगी।</p>
-<p class="small">सेवाएँ संबंधित बैंक/NBFC की पात्रता और स्वीकृति के अधीन हैं।</p>
-<a href="agent-register.html" class="agent-btn">Add Agent / एजेंट रजिस्ट्रेशन</a>
+<section class="panel login" id="loginBox">
+<h2>Money Solution Finance</h2>
+<h3>Admin Login</h3>
+<form id="loginForm">
+<input id="email" type="email" placeholder="Admin Email" required>
+<input id="password" type="password" placeholder="Password" required>
+<button type="submit">Login</button>
+</form>
+<p id="loginMsg" class="error"></p>
 </section>
 
-<section id="loans" class="card">
-<h2>Loan Services</h2>
-<div class="grid">
-<a href="#inquiry" class="service loan1" data-service="Personal Loan">Personal Loan</a>
-<a href="#inquiry" class="service loan2" data-service="Business Loan">Business Loan</a>
-<a href="#inquiry" class="service loan3" data-service="Home Loan">Home Loan</a>
-<a href="#inquiry" class="service loan4" data-service="Loan Against Property">Loan Against Property</a>
-<a href="#inquiry" class="service loan5" data-service="Vehicle Loan">Vehicle Loan</a>
-<a href="#inquiry" class="service loan6" data-service="MSME Finance">MSME Finance</a>
+<section id="dashboard">
+<div class="panel">
+<h1>Admin Dashboard</h1>
+<div class="tabs">
+<button id="inquiryTab">Customer Inquiries</button>
+<button id="agentTab">Agent Management</button>
+<button id="partnerTab">NBFC Partner Links</button>
+<button class="danger" id="logoutBtn">Logout</button>
 </div>
-</section>
-
-<section id="other" class="card">
-<h2>Other Financial Services</h2>
-<div class="grid">
-<a href="#inquiry" class="service other1" data-service="Life &amp; General Insurance">Life &amp; General Insurance</a>
-<a href="#inquiry" class="service other2" data-service="Health Insurance">Health Insurance</a>
-<a href="#inquiry" class="service other3" data-service="Banking Services">Banking Services</a>
-<a href="#inquiry" class="service other4" data-service="Credit Card Inquiry">Credit Card Inquiry</a>
 </div>
-</section>
 
-<section id="inquiry" class="card">
-<h2>Customer Inquiry Form</h2>
+<!-- CUSTOMER INQUIRIES -->
+<div class="panel" id="inquirySection">
+<h2>Customer Inquiries</h2>
+<button class="secondary" id="refreshBtn">Refresh Inquiries</button>
+<div class="tools">
+<input id="search" placeholder="नाम, मोबाइल, जिला या सेवा खोजें">
+<select id="statusFilter">
+<option value="">सभी Status</option>
+<option>New</option>
+<option>Contacted</option>
+<option>Follow-up</option>
+<option>Closed</option>
+</select>
+</div>
+<p id="count" class="muted"></p>
+<p id="listMsg" class="muted"></p>
+<div id="list"></div>
+</div>
 
-<a href="https://wa.me/919450933936" target="_blank"
-style="display:block;background:#168b45;color:white;padding:14px;text-align:center;text-decoration:none;border-radius:9px;font-weight:bold;margin:12px 0;">
-🟢 WhatsApp पर सीधे संपर्क करें
-</a>
+<!-- AGENTS -->
+<div class="panel" id="agentsSection">
+<h2>Registered Agents</h2>
+<button class="secondary" id="refreshAgents">Refresh Agents</button>
+<div class="tools">
+<input id="agentSearch" placeholder="Agent ID, नाम, मोबाइल, Email या जिला खोजें">
+<select id="agentStatus">
+<option value="">सभी Agents</option>
+<option value="pending">Pending</option>
+<option value="approved">Approved</option>
+<option value="rejected">Rejected</option>
+</select>
+</div>
+<p id="agentCount" class="muted"></p>
+<p id="agentMsg" class="muted"></p>
+<div id="agentList"></div>
+</div>
 
-<form id="inq">
-<input name="name" maxlength="80" placeholder="पूरा नाम" required>
-<input name="phone" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10 अंकों का मोबाइल नंबर" required>
-<input name="address" maxlength="250" placeholder="पूरा पता" required>
-<input name="district" maxlength="80" placeholder="जिला" required>
-<input name="pin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="6 अंकों का PIN Code" required>
+<!-- PARTNER LINKS -->
+<div class="panel" id="partnersSection">
+<h2>NBFC / Partner Links Management</h2>
+<p class="muted">कंपनी का नाम, कैटेगरी और Partner URL जोड़ें। चालू लिंक वेबसाइट पर दिखाए जा सकते हैं।</p>
 
-<select name="service" id="serviceSelect" required>
-<option value="">सेवा चुनें</option>
+<form id="partnerForm">
+<input type="hidden" id="partnerId">
+
+<label>कंपनी / Partner का नाम</label>
+<input id="partnerName" maxlength="100" placeholder="जैसे InCred" required>
+
+<label>Loan Category / सेवा</label>
+<select id="partnerCategory" required>
+<option value="">Category चुनें</option>
 <option>Personal Loan</option>
 <option>Business Loan</option>
 <option>Home Loan</option>
 <option>Loan Against Property</option>
 <option>Vehicle Loan</option>
 <option>MSME Finance</option>
-<option>Life &amp; General Insurance</option>
-<option>Health Insurance</option>
 <option>Banking Services</option>
-<option>Credit Card Inquiry</option>
-<option>Other</option>
+<option>General / Partner Platform</option>
 </select>
 
-<input name="loanAmount" type="number" min="0" placeholder="कितना Loan चाहिए? (₹)">
-<textarea name="message" maxlength="1000" placeholder="अतिरिक्त जानकारी"></textarea>
-<button id="sendBtn" type="submit">Inquiry भेजें</button>
+<label>Partner Website URL</label>
+<input id="partnerUrl" type="url" placeholder="https://example.com" required>
+
+<label>
+<input id="partnerEnabled" type="checkbox" checked style="width:auto">
+ वेबसाइट पर चालू रखें
+</label>
+
+<div class="actions">
+<button type="submit" id="partnerSave">Partner Link Save करें</button>
+<button type="button" class="secondary" id="partnerCancel">Clear / Cancel</button>
+</div>
+<p id="partnerMsg" class="muted"></p>
 </form>
 
-<p id="msg" role="status"></p>
-
-<a id="whatsappBtn" href="#" target="_blank"
-style="display:none;background:#168b45;color:white;padding:14px;text-align:center;text-decoration:none;border-radius:9px;font-weight:bold;margin:10px 0;">
-🟢 WhatsApp पर Inquiry भेजें
-</a>
-
-<p class="small">आपकी जानकारी केवल अधिकृत Admin टीम को दिखाई देगी।</p>
+<hr>
+<h3>आपके Partner Links</h3>
+<button class="secondary" id="refreshPartners">Refresh Partner Links</button>
+<p id="partnerCount" class="muted"></p>
+<div id="partnerList"></div>
+</div>
 </section>
+</div>
 
-<section id="contact" class="card">
-<h2>Contact Us</h2>
-<p>Call: <a href="tel:8881850249">8881850249</a></p>
-<p>WhatsApp: <a href="https://wa.me/919450933936">9450933936</a></p>
-<p>Email: <a href="mailto:mohammedsuhel669@gmail.com">mohammedsuhel669@gmail.com</a></p>
-<p>Address: आशियाना अपार्टमेंट, फ्लैट नंबर 502, घसियारी मंडी, लखनऊ, उत्तर प्रदेश</p>
-<p>PIN Code: 226001</p>
-</section>
+<!-- AGENT EDIT DIALOG -->
+<dialog id="agentDialog">
+<form id="agentForm">
+<h2>Agent Details Edit</h2>
+<input type="hidden" id="aUid">
+<label>नाम<input id="aName" required></label>
+<label>पिता का नाम<input id="aFather"></label>
+<label>पता<textarea id="aAddress"></textarea></label>
+<label>शहर<input id="aCity"></label>
+<label>जिला<input id="aDistrict"></label>
+<label>PIN<input id="aPin" maxlength="6"></label>
+<label>मोबाइल<input id="aMobile" maxlength="10"></label>
+<label>WhatsApp<input id="aWhatsapp" maxlength="10"></label>
+<div class="actions">
+<button type="submit">Save Changes</button>
+<button type="button" class="secondary" id="closeAgentDialog">Cancel</button>
+</div>
+<p id="agentEditMsg" class="error"></p>
+</form>
+</dialog>
 
-</main>
+<!-- INQUIRY EDIT DIALOG -->
+<dialog id="inquiryDialog">
+<form id="inquiryForm">
+<h2>Customer Inquiry Edit</h2>
+<input type="hidden" id="iUid">
+<label>Customer Name</label>
+<input id="iName" disabled>
+<label>Mobile</label>
+<input id="iPhone" disabled>
+<label>Status</label>
+<select id="iStatus">
+<option>New</option>
+<option>Contacted</option>
+<option>Follow-up</option>
+<option>Closed</option>
+</select>
+<label>Follow-up Date</label>
+<input id="iFollow" type="date">
+<label>Admin Notes</label>
+<textarea id="iNotes" maxlength="1000" placeholder="Follow-up की जानकारी"></textarea>
+<div class="actions">
+<button type="submit">Save Inquiry</button>
+<button type="button" class="secondary" id="closeInquiryDialog">Cancel</button>
+</div>
+<p id="inquiryEditMsg" class="error"></p>
+</form>
+</dialog>
 
-<footer style="background:#073b72;color:white;text-align:center;padding:16px">
-Money Solution Finance Services • DSA Office
-</footer>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-<script type="module">
-import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import {getFirestore,collection,addDoc,serverTimestamp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import {firebaseConfig} from './firebase-config-module.js';
-
-const app=initializeApp(firebaseConfig);
-const db=getFirestore(app);
-const form=document.getElementById('inq');
-const msg=document.getElementById('msg');
-const btn=document.getElementById('sendBtn');
-const serviceSelect=document.getElementById('serviceSelect');
-
-// तीन डॉट मेनू
-const menuBox=document.getElementById('menuBox');
-const menuDots=document.getElementById('menuDots');
-
-menuDots.addEventListener('click',()=>{
-menuBox.classList.toggle('open');
-});
-
-// मेनू से सेवा चुनना
-document.querySelectorAll('.menu-list a[data-service]').forEach(link=>{
-link.addEventListener('click',()=>{
-serviceSelect.value=link.getAttribute('data-service');
-menuBox.classList.remove('open');
-});
-});
-
-// बाहर क्लिक करने पर मेनू बंद
-document.addEventListener('click',e=>{
-if(!menuBox.contains(e.target)){
-menuBox.classList.remove('open');
-}
-});
-
-// रंगीन Service Box से Inquiry
-document.querySelectorAll('.service[data-service]').forEach(service=>{
-service.addEventListener('click',()=>{
-serviceSelect.value=service.getAttribute('data-service');
-});
-});
-
-form.addEventListener('submit',async e=>{
-e.preventDefault();
-
-const f=new FormData(form);
-const phone=String(f.get('phone')||'').trim();
-const pin=String(f.get('pin')||'').trim();
-
-if(!/^[0-9]{10}$/.test(phone)){
-msg.textContent='सही 10 अंकों का मोबाइल नंबर लिखें।';
-return;
-}
-if(!/^[0-9]{6}$/.test(pin)){
-msg.textContent='सही 6 अंकों का PIN Code लिखें।';
-return;
-}
-
-const data={
-name:String(f.get('name')).trim(),
-phone:phone,
-address:String(f.get('address')).trim(),
-district:String(f.get('district')).trim(),
-pin:pin,
-service:String(f.get('service')).trim(),
-loanAmount:String(f.get('loanAmount')||'').trim(),
-message:String(f.get('message')||'').trim(),
-createdAt:serverTimestamp(),
-status:'New'
+<script>
+const firebaseConfig={
+apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+authDomain:"money-salutations-fainence.firebaseapp.com",
+projectId:"money-salutations-fainence",
+storageBucket:"money-salutations-fainence.firebasestorage.app",
+messagingSenderId:"891890606664",
+appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
+measurementId:"G-HX6NBT529M"
 };
 
-btn.disabled=true;
-btn.textContent='भेजा जा रहा है...';
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(),db=firebase.firestore();
+const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+const $=id=>document.getElementById(id);
+let records=[],agents=[],partners=[];
 
+$("loginForm").onsubmit=async e=>{
+e.preventDefault();
+$("loginMsg").textContent="Login हो रहा है...";
 try{
-await addDoc(collection(db,'inquiries'),data);
-
-msg.textContent='धन्यवाद! आपकी Inquiry सफलतापूर्वक भेज दी गई है।';
-
-const whatsappText =
-'New Customer Inquiry - Money Solution Finance Services\n\n'+
-'Name: '+data.name+'\n'+
-'Mobile: '+data.phone+'\n'+
-'Address: '+data.address+'\n'+
-'District: '+data.district+'\n'+
-'PIN: '+data.pin+'\n'+
-'Service: '+data.service+'\n'+
-'Loan Amount: ₹'+data.loanAmount+'\n'+
-'Message: '+data.message;
-
-const whatsappBtn=document.getElementById('whatsappBtn');
-if(whatsappBtn){
-whatsappBtn.href='https://wa.me/919450933936?text='+encodeURIComponent(whatsappText);
-whatsappBtn.style.display='block';
+await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);
+}catch(err){
+$("loginMsg").textContent="Login नहीं हुआ: "+err.message;
 }
+};
 
-form.reset();
-
-}catch(error){
-console.error(error);
-msg.textContent='Inquiry नहीं भेजी जा सकी। कृपया दोबारा प्रयास करें।';
+auth.onAuthStateChanged(async user=>{
+if(user&&user.uid===ADMIN_UID){
+$("loginBox").style.display="none";
+$("dashboard").style.display="block";
+await loadData();
+await loadAgents();
+await seedDefaultPartners();
+await loadPartners();
+}else{
+$("dashboard").style.display="none";
+$("loginBox").style.display="block";
+if(user){
+await auth.signOut();
+$("loginMsg").textContent="यह Account Admin नहीं है।";
 }
-
-btn.disabled=false;
-btn.textContent='Inquiry भेजें';
+}
 });
-</script>
 
+$("logoutBtn").onclick=()=>auth.signOut();
+
+function showSection(name){
+["inquirySection","agentsSection","partnersSection"].forEach(id=>{
+$(id).style.display=id===name?"block":"none";
+});
+}
+$("inquiryTab").onclick=()=>showSection("inquirySection");
+$("agentTab").onclick=()=>{showSection("agentsSection");loadAgents();};
+$("partnerTab").onclick=()=>{showSection("partnersSection");loadPartners();};
+
+$("refreshBtn").onclick=loadData;
+$("refreshAgents").onclick=loadAgents;
+$("refreshPartners").onclick=loadPartners;
+$("search").oninput=renderInquiries;
+$("statusFilter").onchange=renderInquiries;
+$("agentSearch").oninput=renderAgents;
+$("agentStatus").onchange=renderAgents;
+
+function dateText(v){
+if(!v)return "-";
+return v.toDate?v.toDate().toLocaleString("en-IN"):String(v);
+}
+
+/* CUSTOMER INQUIRIES */
+async function loadData(){
+$("listMsg").textContent="Inquiries लोड हो रही हैं...";
+try{
+const snap=await db.collection("inquiries").get();
+records=snap.docs.map(x=>({id:x.id,...x.data()}));
+records.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
+$("listMsg").textContent="";
+renderInquiries();
+}catch(e){
+$("listMsg").textContent="डेटा नहीं खुला: "+e.message;
+}
+}
+
+function renderInquiries(){
+const q=$("search").value.trim().toLowerCase();
+const st=$("statusFilter").value;
+const arr=records.filter(d=>{
+const s=[d.name,d.fullName,d.phone,d.mobile,d.address,d.district,d.pin,d.service,d.loanType,d.message].join(" ").toLowerCase();
+return (!q||s.includes(q))&&(!st||(d.status||"New")===st);
+});
+$("count").textContent="कुल "+arr.length+" Inquiry";
+$("list").innerHTML="";
+if(!arr.length){$("list").textContent="कोई Inquiry नहीं मिली।";return;}
+
+arr.forEach(d=>{
+const card=document.createElement("article");
+card.className="item";
+const h=document.createElement("h3");
+h.textContent=(d.name||d.fullName||"Customer")+" — "+(d.phone||d.mobile||"-");
+const info=document.createElement("div");
+info.className="details";
+[
+["सेवा",d.service||d.loanType],
+["Loan Amount",d.loanAmount||d.amount],
+["पता",d.address],["जिला",d.district],["PIN",d.pin],
+["Message",d.message],["Date",dateText(d.createdAt)],
+["Status",d.status||"New"],["Follow-up",d.followUpDate],
+["Admin Notes",d.adminNotes]
+].forEach(([k,v])=>{
+const p=document.createElement("p");
+p.textContent=k+": "+(v||"-");
+info.append(p);
+});
+const actions=document.createElement("div");
+actions.className="actions";
+const edit=document.createElement("button");
+edit.textContent="Edit / Follow-up";
+edit.onclick=()=>openInquiryEdit(d);
+const del=document.createElement("button");
+del.className="danger";
+del.textContent="Delete Inquiry";
+del.onclick=async()=>{
+if(confirm("Inquiry Delete करें?")){
+try{await db.collection("inquiries").doc(d.id).delete();await loadData();}
+catch(e){alert(e.message);}
+}
+};
+actions.append(edit,del);
+card.append(h,info,actions);
+$("list").append(card);
+});
+}
+
+function openInquiryEdit(d){
+$("iUid").value=d.id;
+$("iName").value=d.name||d.fullName||"";
+$("iPhone").value=d.phone||d.mobile||"";
+$("iStatus").value=d.status||"New";
+$("iFollow").value=d.followUpDate||"";
+$("iNotes").value=d.adminNotes||"";
+$("inquiryEditMsg").textContent="";
+$("inquiryDialog").showModal();
+}
+$("closeInquiryDialog").onclick=()=>$("inquiryDialog").close();
+
+$("inquiryForm").onsubmit=async e=>{
+e.preventDefault();
+try{
+await db.collection("inquiries").doc($("iUid").value).update({
+status:$("iStatus").value,
+followUpDate:$("iFollow").value,
+adminNotes:$("iNotes").value.trim(),
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+$("inquiryDialog").close();
+await loadData();
+}catch(err){$("inquiryEditMsg").textContent="Save नहीं हुआ: "+err.message;}
+};
+
+/* AGENT MANAGEMENT */
+async function loadAgents(){
+$("agentMsg").textContent="Agents लोड हो रहे हैं...";
+try{
+const snap=await db.collection("agents").get();
+agents=snap.docs.map(x=>({id:x.id,...x.data()}));
+agents.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
+$("agentMsg").textContent="";
+renderAgents();
+}catch(e){$("agentMsg").textContent="Agents नहीं खुले: "+e.message;}
+}
+
+function makeAgentPrefix(name){
+const words=String(name||"").trim().toUpperCase().split(/\s+/).filter(Boolean);
+let prefix=words.length>=2?words[0].charAt(0)+words[1].charAt(0):words[0]?.replace(/[^A-Z]/g,"").slice(0,2);
+prefix=(prefix||"").replace(/[^A-Z]/g,"");
+return prefix.length===2?prefix:"MS";
+}
+
+async function issueAgentId(id,status="approved"){
+const agentRef=db.collection("agents").doc(id);
+const counterRef=db.collection("counters").doc("agentSerial");
+return await db.runTransaction(async transaction=>{
+const agentSnap=await transaction.get(agentRef);
+if(!agentSnap.exists)throw new Error("Agent Profile नहीं मिला।");
+const agent=agentSnap.data();
+if(status==="approved"&&agent.agentId){
+transaction.update(agentRef,{status:"approved",updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+return agent.agentId;
+}
+if(status!=="approved"){
+transaction.update(agentRef,{status:status,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+return null;
+}
+const counterSnap=await transaction.get(counterRef);
+const lastNumber=counterSnap.exists?Number(counterSnap.data().lastNumber||0):0;
+const nextNumber=lastNumber+1;
+const agentId=makeAgentPrefix(agent.name)+"-"+String(nextNumber).padStart(3,"0");
+transaction.set(counterRef,{lastNumber:nextNumber,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+transaction.update(agentRef,{agentId:agentId,status:"approved",updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+return agentId;
+});
+}
+
+function renderAgents(){
+const q=$("agentSearch").value.trim().toLowerCase();
+const st=$("agentStatus").value;
+const arr=agents.filter(a=>{
+const s=[a.agentId,a.name,a.mobile,a.email,a.district,a.city,a.uid].join(" ").toLowerCase();
+return (!q||s.includes(q))&&(!st||a.status===st);
+});
+$("agentCount").textContent="कुल "+arr.length+" Agents";
+$("agentList").innerHTML="";
+if(!arr.length){$("agentList").textContent="कोई Agent नहीं मिला।";return;}
+arr.forEach(a=>{
+const card=document.createElement("article");card.className="item";
+const h=document.createElement("h3");h.textContent=(a.name||"Agent")+" ("+(a.status||"pending")+")";
+const info=document.createElement("div");info.className="details";
+[
+["Agent ID",a.agentId||"अभी जारी नहीं हुई"],["पिता का नाम",a.fatherName],
+["मोबाइल",a.mobile],["WhatsApp",a.whatsapp],["Email",a.email],
+["पता",a.address],["शहर",a.city],["जिला",a.district],
+["PIN",a.pin],["Registration",dateText(a.createdAt)]
+].forEach(([k,v])=>{const p=document.createElement("p");p.textContent=k+": "+(v||"-");info.append(p);});
+const actions=document.createElement("div");actions.className="actions";
+const approve=document.createElement("button");approve.className="green";approve.textContent="Approve और ID जारी करें";approve.onclick=()=>changeAgentStatus(a.id,"approved");
+const reject=document.createElement("button");reject.className="secondary";reject.textContent="Reject";reject.onclick=()=>changeAgentStatus(a.id,"rejected");
+const edit=document.createElement("button");edit.textContent="Edit";edit.onclick=()=>openAgentEdit(a);
+const del=document.createElement("button");del.className="danger";del.textContent="Delete Profile";del.onclick=()=>deleteAgent(a.id);
+actions.append(approve,reject,edit,del);
+if(a.status==="approved"&&!a.agentId){
+const issue=document.createElement("button");issue.className="orange";issue.textContent="Generate Agent ID";issue.onclick=()=>changeAgentStatus(a.id,"approved");actions.append(issue);
+}
+card.append(h,info,actions);$("agentList").append(card);
+});
+}
+
+async function changeAgentStatus(id,status){
+const msg=status==="approved"?"Agent को Approve करके नई Agent ID जारी करना चाहते हैं?":"Agent Status "+status+" करना चाहते हैं?";
+if(!confirm(msg))return;
+try{
+const agentId=await issueAgentId(id,status);
+if(agentId)alert("Agent Approved!\nAgent ID: "+agentId);
+await loadAgents();
+}catch(e){alert("Status update नहीं हुआ: "+e.message);}
+}
+
+function openAgentEdit(a){
+$("aUid").value=a.id;$("aName").value=a.name||"";
+$("aFather").value=a.fatherName||"";$("aAddress").value=a.address||"";
+$("aCity").value=a.city||"";$("aDistrict").value=a.district||"";
+$("aPin").value=a.pin||"";$("aMobile").value=a.mobile||"";
+$("aWhatsapp").value=a.whatsapp||"";$("agentEditMsg").textContent="";
+$("agentDialog").showModal();
+}
+$("closeAgentDialog").onclick=()=>$("agentDialog").close();
+$("agentForm").onsubmit=async e=>{
+e.preventDefault();
+try{
+await db.collection("agents").doc($("aUid").value).update({
+name:$("aName").value.trim(),fatherName:$("aFather").value.trim(),
+address:$("aAddress").value.trim(),city:$("aCity").value.trim(),
+district:$("aDistrict").value.trim(),pin:$("aPin").value.trim(),
+mobile:$("aMobile").value.trim(),whatsapp:$("aWhatsapp").value.trim(),
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+$("agentDialog").close();await loadAgents();
+}catch(err){$("agentEditMsg").textContent="Save नहीं हुआ: "+err.message;}
+};
+
+async function deleteAgent(id){
+if(!confirm("Agent Profile Firestore से Delete होगा। Authentication Account अपने आप Delete नहीं होगा। जारी रखें?"))return;
+try{await db.collection("agents").doc(id).delete();await loadAgents();}
+catch(e){alert("Delete नहीं हुआ: "+e.message);}
+}
+
+/* DEFAULT PARTNER LINKS */
+const defaultPartners=[
+{name:"Dhanmudra Capital Advisor",category:"General / Partner Platform",url:"https://dhanmudracapitaladvisor.com/register?ref=DM9P4PC4"},
+{name:"Aditya Birla Platform",category:"Banking Services",url:"https://adityabirla-platform.finbox.in/signin-mobile"},
+{name:"Moneycontrol Pay",category:"General / Partner Platform",url:"https://www.moneycontrolpay.com/?utm_source=KMS&utm_campaign=AM_M_Solu_13"},
+{name:"InCred",category:"Personal Loan",url:"https://pl.incred.com/open-market-sales/registration"}
+];
+
+async function seedDefaultPartners(){
+try{
+const snap=await db.collection("partnerLinks").limit(1).get();
+if(!snap.empty)return;
+for(const p of defaultPartners){
+await db.collection("partnerLinks").add({
+...p,enabled:true,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+}
+}catch(e){
+console.error("Default partner links seed:",e);
+}
+}
+
+/* PARTNER LINK MANAGEMENT */
+async function loadPartners(){
+$("partnerMsg").textContent="Partner Links लोड हो रहे हैं...";
+try{
+const snap=await db.collection("partnerLinks").get();
+partners=snap.docs.map(x=>({id:x.id,...x.data()}));
+partners.sort((a,b)=>(a.name||"").localeCompare(b.name||""));
+$("partnerMsg").textContent="";
+renderPartners();
+}catch(e){
+$("partnerMsg").textContent="Partner Links नहीं खुले: "+e.message;
+}
+}
+
+function renderPartners(){
+$("partnerCount").textContent="कुल "+partners.length+" Partner Links";
+$("partnerList").innerHTML="";
+if(!partners.length){$("partnerList").textContent="अभी कोई Partner Link नहीं है।";return;}
+partners.forEach(p=>{
+const card=document.createElement("article");card.className="item";
+const h=document.createElement("h3");h.textContent=p.name||"Partner";
+const cat=document.createElement("p");cat.textContent="Category: "+(p.category||"-");
+const status=document.createElement("span");status.className="badge";
+status.textContent=p.enabled?"चालू":"बंद";
+const link=document.createElement("p");
+const a=document.createElement("a");
+a.href=p.url;a.target="_blank";a.rel="noopener noreferrer";
+a.textContent="Partner Website खोलें";
+link.append(a);
+const actions=document.createElement("div");actions.className="actions";
+const edit=document.createElement("button");edit.textContent="Edit";edit.onclick=()=>editPartner(p);
+const toggle=document.createElement("button");toggle.className="orange";
+toggle.textContent=p.enabled?"बंद करें":"चालू करें";
+toggle.onclick=()=>togglePartner(p);
+const del=document.createElement("button");del.className="danger";del.textContent="Delete";
+del.onclick=()=>deletePartner(p.id);
+actions.append(edit,toggle,del);
+card.append(h,cat,status,link,actions);
+$("partnerList").append(card);
+});
+}
+
+function editPartner(p){
+$("partnerId").value=p.id;
+$("partnerName").value=p.name||"";
+$("partnerCategory").value=p.category||"General / Partner Platform";
+$("partnerUrl").value=p.url||"";
+$("partnerEnabled").checked=p.enabled!==false;
+$("partnerSave").textContent="Partner Changes Save करें";
+window.scrollTo({top:$("partnersSection").offsetTop,behavior:"smooth"});
+}
+
+$("partnerCancel").onclick=()=>{
+$("partnerForm").reset();
+$("partnerId").value="";
+$("partnerEnabled").checked=true;
+$("partnerSave").textContent="Partner Link Save करें";
+$("partnerMsg").textContent="";
+};
+
+$("partnerForm").onsubmit=async e=>{
+e.preventDefault();
+const id=$("partnerId").value;
+const name=$("partnerName").value.trim();
+const category=$("partnerCategory").value;
+const url=$("partnerUrl").value.trim();
+let parsed;
+try{parsed=new URL(url);}catch(e){$("partnerMsg").textContent="सही URL लिखें।";return;}
+if(parsed.protocol!=="https:"){
+$("partnerMsg").textContent="सुरक्षा के लिए HTTPS लिंक ही स्वीकार होगा।";return;
+}
+const data={
+name,category,url,
+enabled:$("partnerEnabled").checked,
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+};
+try{
+if(id){
+await db.collection("partnerLinks").doc(id).update(data);
+}else{
+data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+await db.collection("partnerLinks").add(data);
+}
+$("partnerForm").reset();
+$("partnerId").value="";
+$("partnerEnabled").checked=true;
+$("partnerSave").textContent="Partner Link Save करें";
+$("partnerMsg").textContent="Partner Link सफलतापूर्वक Save हो गया।";
+await loadPartners();
+}catch(err){$("partnerMsg").textContent="Save नहीं हुआ: "+err.message;}
+};
+
+async function togglePartner(p){
+try{
+await db.collection("partnerLinks").doc(p.id).update({
+enabled:!p.enabled,
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+await loadPartners();
+}catch(e){alert("बदलाव नहीं हुआ: "+e.message);}
+}
+
+async function deletePartner(id){
+if(!confirm("यह Partner Link Delete करना चाहते हैं?"))return;
+try{
+await db.collection("partnerLinks").doc(id).delete();
+await loadPartners();
+}catch(e){alert("Delete नहीं हुआ: "+e.message);}
+}
+</script>
 </body>
 </html>
