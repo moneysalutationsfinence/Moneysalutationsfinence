@@ -4,44 +4,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Money Solution Finance - Admin</title>
+<title>Money Solution Finance Admin</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;padding:14px;background:#eef3f9;font-family:Arial;color:#172033}
 .wrap{max-width:1100px;margin:18px auto}
 .panel{background:white;padding:18px;border-radius:14px;box-shadow:0 3px 14px #0001;margin-bottom:14px}
-h1,h2{color:#123b70;margin-top:0}
-.login{max-width:430px;margin:7vh auto}
+h1,h2,h3{color:#123b70;margin-top:0}
 input,select,textarea,button{font:inherit;padding:11px;border:1px solid #cbd5e1;border-radius:8px;width:100%;margin:5px 0}
 button{background:#123b70;color:white;border:0;font-weight:bold;cursor:pointer}
 button:disabled{opacity:.5}
-.danger{background:#b42318}
-.secondary{background:#475569}
-.green{background:#168044}
-.orange{background:#b76b08}
-.tabs,.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.danger{background:#b42318}.secondary{background:#475569}
+.green{background:#168044}.orange{background:#b76b08}
+.tabs,.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .tools{display:grid;grid-template-columns:2fr 1fr;gap:8px}
 .item{border:1px solid #dbe3ed;border-radius:11px;padding:14px;margin:12px 0;background:#fbfdff;overflow-wrap:anywhere}
 .details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 16px}
 .details p{margin:4px 0;line-height:1.45}
 .muted{color:#64748b;font-size:13px}
 #dashboard{display:none}
-.error{color:#b42318}
-.success{color:#168044}
+.error{color:#b42318}.success{color:#168044}
 dialog{border:0;border-radius:12px;max-width:560px;width:calc(100% - 24px);box-shadow:0 10px 40px #0004}
 dialog::backdrop{background:#0007}
-#agentsSection{display:none}
+.section{display:none}.section.active{display:block}
+.url{word-break:break-all}
 @media(max-width:650px){
 .tabs,.actions,.tools,.details{grid-template-columns:1fr}
-.panel{padding:13px}
-.wrap{margin:5px auto}
+.panel{padding:13px}.wrap{margin:5px auto}
 }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-<section class="panel login" id="loginBox">
+<section class="panel" id="loginBox">
 <h2>Money Solution Finance</h2>
 <h3>Admin Login</h3>
 <form id="loginForm">
@@ -56,23 +52,22 @@ dialog::backdrop{background:#0007}
 <div class="panel">
 <h1>Admin Dashboard</h1>
 <div class="tabs">
-<button id="inquiryTab">Customer Inquiries</button>
-<button id="agentTab">Agent Management</button>
+<button data-section="inquirySection">Customer Inquiries</button>
+<button data-section="agentsSection">Agent Management</button>
+<button data-section="partnersSection">NBFC Partner Links</button>
 <button class="danger" id="logoutBtn">Logout</button>
 </div>
 </div>
 
-<div class="panel" id="inquirySection">
+<div class="panel section active" id="inquirySection">
 <h2>Customer Inquiries</h2>
-<button class="secondary" id="refreshBtn">Refresh Inquiries</button>
+<button class="secondary" id="refreshBtn">Refresh</button>
 <div class="tools">
 <input id="search" placeholder="नाम, मोबाइल, जिला या सेवा खोजें">
 <select id="statusFilter">
 <option value="">सभी Status</option>
-<option>New</option>
-<option>Contacted</option>
-<option>Follow-up</option>
-<option>Closed</option>
+<option>New</option><option>Contacted</option>
+<option>Follow-up</option><option>Closed</option>
 </select>
 </div>
 <p id="count" class="muted"></p>
@@ -80,7 +75,7 @@ dialog::backdrop{background:#0007}
 <div id="list"></div>
 </div>
 
-<div class="panel" id="agentsSection">
+<div class="panel section" id="agentsSection">
 <h2>Registered Agents</h2>
 <button class="secondary" id="refreshAgents">Refresh Agents</button>
 <div class="tools">
@@ -96,8 +91,50 @@ dialog::backdrop{background:#0007}
 <p id="agentMsg" class="muted"></p>
 <div id="agentList"></div>
 </div>
+
+<div class="panel section" id="partnersSection">
+<h2>NBFC Partner Links</h2>
+<p class="muted">Enabled लिंक ग्राहक वेबसाइट पर दिखाए जा सकते हैं।</p>
+<form id="partnerForm">
+<input type="hidden" id="partnerId">
+<input id="partnerName" placeholder="Partner का नाम" required>
+<select id="partnerCategory">
+<option>Personal Loan</option>
+<option>Business Loan</option>
+<option>Home Loan</option>
+<option>Banking Services</option>
+<option>General / Partner Platform</option>
+<option>Other</option>
+</select>
+<input id="partnerUrl" type="url" placeholder="https://..." required>
+<label><input id="partnerEnabled" type="checkbox" checked style="width:auto"> Enabled</label>
+<button id="partnerSave" type="submit">Partner Link Save करें</button>
+<button type="button" class="secondary" id="partnerCancel" style="display:none">Edit Cancel</button>
+</form>
+<p id="partnerMsg" class="muted"></p>
+<button class="secondary" id="refreshPartners">Refresh Links</button>
+<div id="partnerList"></div>
+</div>
 </section>
 </div>
+
+<dialog id="inquiryDialog">
+<form id="inquiryForm">
+<h2>Inquiry Edit / Follow-up</h2>
+<input type="hidden" id="iId">
+<label>Status
+<select id="iStatus">
+<option>New</option><option>Contacted</option>
+<option>Follow-up</option><option>Closed</option>
+</select>
+</label>
+<label>Follow-up Date<input type="date" id="iFollow"></label>
+<label>Admin Notes<textarea id="iNotes"></textarea></label>
+<button type="submit">Save</button>
+<button type="button" class="secondary" id="closeInquiry">Cancel</button>
+<p id="iMsg" class="error"></p>
+</form>
+</dialog>
 
 <dialog id="agentDialog">
 <form id="agentForm">
@@ -111,10 +148,8 @@ dialog::backdrop{background:#0007}
 <label>PIN<input id="aPin" maxlength="6"></label>
 <label>मोबाइल<input id="aMobile" maxlength="10"></label>
 <label>WhatsApp<input id="aWhatsapp" maxlength="10"></label>
-<div class="actions">
 <button type="submit">Save Changes</button>
 <button type="button" class="secondary" id="closeAgentDialog">Cancel</button>
-</div>
 <p id="agentEditMsg" class="error"></p>
 </form>
 </dialog>
@@ -135,18 +170,18 @@ measurementId:"G-HX6NBT529M"
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth(),db=firebase.firestore();
+const auth=firebase.auth();
+const db=firebase.firestore();
 const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
 const $=id=>document.getElementById(id);
-let records=[],agents=[];
+let inquiries=[],agents=[],partners=[];
 
 $("loginForm").onsubmit=async e=>{
 e.preventDefault();
 $("loginMsg").textContent="Login हो रहा है...";
 try{
 await auth.signInWithEmailAndPassword(
-$("email").value.trim(),
-$("password").value
+$("email").value.trim(),$("password").value
 );
 }catch(err){
 $("loginMsg").textContent="Login नहीं हुआ: "+err.message;
@@ -157,8 +192,7 @@ auth.onAuthStateChanged(async user=>{
 if(user&&user.uid===ADMIN_UID){
 $("loginBox").style.display="none";
 $("dashboard").style.display="block";
-await loadData();
-await loadAgents();
+await Promise.all([loadInquiries(),loadAgents(),loadPartners()]);
 }else{
 $("dashboard").style.display="none";
 $("loginBox").style.display="block";
@@ -171,19 +205,16 @@ $("loginMsg").textContent="यह Account Admin नहीं है।";
 
 $("logoutBtn").onclick=()=>auth.signOut();
 
-$("inquiryTab").onclick=()=>{
-$("inquirySection").style.display="block";
-$("agentsSection").style.display="none";
+document.querySelectorAll("[data-section]").forEach(b=>{
+b.onclick=()=>{
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+$(b.dataset.section).classList.add("active");
 };
+});
 
-$("agentTab").onclick=()=>{
-$("inquirySection").style.display="none";
-$("agentsSection").style.display="block";
-loadAgents();
-};
-
-$("refreshBtn").onclick=loadData;
+$("refreshBtn").onclick=loadInquiries;
 $("refreshAgents").onclick=loadAgents;
+$("refreshPartners").onclick=loadPartners;
 $("search").oninput=renderInquiries;
 $("statusFilter").onchange=renderInquiries;
 $("agentSearch").oninput=renderAgents;
@@ -194,15 +225,13 @@ if(!v)return "-";
 return v.toDate?v.toDate().toLocaleString("en-IN"):String(v);
 }
 
-async function loadData(){
+// CUSTOMER INQUIRIES
+async function loadInquiries(){
 $("listMsg").textContent="Inquiries लोड हो रही हैं...";
 try{
 const snap=await db.collection("inquiries").get();
-records=snap.docs.map(x=>({id:x.id,...x.data()}));
-records.sort((a,b)=>
-(b.createdAt?.toMillis?.()||0)-
-(a.createdAt?.toMillis?.()||0)
-);
+inquiries=snap.docs.map(d=>({id:d.id,...d.data()}));
+inquiries.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
 $("listMsg").textContent="";
 renderInquiries();
 }catch(e){
@@ -213,74 +242,93 @@ $("listMsg").textContent="डेटा नहीं खुला: "+e.message;
 function renderInquiries(){
 const q=$("search").value.trim().toLowerCase();
 const st=$("statusFilter").value;
-const arr=records.filter(d=>{
-const s=[
-d.name,d.fullName,d.phone,d.mobile,d.address,d.district,
-d.pin,d.service,d.loanType,d.message
-].join(" ").toLowerCase();
+const arr=inquiries.filter(d=>{
+const s=[d.name,d.fullName,d.phone,d.mobile,d.address,d.district,d.pin,d.service,d.loanType,d.message].join(" ").toLowerCase();
 return (!q||s.includes(q))&&(!st||(d.status||"New")===st);
 });
-
 $("count").textContent="कुल "+arr.length+" Inquiry";
 $("list").innerHTML="";
-
 if(!arr.length){
 $("list").textContent="कोई Inquiry नहीं मिली।";
 return;
 }
-
 arr.forEach(d=>{
 const card=document.createElement("article");
 card.className="item";
-
 const h=document.createElement("h3");
 h.textContent=(d.name||d.fullName||"Customer")+" — "+(d.phone||d.mobile||"-");
-
 const info=document.createElement("div");
 info.className="details";
-
 [
 ["सेवा",d.service||d.loanType],
 ["Loan Amount",d.loanAmount||d.amount],
-["पता",d.address],
-["जिला",d.district],
-["PIN",d.pin],
-["Message",d.message],
+["पता",d.address],["जिला",d.district],
+["PIN",d.pin],["Message",d.message],
 ["Date",dateText(d.createdAt)],
 ["Status",d.status||"New"],
-["Follow-up",d.followUpDate]
+["Follow-up",d.followUpDate],
+["Notes",d.adminNotes]
 ].forEach(([k,v])=>{
 const p=document.createElement("p");
 p.textContent=k+": "+(v||"-");
 info.append(p);
 });
-
+const acts=document.createElement("div");
+acts.className="actions";
+const edit=document.createElement("button");
+edit.textContent="Edit / Follow-up";
+edit.onclick=()=>openInquiryEdit(d);
 const del=document.createElement("button");
 del.className="danger";
-del.textContent="Delete Inquiry";
+del.textContent="Delete";
 del.onclick=async()=>{
 if(confirm("Inquiry Delete करें?")){
 try{
 await db.collection("inquiries").doc(d.id).delete();
-await loadData();
+await loadInquiries();
 }catch(e){alert(e.message);}
 }
 };
-
-card.append(h,info,del);
+acts.append(edit,del);
+card.append(h,info,acts);
 $("list").append(card);
 });
 }
 
+function openInquiryEdit(d){
+$("iId").value=d.id;
+$("iStatus").value=d.status||"New";
+$("iFollow").value=d.followUpDate||"";
+$("iNotes").value=d.adminNotes||"";
+$("iMsg").textContent="";
+$("inquiryDialog").showModal();
+}
+
+$("closeInquiry").onclick=()=>$("inquiryDialog").close();
+
+$("inquiryForm").onsubmit=async e=>{
+e.preventDefault();
+try{
+await db.collection("inquiries").doc($("iId").value).update({
+status:$("iStatus").value,
+followUpDate:$("iFollow").value,
+adminNotes:$("iNotes").value.trim(),
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+$("inquiryDialog").close();
+await loadInquiries();
+}catch(err){
+$("iMsg").textContent="Save नहीं हुआ: "+err.message;
+}
+};
+
+// AGENT MANAGEMENT
 async function loadAgents(){
 $("agentMsg").textContent="Agents लोड हो रहे हैं...";
 try{
 const snap=await db.collection("agents").get();
-agents=snap.docs.map(x=>({id:x.id,...x.data()}));
-agents.sort((a,b)=>
-(b.createdAt?.toMillis?.()||0)-
-(a.createdAt?.toMillis?.()||0)
-);
+agents=snap.docs.map(d=>({id:d.id,...d.data()}));
+agents.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
 $("agentMsg").textContent="";
 renderAgents();
 }catch(e){
@@ -288,75 +336,32 @@ $("agentMsg").textContent="Agents नहीं खुले: "+e.message;
 }
 }
 
-/* नाम से Agent ID का शुरुआती अक्षर */
-function makeAgentPrefix(name){
-const words=String(name||"")
-.trim()
-.toUpperCase()
-.split(/\s+/)
-.filter(Boolean);
-
-let prefix="";
-
-if(words.length>=2){
-prefix=words[0].charAt(0)+words[1].charAt(0);
-}else if(words.length===1){
-prefix=words[0].replace(/[^A-Z]/g,"").slice(0,2);
+function makePrefix(name){
+const words=String(name||"").trim().toUpperCase().split(/\s+/).filter(Boolean);
+const p=words.length>=2?words[0][0]+words[1][0]:(words[0]||"").replace(/[^A-Z]/g,"").slice(0,2);
+return /^[A-Z]{2}$/.test(p)?p:"MS";
 }
 
-prefix=prefix.replace(/[^A-Z]/g,"");
-return prefix.length===2?prefix:"MS";
-}
-
-/* Transaction से क्रमवार और यूनिक Agent ID */
-async function issueAgentId(id,status="approved"){
+async function issueAgentId(id,status){
 const agentRef=db.collection("agents").doc(id);
 const counterRef=db.collection("counters").doc("agentSerial");
-
-return await db.runTransaction(async transaction=>{
-const agentSnap=await transaction.get(agentRef);
-
-if(!agentSnap.exists){
-throw new Error("Agent Profile नहीं मिला।");
-}
-
-const agent=agentSnap.data();
-
-if(status==="approved"&&agent.agentId){
-transaction.update(agentRef,{
-status:"approved",
-updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-});
-return agent.agentId;
-}
-
+return db.runTransaction(async t=>{
+const a=await t.get(agentRef);
+if(!a.exists)throw Error("Agent Profile नहीं मिला");
+const data=a.data();
 if(status!=="approved"){
-transaction.update(agentRef,{
-status:status,
-updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-});
+t.update(agentRef,{status,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
 return null;
 }
-
-const counterSnap=await transaction.get(counterRef);
-const lastNumber=counterSnap.exists?
-Number(counterSnap.data().lastNumber||0):0;
-
-const nextNumber=lastNumber+1;
-const serial=String(nextNumber).padStart(3,"0");
-const agentId=makeAgentPrefix(agent.name)+"-"+serial;
-
-transaction.set(counterRef,{
-lastNumber:nextNumber,
-updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-},{merge:true});
-
-transaction.update(agentRef,{
-agentId:agentId,
-status:"approved",
-updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-});
-
+if(data.agentId){
+t.update(agentRef,{status:"approved",updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+return data.agentId;
+}
+const c=await t.get(counterRef);
+const n=(c.exists?Number(c.data().lastNumber||0):0)+1;
+const agentId=makePrefix(data.name)+"-"+String(n).padStart(3,"0");
+t.set(counterRef,{lastNumber:n,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+t.update(agentRef,{agentId,status:"approved",updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
 return agentId;
 });
 }
@@ -364,104 +369,65 @@ return agentId;
 function renderAgents(){
 const q=$("agentSearch").value.trim().toLowerCase();
 const st=$("agentStatus").value;
-
 const arr=agents.filter(a=>{
-const s=[
-a.agentId,a.name,a.mobile,a.email,a.district,a.city,a.uid
-].join(" ").toLowerCase();
-
+const s=[a.agentId,a.name,a.mobile,a.email,a.district,a.city,a.uid].join(" ").toLowerCase();
 return (!q||s.includes(q))&&(!st||a.status===st);
 });
-
 $("agentCount").textContent="कुल "+arr.length+" Agents";
 $("agentList").innerHTML="";
-
 if(!arr.length){
 $("agentList").textContent="कोई Agent नहीं मिला।";
 return;
 }
-
 arr.forEach(a=>{
 const card=document.createElement("article");
 card.className="item";
-
 const h=document.createElement("h3");
 h.textContent=(a.name||"Agent")+" ("+(a.status||"pending")+")";
-
 const info=document.createElement("div");
 info.className="details";
-
 [
-["Agent ID",a.agentId||"अभी जारी नहीं हुई"],
+["Agent ID",a.agentId||"अभी जारी नहीं"],
 ["पिता का नाम",a.fatherName],
-["मोबाइल",a.mobile],
-["WhatsApp",a.whatsapp],
-["Email",a.email],
-["पता",a.address],
-["शहर",a.city],
-["जिला",a.district],
-["PIN",a.pin],
-["Registration",dateText(a.createdAt)]
+["मोबाइल",a.mobile],["WhatsApp",a.whatsapp],
+["Email",a.email],["पता",a.address],
+["शहर",a.city],["जिला",a.district],
+["PIN",a.pin],["Registration",dateText(a.createdAt)]
 ].forEach(([k,v])=>{
 const p=document.createElement("p");
 p.textContent=k+": "+(v||"-");
 info.append(p);
 });
-
-const actions=document.createElement("div");
-actions.className="actions";
-
+const acts=document.createElement("div");
+acts.className="actions";
 const approve=document.createElement("button");
 approve.className="green";
 approve.textContent="Approve और ID जारी करें";
-approve.onclick=()=>changeAgentStatus(a.id,"approved");
-
+approve.onclick=()=>changeAgent(a.id,"approved");
 const reject=document.createElement("button");
 reject.className="secondary";
 reject.textContent="Reject";
-reject.onclick=()=>changeAgentStatus(a.id,"rejected");
-
+reject.onclick=()=>changeAgent(a.id,"rejected");
 const edit=document.createElement("button");
 edit.textContent="Edit";
 edit.onclick=()=>openAgentEdit(a);
-
 const del=document.createElement("button");
 del.className="danger";
 del.textContent="Delete Profile";
 del.onclick=()=>deleteAgent(a.id);
-
-actions.append(approve,reject,edit,del);
-
-/* पुराने Approved एजेंट जिनकी ID नहीं है */
-if(a.status==="approved"&&!a.agentId){
-const issue=document.createElement("button");
-issue.className="orange";
-issue.textContent="Generate Agent ID";
-issue.onclick=()=>changeAgentStatus(a.id,"approved");
-actions.append(issue);
-}
-
-card.append(h,info,actions);
+acts.append(approve,reject,edit,del);
+card.append(h,info,acts);
 $("agentList").append(card);
 });
 }
 
-async function changeAgentStatus(id,status){
-const msg=status==="approved"?
-"Agent को Approve करके नई Agent ID जारी करना चाहते हैं?":
-"Agent Status "+status+" करना चाहते हैं?";
-
-if(!confirm(msg))return;
-
+async function changeAgent(id,status){
+if(!confirm(status==="approved"?"Agent Approve करके ID जारी करें?":"Agent को Reject करें?"))return;
 try{
-const agentId=await issueAgentId(id,status);
-if(agentId){
-alert("Agent Approved!\nAgent ID: "+agentId);
-}
+const aid=await issueAgentId(id,status);
+if(aid)alert("Agent Approved! ID: "+aid);
 await loadAgents();
-}catch(e){
-alert("Status update नहीं हुआ: "+e.message);
-}
+}catch(e){alert("Update नहीं हुआ: "+e.message);}
 }
 
 function openAgentEdit(a){
@@ -482,10 +448,8 @@ $("closeAgentDialog").onclick=()=>$("agentDialog").close();
 
 $("agentForm").onsubmit=async e=>{
 e.preventDefault();
-const id=$("aUid").value;
-
 try{
-await db.collection("agents").doc(id).update({
+await db.collection("agents").doc($("aUid").value).update({
 name:$("aName").value.trim(),
 fatherName:$("aFather").value.trim(),
 address:$("aAddress").value.trim(),
@@ -496,24 +460,145 @@ mobile:$("aMobile").value.trim(),
 whatsapp:$("aWhatsapp").value.trim(),
 updatedAt:firebase.firestore.FieldValue.serverTimestamp()
 });
-
 $("agentDialog").close();
 await loadAgents();
 }catch(err){
-$("agentEditMsg").textContent="Save नहीं हुआ: "+err.message;
+$("agentEditMsg").textContent=err.message;
 }
 };
 
 async function deleteAgent(id){
-if(!confirm("Agent Profile Firestore से Delete होगा। Authentication Account अपने आप Delete नहीं होगा। जारी रखें?"))return;
-
+if(!confirm("Agent Profile Delete होगा। Firebase Authentication Account अपने आप Delete नहीं होगा। जारी रखें?"))return;
 try{
 await db.collection("agents").doc(id).delete();
 await loadAgents();
+}catch(e){alert(e.message);}
+}
+
+// NBFC PARTNER LINKS
+const defaultPartners=[
+{name:"Dhanmudra Capital Advisor",category:"General / Partner Platform",url:"https://dhanmudracapitaladvisor.com/register?ref=DM9P4PC4"},
+{name:"Aditya Birla Platform",category:"Banking Services",url:"https://adityabirla-platform.finbox.in/signin-mobile"},
+{name:"Moneycontrol Pay",category:"General / Partner Platform",url:"https://www.moneycontrolpay.com/?utm_source=KMS&utm_campaign=AM_M_Solu_13"},
+{name:"InCred",category:"Personal Loan",url:"https://pl.incred.com/open-market-sales/registration"}
+];
+
+async function loadPartners(){
+try{
+let snap=await db.collection("partnerLinks").get();
+partners=snap.docs.map(d=>({id:d.id,...d.data()}));
+if(!partners.length){
+for(const p of defaultPartners){
+await db.collection("partnerLinks").add({
+...p,enabled:true,
+createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+}
+snap=await db.collection("partnerLinks").get();
+partners=snap.docs.map(d=>({id:d.id,...d.data()}));
+}
+$("partnerMsg").textContent="";
+renderPartners();
 }catch(e){
-alert("Delete नहीं हुआ: "+e.message);
+$("partnerMsg").textContent="Partner Links नहीं खुले: "+e.message;
 }
 }
+
+function renderPartners(){
+$("partnerList").innerHTML="";
+if(!partners.length){
+$("partnerList").textContent="कोई Partner Link नहीं है।";
+return;
+}
+partners.forEach(p=>{
+const card=document.createElement("article");
+card.className="item";
+const h=document.createElement("h3");
+h.textContent=p.name+" — "+(p.enabled?"Enabled":"Disabled");
+const cat=document.createElement("p");
+cat.textContent="Category: "+(p.category||"-");
+const url=document.createElement("p");
+url.className="url";
+url.textContent=p.url;
+const acts=document.createElement("div");
+acts.className="actions";
+const toggle=document.createElement("button");
+toggle.className=p.enabled?"orange":"green";
+toggle.textContent=p.enabled?"Disable":"Enable";
+toggle.onclick=()=>updatePartner(p.id,{enabled:!p.enabled});
+const edit=document.createElement("button");
+edit.textContent="Edit";
+edit.onclick=()=>editPartner(p);
+const del=document.createElement("button");
+del.className="danger";
+del.textContent="Delete";
+del.onclick=async()=>{
+if(confirm("Partner link Delete करें?")){
+try{
+await db.collection("partnerLinks").doc(p.id).delete();
+await loadPartners();
+}catch(e){alert(e.message);}
+}
+};
+acts.append(toggle,edit,del);
+card.append(h,cat,url,acts);
+$("partnerList").append(card);
+});
+}
+
+async function updatePartner(id,data){
+try{
+await db.collection("partnerLinks").doc(id).update({
+...data,updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+await loadPartners();
+}catch(e){alert(e.message);}
+}
+
+function editPartner(p){
+$("partnerId").value=p.id;
+$("partnerName").value=p.name||"";
+$("partnerCategory").value=p.category||"Other";
+$("partnerUrl").value=p.url||"";
+$("partnerEnabled").checked=!!p.enabled;
+$("partnerSave").textContent="Update Partner";
+$("partnerCancel").style.display="block";
+}
+
+function resetPartnerForm(){
+$("partnerForm").reset();
+$("partnerId").value="";
+$("partnerEnabled").checked=true;
+$("partnerSave").textContent="Partner Link Save करें";
+$("partnerCancel").style.display="none";
+}
+
+$("partnerCancel").onclick=resetPartnerForm;
+
+$("partnerForm").onsubmit=async e=>{
+e.preventDefault();
+const id=$("partnerId").value;
+const data={
+name:$("partnerName").value.trim(),
+category:$("partnerCategory").value,
+url:$("partnerUrl").value.trim(),
+enabled:$("partnerEnabled").checked,
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+};
+try{
+if(id){
+await db.collection("partnerLinks").doc(id).update(data);
+}else{
+await db.collection("partnerLinks").add({
+...data,createdAt:firebase.firestore.FieldValue.serverTimestamp()
+});
+}
+resetPartnerForm();
+await loadPartners();
+}catch(err){
+$("partnerMsg").textContent="Save नहीं हुआ: "+err.message;
+}
+};
 </script>
 </body>
 </html>
