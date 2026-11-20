@@ -6,296 +6,351 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Money Solution Finance Services</title>
 <meta name="description" content="Money Solution Finance Services - Loan, Insurance and Banking Services">
-
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f6fb;color:#172033}
-header{background:#073b72;color:white;padding:18px;text-align:center}
-header h1{margin:0;font-size:25px}
-header p{margin:6px 0 0}
-nav{background:#fff;padding:13px;text-align:center;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #0002}
-nav a{display:inline-block;color:#073b72;text-decoration:none;font-weight:bold;margin:5px 9px}
-.container{max-width:1100px;margin:auto;padding:16px}
-.hero{background:linear-gradient(120deg,#073b72,#0875d1);color:white;padding:30px;border-radius:15px;text-align:center}
-.hero h2{font-size:30px}
-.btn{display:block;background:#0b63ce;color:white;text-decoration:none;text-align:center;padding:14px;border-radius:9px;font-weight:bold;margin-top:12px;border:0;width:100%;cursor:pointer;font-size:15px}
-.btn:hover{opacity:.9}
-.btn:disabled{opacity:.6;cursor:not-allowed}
-.gold{background:#f2b600;color:#111}
-.green{background:#168044}
-.card{background:white;padding:20px;border-radius:12px;margin:14px 0;box-shadow:0 3px 12px #0001}
-.card h3{color:#073b72;margin-top:0}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-input,select,textarea{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccd5e0;border-radius:7px;font-size:15px}
-label{font-weight:bold;font-size:14px}
-textarea{min-height:90px}
-.poster{width:100%;max-width:500px;display:block;margin:15px auto;border-radius:10px}
-footer{background:#073b72;color:white;text-align:center;padding:25px;margin-top:30px}
-footer a{color:white}
-#formMessage{padding:10px;border-radius:7px;white-space:normal}
-@media(max-width:700px){
-.grid{grid-template-columns:1fr}
-header h1{font-size:21px}
-.hero h2{font-size:25px}
-nav a{font-size:13px;margin:5px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Arial,sans-serif;background:#f3f6fc;color:#17243b}
+a{text-decoration:none;color:inherit}
+header{background:linear-gradient(120deg,#071c46,#0757a5);color:white;padding:18px 16px;position:relative}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1100px;margin:auto}
+.brand{font-size:20px;font-weight:800;line-height:1.3}
+.brand small{display:block;font-size:12px;font-weight:500;color:#d8e9ff}
+.menu-wrap{position:relative}
+.menu-btn{background:#ffffff20;color:white;border:1px solid #ffffff70;border-radius:10px;font-size:28px;width:44px;height:44px;cursor:pointer}
+.dropdown{display:none;position:absolute;right:0;top:52px;width:255px;max-height:75vh;overflow:auto;background:white;color:#17243b;border-radius:12px;box-shadow:0 10px 30px #001a4050;z-index:1000;padding:8px}
+.dropdown.show{display:block}
+.dropdown a{display:block;padding:12px;border-bottom:1px solid #edf0f5;font-size:14px}
+.dropdown a:hover{background:#eaf3ff;color:#0757a5}
+.hero{background:linear-gradient(120deg,#0a3977,#087bd0);color:white;padding:42px 18px;text-align:center}
+.hero h1{font-size:30px;margin-bottom:12px}
+.hero p{line-height:1.7;max-width:700px;margin:0 auto 20px}
+.btn{display:inline-block;background:#f6b900;color:#17243b;font-weight:bold;padding:12px 20px;border-radius:9px;margin:5px}
+.btn.light{background:white;color:#0757a5}
+.container{max-width:1100px;margin:auto;padding:25px 15px}
+.section-title{text-align:center;color:#092e64;font-size:24px;margin-bottom:20px}
+.poster-box{background:white;padding:12px;border-radius:15px;box-shadow:0 5px 20px #1234;margin-bottom:25px;text-align:center}
+.poster-box img{width:100%;max-width:700px;height:auto;display:block;margin:auto;border-radius:10px}
+.poster-fallback{display:none;padding:30px;background:#eaf3ff;color:#17447c;border-radius:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px}
+.service-card{background:white;padding:20px;border-radius:14px;box-shadow:0 4px 15px #1232;border:1px solid #e5ebf5}
+.service-card .emoji{font-size:30px}
+.service-card h3{color:#074b91;margin:10px 0}
+.service-card p{font-size:14px;color:#5b6678;line-height:1.5}
+.partner-card{background:white;padding:17px;border-radius:12px;border:1px solid #e1e8f2;text-align:center}
+.partner-card h3{font-size:16px;margin-bottom:10px;color:#123b70}
+.partner-card a{display:inline-block;background:#0757a5;color:white;padding:9px 14px;border-radius:8px;font-size:13px}
+form{background:white;padding:20px;border-radius:14px;box-shadow:0 4px 18px #1232;max-width:700px;margin:auto}
+form label{display:block;font-weight:bold;font-size:14px;margin:12px 0 6px}
+form input,form select,form textarea{width:100%;padding:12px;border:1px solid #ccd6e5;border-radius:8px;font-size:15px}
+form textarea{min-height:85px;resize:vertical}
+.consent{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.5;margin:14px 0}
+.consent input{width:auto;margin-top:3px}
+.submit-btn{width:100%;background:#0757a5;color:white;border:0;border-radius:9px;padding:14px;font-size:16px;font-weight:bold;cursor:pointer}
+.submit-btn:disabled{opacity:.6}
+#formMessage{margin-top:14px;text-align:center;font-weight:bold}
+.contact{background:#082b5a;color:white;text-align:center;padding:28px 15px;line-height:2}
+.contact a{color:#ffcf35;font-weight:bold}
+footer{background:#061b3a;color:#d9e5f5;text-align:center;padding:17px;font-size:13px}
+@media(max-width:600px){
+.brand{font-size:17px}
+.hero{padding:32px 14px}
+.hero h1{font-size:24px}
+.section-title{font-size:21px}
+.container{padding:20px 12px}
 }
 </style>
 </head>
-
 <body>
 
 <header>
-<h1>Money Solution Finance Services</h1>
-<p>Loan • Insurance • Banking Services • Customer Inquiry</p>
+  <div class="topbar">
+    <div class="brand">
+      MONEY SOLUTION
+      <small>FINANCE SERVICES • DSA OFFICE</small>
+    </div>
+    <div class="menu-wrap">
+      <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">⋮</button>
+      <nav class="dropdown" id="dropdownMenu">
+        <a href="#home">🏠 Home</a>
+        <a href="#loans">💰 Loan Services</a>
+        <a href="#personal-loan">Personal Loan</a>
+        <a href="#business-loan">Business Loan</a>
+        <a href="#home-loan">Home Loan</a>
+        <a href="#lap">Loan Against Property</a>
+        <a href="#vehicle-loan">Vehicle Loan</a>
+        <a href="#msme">MSME Finance</a>
+        <a href="#insurance">Insurance & Banking</a>
+        <a href="#life-insurance">Life Insurance</a>
+        <a href="#health-insurance">Health Insurance</a>
+        <a href="#banking">Banking Services</a>
+        <a href="#credit-card">Credit Card Inquiry</a>
+        <a href="#inquiry">Customer Inquiry</a>
+        <a href="#contact">Contact Us</a>
+        <a href="agent-login.html">Agent Login</a>
+        <a href="agent-register.html">Agent / DSA Registration</a>
+        <a href="admin/index.html">Admin Login</a>
+      </nav>
+    </div>
+  </div>
 </header>
 
-<nav>
-<a href="#home">Home</a>
-<a href="#services">Loan Services</a>
-<a href="#partners">Partner Links</a>
-<a href="#inquiry">Customer Inquiry</a>
-<a href="#contact">Contact</a>
-</nav>
-
-<div class="container" id="home">
-
-<section class="hero">
-<h2>Welcome to Money Solution Finance Services</h2>
-<p>Personal Loan | Business Loan | Home Loan | Insurance | Banking Services</p>
-<a class="btn gold" href="#inquiry">Apply Now</a>
-<a class="btn green" href="https://wa.me/919450933936" target="_blank" rel="noopener">Chat on WhatsApp</a>
+<section class="hero" id="home">
+  <h1>आपकी हर फाइनेंस जरूरत का समाधान</h1>
+  <p>Personal Loan, Business Loan, Home Loan, Insurance और Banking Services के लिए आज ही संपर्क करें।</p>
+  <a class="btn" href="#inquiry">Apply Now</a>
+  <a class="btn light" href="https://wa.me/919450933936">WhatsApp करें</a>
 </section>
 
-<img class="poster"
-src="assets/Money%20Solution%20Finance%20Loan%20Services%20Poster.png"
-alt="Money Solution Finance Services Poster"
-onerror="this.style.display='none'">
+<main class="container">
 
-<section id="services">
-<h2 style="text-align:center;color:#073b72">Our Loan & Finance Services</h2>
+  <section class="poster-box">
+    <h2 class="section-title">Our Finance Services</h2>
+    <img
+      src="assets/Money%20Solution%20Finance%20Loan%20Services%20Poster.png"
+      alt="Money Solution Finance Services Poster"
+      onerror="this.style.display='none';document.getElementById('posterFallback').style.display='block';">
+    <div class="poster-fallback" id="posterFallback">
+      <h3>Money Solution Finance Services</h3>
+      <p>पोस्टर की इमेज नहीं मिली। GitHub में assets फोल्डर के अंदर इमेज का नाम और उसका स्थान जाँचें।</p>
+    </div>
+  </section>
 
-<div class="grid">
+  <section id="loans">
+    <h2 class="section-title">Our Loan Services</h2>
+    <div class="grid">
+      <article class="service-card" id="personal-loan">
+        <div class="emoji">💳</div><h3>Personal Loan</h3>
+        <p>व्यक्तिगत जरूरतों के लिए लोन की जानकारी और आवेदन सहायता।</p>
+      </article>
+      <article class="service-card" id="business-loan">
+        <div class="emoji">🏢</div><h3>Business Loan</h3>
+        <p>व्यापार और बिजनेस की जरूरतों के लिए फाइनेंस सहायता।</p>
+      </article>
+      <article class="service-card" id="home-loan">
+        <div class="emoji">🏠</div><h3>Home Loan</h3>
+        <p>घर खरीदने या निर्माण के लिए लोन संबंधी सहायता।</p>
+      </article>
+      <article class="service-card" id="lap">
+        <div class="emoji">🏡</div><h3>Loan Against Property</h3>
+        <p>प्रॉपर्टी के आधार पर लोन की जानकारी।</p>
+      </article>
+      <article class="service-card" id="vehicle-loan">
+        <div class="emoji">🚗</div><h3>Vehicle Loan</h3>
+        <p>वाहन खरीदने के लिए फाइनेंस विकल्पों की जानकारी।</p>
+      </article>
+      <article class="service-card" id="msme">
+        <div class="emoji">📈</div><h3>MSME Finance</h3>
+        <p>छोटे और मध्यम व्यवसायों के लिए फाइनेंस सहायता।</p>
+      </article>
+    </div>
+  </section>
 
-<div class="card">
-<h3>Personal Loan</h3>
-<p>Personal Loan की जानकारी और आवेदन के लिए संपर्क करें।</p>
-<a class="btn" href="#inquiry">Personal Loan Apply Now</a>
-</div>
+  <section id="insurance" style="margin-top:35px">
+    <h2 class="section-title">Insurance & Banking Services</h2>
+    <div class="grid">
+      <article class="service-card" id="life-insurance">
+        <div class="emoji">🛡️</div><h3>Life Insurance</h3>
+        <p>लाइफ इंश्योरेंस योजनाओं की जानकारी।</p>
+      </article>
+      <article class="service-card" id="health-insurance">
+        <div class="emoji">❤️</div><h3>Health Insurance</h3>
+        <p>हेल्थ इंश्योरेंस विकल्पों की जानकारी।</p>
+      </article>
+      <article class="service-card" id="banking">
+        <div class="emoji">🏦</div><h3>Banking Services</h3>
+        <p>बैंकिंग और वित्तीय सेवाओं की जानकारी।</p>
+      </article>
+      <article class="service-card" id="credit-card">
+        <div class="emoji">💳</div><h3>Credit Card Inquiry</h3>
+        <p>क्रेडिट कार्ड संबंधी जानकारी और आवेदन सहायता।</p>
+      </article>
+    </div>
+  </section>
 
-<div class="card">
-<h3>Business Loan</h3>
-<p>व्यापार और व्यवसाय के लिए Business Loan।</p>
-<a class="btn" href="https://creditlink.finbox.in/?partnerCode=DI_ZJXNSA&agentCode=9450729590&productType=business_loan" target="_blank" rel="noopener">Business Loan Apply Now</a>
-</div>
+  <section style="margin-top:35px">
+    <h2 class="section-title">Our Partner Platforms</h2>
+    <div class="grid">
+      <div class="partner-card">
+        <h3>Dhanmudra Capital Advisor</h3>
+        <a href="https://dhanmudracapitaladvisor.com/register?ref=DM9P4PC" target="_blank" rel="noopener">Visit Platform</a>
+      </div>
+      <div class="partner-card">
+        <h3>Aditya Birla Platform</h3>
+        <a href="https://adityabirla-platform.finbox.in/signin-mobile" target="_blank" rel="noopener">Visit Platform</a>
+      </div>
+      <div class="partner-card">
+        <h3>Moneycontrol Pay</h3>
+        <a href="https://www.moneycontrolpay.com/?utm_source=KMS&utm_campaign=AM_M_Solu_13" target="_blank" rel="noopener">Visit Platform</a>
+      </div>
+      <div class="partner-card">
+        <h3>InCred</h3>
+        <a href="https://pl.incred.com/open-market-sales/registration" target="_blank" rel="noopener">Visit Platform</a>
+      </div>
+      <div class="partner-card">
+        <h3>FinBox Business Loan</h3>
+        <a href="https://creditlink.finbox.in/?partnerCode=DI_ZJXNSA&agentCode=9450729590&productType=business_loan" target="_blank" rel="noopener">Visit Platform</a>
+      </div>
+    </div>
+  </section>
 
-<div class="card">
-<h3>Home Loan</h3>
-<p>घर खरीदने और निर्माण के लिए Home Loan।</p>
-<a class="btn" href="#inquiry">Home Loan Apply Now</a>
-</div>
+  <section id="inquiry" style="margin-top:35px">
+    <h2 class="section-title">Customer Inquiry Form</h2>
+    <form id="inquiryForm">
+      <label for="name">पूरा नाम *</label>
+      <input id="name" type="text" required placeholder="अपना नाम लिखें">
 
-<div class="card">
-<h3>Loan Against Property</h3>
-<p>संपत्ति के आधार पर Loan की जानकारी।</p>
-<a class="btn" href="#inquiry">Apply Now</a>
-</div>
+      <label for="phone">मोबाइल नंबर *</label>
+      <input id="phone" type="tel" inputmode="numeric" maxlength="10" required placeholder="10 अंकों का मोबाइल नंबर">
 
-<div class="card">
-<h3>Insurance Services</h3>
-<p>Insurance सेवाओं के लिए संपर्क करें।</p>
-<a class="btn" href="#inquiry">Get Insurance</a>
-</div>
+      <label for="district">जिला *</label>
+      <input id="district" type="text" required placeholder="अपना जिला लिखें">
 
-<div class="card">
-<h3>Banking Services</h3>
-<p>Banking और अन्य वित्तीय सेवाएँ।</p>
-<a class="btn" href="#inquiry">Banking Services Apply Now</a>
-</div>
+      <label for="pin">PIN Code *</label>
+      <input id="pin" type="text" inputmode="numeric" maxlength="6" required placeholder="6 अंकों का PIN Code">
 
-</div>
+      <label for="service">कौन-सी सेवा चाहिए? *</label>
+      <select id="service" required>
+        <option value="">सेवा चुनें</option>
+        <option>Personal Loan</option>
+        <option>Business Loan</option>
+        <option>Home Loan</option>
+        <option>Loan Against Property</option>
+        <option>Vehicle Loan</option>
+        <option>MSME Finance</option>
+        <option>Life Insurance</option>
+        <option>Health Insurance</option>
+        <option>Banking Services</option>
+        <option>Credit Card</option>
+        <option>Other</option>
+      </select>
+
+      <label for="loanAmount">लोन राशि (यदि लागू हो)</label>
+      <input id="loanAmount" type="text" placeholder="उदाहरण: 500000">
+
+      <label for="address">पूरा पता</label>
+      <textarea id="address" placeholder="अपना पता लिखें"></textarea>
+
+      <label for="message">अन्य जानकारी</label>
+      <textarea id="message" placeholder="अपनी जरूरत बताएं"></textarea>
+
+      <label class="consent">
+        <input id="consent" type="checkbox" required>
+        <span>मैं अपनी जानकारी इस Inquiry के संबंध में संपर्क करने के लिए साझा करने की सहमति देता/देती हूँ।</span>
+      </label>
+
+      <button class="submit-btn" id="submitBtn" type="submit">Submit Inquiry</button>
+      <p id="formMessage" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+</main>
+
+<section class="contact" id="contact">
+  <h2>Money Solution Finance Services</h2>
+  <p>DSA Office | Loan • Insurance • Banking Services</p>
+  <p>Call: <a href="tel:8881850249">8881850249</a></p>
+  <p>WhatsApp: <a href="https://wa.me/919450933936">9450933936</a></p>
+  <p><a href="agent-login.html">Agent Login</a> |
+     <a href="agent-register.html">Agent Registration</a> |
+     <a href="admin/index.html">Admin Login</a></p>
 </section>
-
-<section id="partners">
-<h2 style="text-align:center;color:#073b72">Our Partner Apply Links</h2>
-
-<div class="card">
-<h3>Dhanmudra Capital Advisor</h3>
-<a class="btn" href="https://dhanmudracapitaladvisor.com/register?ref=DM9P4PC" target="_blank" rel="noopener">Apply Now</a>
-</div>
-
-<div class="card">
-<h3>Aditya Birla Platform</h3>
-<a class="btn" href="https://adityabirla-platform.finbox.in/signin-mobile" target="_blank" rel="noopener">Apply Now</a>
-</div>
-
-<div class="card">
-<h3>Moneycontrol Pay</h3>
-<a class="btn" href="https://www.moneycontrolpay.com/?utm_source=KMS&utm_campaign=AM_M_Solu_13" target="_blank" rel="noopener">Apply Now</a>
-</div>
-
-<div class="card">
-<h3>InCred</h3>
-<a class="btn" href="https://pl.incred.com/open-market-sales/registration" target="_blank" rel="noopener">Apply Now</a>
-</div>
-
-<div class="card">
-<h3>FinBox Business Loan</h3>
-<a class="btn" href="https://creditlink.finbox.in/?partnerCode=DI_ZJXNSA&agentCode=9450729590&productType=business_loan" target="_blank" rel="noopener">Business Loan Apply Now</a>
-</div>
-</section>
-
-<section id="inquiry">
-<h2 style="text-align:center;color:#073b72">Customer Inquiry Form</h2>
-
-<div class="card">
-<form id="inquiryForm">
-
-<label>Customer Name *</label>
-<input type="text" id="name" required maxlength="100">
-
-<label>Mobile Number *</label>
-<input type="tel" id="phone" required pattern="[0-9]{10}" maxlength="10">
-
-<label>District *</label>
-<input type="text" id="district" required>
-
-<label>PIN Code *</label>
-<input type="text" id="pin" required pattern="[0-9]{6}" maxlength="6">
-
-<label>Loan / Service *</label>
-<select id="service" required>
-<option value="">Select Service</option>
-<option>Personal Loan</option>
-<option>Business Loan</option>
-<option>Home Loan</option>
-<option>Loan Against Property</option>
-<option>Insurance</option>
-<option>Banking Services</option>
-<option>Other</option>
-</select>
-
-<label>Required Loan Amount</label>
-<input type="text" id="loanAmount">
-
-<label>Full Address *</label>
-<textarea id="address" required></textarea>
-
-<label>Other Information</label>
-<textarea id="message"></textarea>
-
-<label style="font-weight:normal">
-<input type="checkbox" id="consent" required style="width:auto">
-मैं सहमत हूँ कि मेरी जानकारी मेरी Inquiry पर संपर्क करने के लिए उपयोग की जा सकती है।
-</label>
-
-<button class="btn" id="submitBtn" type="submit">Submit Inquiry</button>
-<p id="formMessage" role="status" aria-live="polite"></p>
-
-</form>
-</div>
-</section>
-
-<section id="contact">
-<div class="card">
-<h2 style="color:#073b72">Contact Us</h2>
-<p><b>Money Solution Finance Services</b></p>
-<p>Mobile: 8881850249</p>
-<p>WhatsApp: 9450933936</p>
-<a class="btn green" href="tel:8881850249">Call Now</a>
-<a class="btn" href="https://wa.me/919450933936" target="_blank" rel="noopener">WhatsApp Now</a>
-<a class="btn" href="agent-register.html">Agent Registration</a>
-<a class="btn" href="agent-login.html">Agent Login</a>
-<a class="btn" href="admin/">Admin Login</a>
-</div>
-</section>
-
-</div>
 
 <footer>
-<p>Money Solution Finance Services</p>
-<p>DSA Office</p>
-<a href="privacy-policy.html">Privacy Policy</a>
+  © <span id="year"></span> Money Solution Finance Services. All Rights Reserved.
 </footer>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
 <script>
 const firebaseConfig = {
-apiKey: "AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
-authDomain: "money-salutations-fainence.firebaseapp.com",
-projectId: "money-salutations-fainence",
-storageBucket: "money-salutations-fainence.firebasestorage.app",
-messagingSenderId: "891890606664",
-appId: "1:891890606664:web:1d6df6ec8554d523176e7d",
-measurementId: "G-HX6NBT529M"
+  apiKey: "AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+  authDomain: "money-salutations-fainence.firebaseapp.com",
+  projectId: "money-salutations-fainence",
+  storageBucket: "money-salutations-fainence.firebasestorage.app",
+  messagingSenderId: "891890606664",
+  appId: "1:891890606664:web:1d6df6ec8554d523176e7d",
+  measurementId: "G-HX6NBT529M"
 };
 
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
+firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+
+const menuBtn = document.getElementById("menuBtn");
+const dropdownMenu = document.getElementById("dropdownMenu");
+
+menuBtn.addEventListener("click", function(event) {
+  event.stopPropagation();
+  dropdownMenu.classList.toggle("show");
+  menuBtn.setAttribute("aria-expanded", dropdownMenu.classList.contains("show"));
+});
+
+document.addEventListener("click", function(event) {
+  if (!dropdownMenu.contains(event.target) && event.target !== menuBtn) {
+    dropdownMenu.classList.remove("show");
+    menuBtn.setAttribute("aria-expanded", "false");
+  }
+});
+
+dropdownMenu.querySelectorAll("a").forEach(function(link) {
+  link.addEventListener("click", function() {
+    dropdownMenu.classList.remove("show");
+    menuBtn.setAttribute("aria-expanded", "false");
+  });
+});
+
+document.getElementById("year").textContent = new Date().getFullYear();
 
 const form = document.getElementById("inquiryForm");
 const msg = document.getElementById("formMessage");
 const btn = document.getElementById("submitBtn");
 
 form.addEventListener("submit", async function(e) {
-    e.preventDefault();
+  e.preventDefault();
+  msg.textContent = "";
+  btn.disabled = true;
+  btn.textContent = "Submitting...";
 
-    msg.textContent = "";
-    btn.disabled = true;
-    btn.textContent = "Submitting...";
+  const phone = document.getElementById("phone").value.trim();
+  const pin = document.getElementById("pin").value.trim();
 
-    const phone = document.getElementById("phone").value.trim();
-    const pin = document.getElementById("pin").value.trim();
-
-    try {
-        if (!/^[0-9]{10}$/.test(phone)) {
-            throw new Error("मोबाइल नंबर 10 अंकों का होना चाहिए।");
-        }
-
-        if (!/^[0-9]{6}$/.test(pin)) {
-            throw new Error("PIN Code 6 अंकों का होना चाहिए।");
-        }
-
-        if (!document.getElementById("consent").checked) {
-            throw new Error("कृपया सहमति वाले बॉक्स पर टिक करें।");
-        }
-
-        await db.collection("inquiries").add({
-            name: document.getElementById("name").value.trim(),
-            phone: phone,
-            district: document.getElementById("district").value.trim(),
-            pin: pin,
-            service: document.getElementById("service").value,
-            loanAmount: document.getElementById("loanAmount").value.trim(),
-            address: document.getElementById("address").value.trim(),
-            message: document.getElementById("message").value.trim(),
-            customerConsent: true,
-            status: "New",
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        form.reset();
-        msg.style.color = "green";
-        msg.style.fontWeight = "bold";
-        msg.textContent = "आपकी Inquiry सफलतापूर्वक जमा हो गई है। धन्यवाद!";
-
-    } catch(error) {
-        console.error("Inquiry Error:", error);
-        msg.style.color = "red";
-        msg.style.fontWeight = "bold";
-        msg.textContent = "समस्या: " + (error.message || "कृपया Internet और Firebase जाँचें।");
-
-    } finally {
-        btn.disabled = false;
-        btn.textContent = "Submit Inquiry";
-        msg.scrollIntoView({behavior: "smooth", block: "center"});
+  try {
+    if (!/^[0-9]{10}$/.test(phone)) {
+      throw new Error("मोबाइल नंबर 10 अंकों का होना चाहिए।");
     }
+    if (!/^[0-9]{6}$/.test(pin)) {
+      throw new Error("PIN Code 6 अंकों का होना चाहिए।");
+    }
+    if (!document.getElementById("consent").checked) {
+      throw new Error("कृपया सहमति वाले बॉक्स पर टिक करें।");
+    }
+
+    await db.collection("inquiries").add({
+      name: document.getElementById("name").value.trim(),
+      phone: phone,
+      district: document.getElementById("district").value.trim(),
+      pin: pin,
+      service: document.getElementById("service").value,
+      loanAmount: document.getElementById("loanAmount").value.trim(),
+      address: document.getElementById("address").value.trim(),
+      message: document.getElementById("message").value.trim(),
+      customerConsent: true,
+      status: "New",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    form.reset();
+    msg.style.color = "green";
+    msg.textContent = "आपकी Inquiry सफलतापूर्वक जमा हो गई है। धन्यवाद!";
+  } catch(error) {
+    console.error("Inquiry Error:", error);
+    msg.style.color = "red";
+    msg.textContent = "समस्या: " + (error.message || "कृपया Internet और Firebase जाँचें।");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Submit Inquiry";
+    msg.scrollIntoView({behavior:"smooth",block:"center"});
+  }
 });
 </script>
-
 </body>
 </html>
