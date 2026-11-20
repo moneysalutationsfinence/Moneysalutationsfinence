@@ -20,6 +20,7 @@ nav a{display:inline-block;color:#073b72;text-decoration:none;font-weight:bold;m
 .hero h2{font-size:30px}
 .btn{display:block;background:#0b63ce;color:white;text-decoration:none;text-align:center;padding:14px;border-radius:9px;font-weight:bold;margin-top:12px;border:0;width:100%;cursor:pointer;font-size:15px}
 .btn:hover{opacity:.9}
+.btn:disabled{opacity:.6;cursor:not-allowed}
 .gold{background:#f2b600;color:#111}
 .green{background:#168044}
 .card{background:white;padding:20px;border-radius:12px;margin:14px 0;box-shadow:0 3px 12px #0001}
@@ -31,8 +32,13 @@ textarea{min-height:90px}
 .poster{width:100%;max-width:500px;display:block;margin:15px auto;border-radius:10px}
 footer{background:#073b72;color:white;text-align:center;padding:25px;margin-top:30px}
 footer a{color:white}
-.small{font-size:12px;color:#64748b}
-@media(max-width:700px){.grid{grid-template-columns:1fr}header h1{font-size:21px}.hero h2{font-size:25px}nav a{font-size:13px;margin:5px}}
+#formMessage{padding:10px;border-radius:7px;white-space:normal}
+@media(max-width:700px){
+.grid{grid-template-columns:1fr}
+header h1{font-size:21px}
+.hero h2{font-size:25px}
+nav a{font-size:13px;margin:5px}
+}
 </style>
 </head>
 
@@ -183,7 +189,7 @@ onerror="this.style.display='none'">
 </label>
 
 <button class="btn" id="submitBtn" type="submit">Submit Inquiry</button>
-<p id="formMessage"></p>
+<p id="formMessage" role="status" aria-live="polite"></p>
 
 </form>
 </div>
@@ -226,58 +232,68 @@ measurementId: "G-HX6NBT529M"
 };
 
 if (!firebase.apps.length) {
-firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
 }
 
 const db = firebase.firestore();
 
-document.getElementById("inquiryForm").addEventListener("submit", async function(e) {
-e.preventDefault();
-
-const btn = document.getElementById("submitBtn");
+const form = document.getElementById("inquiryForm");
 const msg = document.getElementById("formMessage");
+const btn = document.getElementById("submitBtn");
 
-const phone = document.getElementById("phone").value.trim();
-const pin = document.getElementById("pin").value.trim();
+form.addEventListener("submit", async function(e) {
+    e.preventDefault();
 
-if (!/^[0-9]{10}$/.test(phone)) {
-msg.textContent = "कृपया 10 अंकों का मोबाइल नंबर भरें।";
-return;
-}
+    msg.textContent = "";
+    btn.disabled = true;
+    btn.textContent = "Submitting...";
 
-if (!/^[0-9]{6}$/.test(pin)) {
-msg.textContent = "कृपया 6 अंकों का PIN Code भरें।";
-return;
-}
+    const phone = document.getElementById("phone").value.trim();
+    const pin = document.getElementById("pin").value.trim();
 
-btn.disabled = true;
-btn.textContent = "Submitting...";
+    try {
+        if (!/^[0-9]{10}$/.test(phone)) {
+            throw new Error("मोबाइल नंबर 10 अंकों का होना चाहिए।");
+        }
 
-try {
-await db.collection("inquiries").add({
-name: document.getElementById("name").value.trim(),
-phone: phone,
-district: document.getElementById("district").value.trim(),
-pin: pin,
-service: document.getElementById("service").value,
-loanAmount: document.getElementById("loanAmount").value.trim(),
-address: document.getElementById("address").value.trim(),
-message: document.getElementById("message").value.trim(),
-customerConsent: document.getElementById("consent").checked,
-status: "New",
-createdAt: firebase.firestore.FieldValue.serverTimestamp()
-});
+        if (!/^[0-9]{6}$/.test(pin)) {
+            throw new Error("PIN Code 6 अंकों का होना चाहिए।");
+        }
 
-this.reset();
-msg.textContent = "आपकी Inquiry सफलतापूर्वक जमा हो गई है। धन्यवाद!";
+        if (!document.getElementById("consent").checked) {
+            throw new Error("कृपया सहमति वाले बॉक्स पर टिक करें।");
+        }
 
-} catch(error) {
-console.error(error);
-msg.textContent = "Inquiry जमा नहीं हुई। Firebase Rules और Internet जाँचें।";
-} finally {
-btn.disabled = false;
-btn.textContent = "Submit Inquiry";
-}
+        await db.collection("inquiries").add({
+            name: document.getElementById("name").value.trim(),
+            phone: phone,
+            district: document.getElementById("district").value.trim(),
+            pin: pin,
+            service: document.getElementById("service").value,
+            loanAmount: document.getElementById("loanAmount").value.trim(),
+            address: document.getElementById("address").value.trim(),
+            message: document.getElementById("message").value.trim(),
+            customerConsent: true,
+            status: "New",
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        form.reset();
+        msg.style.color = "green";
+        msg.style.fontWeight = "bold";
+        msg.textContent = "आपकी Inquiry सफलतापूर्वक जमा हो गई है। धन्यवाद!";
+
+    } catch(error) {
+        console.error("Inquiry Error:", error);
+        msg.style.color = "red";
+        msg.style.fontWeight = "bold";
+        msg.textContent = "समस्या: " + (error.message || "कृपया Internet और Firebase जाँचें।");
+
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "Submit Inquiry";
+        msg.scrollIntoView({behavior: "smooth", block: "center"});
+    }
 });
 </script>
 
