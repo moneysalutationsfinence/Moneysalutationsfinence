@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin DSA Management</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f1f4f9;font-family:Arial,sans-serif;color:#222}
+header{background:#123d72;color:white;padding:18px;text-align:center}
+main{max-width:1000px;margin:20px auto;padding:12px}
+.card{background:white;padding:18px;border-radius:12px;margin-bottom:16px;box-shadow:0 2px 10px #0001}
+button{padding:10px 14px;border:0;border-radius:6px;color:white;background:#123d72;margin:4px;cursor:pointer}
+.approve{background:#168344}
+.reject{background:#b3261e}
+#list{margin-top:15px}
+.item{background:#fff;border:1px solid #ddd;border-radius:9px;padding:14px;margin:12px 0;overflow-wrap:anywhere}
+.item p{margin:7px 0}
+.status{font-weight:bold}
+.small{color:#666;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+<h2>Money Solution Finance Services</h2>
+<div>Admin - DSA Management</div>
+</header>
+
+<main>
+<div class="card">
+<h3>DSA Registration Management</h3>
+<p>यहाँ सभी DSA Applications दिखाई देंगी। Approve करने पर DSA ID अपने-आप जारी होगी।</p>
+<button id="refresh">Refresh करें</button>
+<button id="logout">Admin Logout</button>
+<div id="message"></div>
+<div id="list">लोड हो रहा है...</div>
+</div>
+</main>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+ getAuth,onAuthStateChanged,signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+ getFirestore,collection,getDocs,doc,runTransaction,
+ serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+ authDomain:"money-salutations-fainence.firebaseapp.com",
+ projectId:"money-salutations-fainence",
+ storageBucket:"money-salutations-fainence.firebasestorage.app",
+ messagingSenderId:"891890606664",
+ appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
+ measurementId:"G-HX6NBT529M"
+};
+
+const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const $=id=>document.getElementById(id);
+
+function message(text,color="red"){
+ $("message").style.color=color;
+ $("message").textContent=text;
+}
+
+onAuthStateChanged(auth,async user=>{
+ if(!user){
+  $("list").textContent="पहले अपने Admin Account से Login करें।";
+  return;
+ }
+ if(user.uid!==ADMIN_UID){
+  await signOut(auth);
+  $("list").textContent="Access Denied: केवल Admin यह पेज खोल सकता है।";
+  return;
+ }
+ await loadDSAs();
+});
+
+async function loadDSAs(){
+ $("list").textContent="DSA सूची लोड हो रही है...";
+ try{
+  const snap=await getDocs(collection(db,"dsas"));
+  $("list").innerHTML="";
+
+  if(snap.empty){
+   $("list").textContent="अभी कोई DSA Registration नहीं आया है।";
+   return;
+  }
+
+  const records=snap.docs.map(d=>({uid:d.id,...d.data()}));
+  records.sort((a,b)=>{
+   const ta=a.createdAt?.toMillis?.()||0;
+   const tb=b.createdAt?.toMillis?.()||0;
+   return tb-ta;
+  });
+
+  records.forEach(dsa=>{
+   const div=document.createElement("div");
+   div.className="item";
+
+   const heading=document.createElement("h3");
+   heading.textContent=dsa.name||"DSA";
+
+   const details=document.createElement("div");
+   details.innerHTML="";
+   const fields=[
+    ["पिता का नाम",dsa.fatherName],
+    ["मोबाइल",dsa.mobile],
+    ["Email",dsa.email],
+    ["पता",dsa.address],
+    ["जिला",dsa.district],
+    ["पिन कोड",dsa.pin],
+    ["DSA ID",dsa.dsaId||"अभी जारी नहीं हुई"],
+    ["Status",dsa.status||"unknown"]
+   ];
+   fields.forEach(([label,value])=>{
+    const p=document.createElement("p");
+    const b=document.createElement("b");
+    b.textContent=label+": ";
+    p.append(b,document.createTextNode(value||"-"));
+    details.appendChild(p);
+   });
+
+   div.append(heading,details);
+
+   const status=(dsa.status||"").toLowerCase();
+
+   if(status!=="approved"){
+    const approve=document.createElement("button");
+    approve.className="approve";
+    approve.textContent="Approve और DSA ID जारी करें";
+    approve.addEventListener("click",()=>approveDSA(dsa.uid,approve));
+    div.appendChild(approve);
+   }
+
+   if(status!=="rejected"){
+    const reject=document.createElement("button");
+    reject.className="reject";
+    reject.textContent="Reject करें";
+    reject.addEventListener("click",()=>rejectDSA(dsa.uid,reject));
+    div.appendChild(reject);
+   }
+
+   $("list").appendChild(div);
+  });
+ }catch(error){
+  $("list").textContent="Error: "+error.message;
+ }
+}
+
+async function approveDSA(uid,button){
+ if(!confirm("क्या इस DSA को Approve करना है?")) return;
+ button.disabled=true;
+ message("DSA Approval हो रहा है...","#123d72");
+
+ try{
+  const dsaRef=doc(db,"dsas",uid);
+  const counterRef=doc(db,"counters","dsaSerial");
+
+  await runTransaction(db,async transaction=>{
+   const dsaSnap=await transaction.get(dsaRef);
+   if(!dsaSnap.exists()) throw new Error("DSA रिकॉर्ड नहीं मिला।");
+
+   const data=dsaSnap.data();
+   let dsaId=data.dsaId;
+
+   if(!dsaId){
+    const counterSnap=await transaction.get(counterRef);
+    const next=(counterSnap.exists()?Number(counterSnap.data().value||0):0)+1;
+    dsaId="DSA-"+String(next).padStart(3,"0");
+    transaction.set(counterRef,{
+     value:next,
+     updatedAt:serverTimestamp()
+    });
+   }
+
+   transaction.update(dsaRef,{
+    status:"approved",
+    dsaId:dsaId,
+    approvedAt:serverTimestamp()
+   });
+  });
+
+  message("DSA सफलतापूर्वक Approve हो गया।","#168344");
+  await loadDSAs();
+ }catch(error){
+  message("Approval Error: "+error.message);
+  button.disabled=false;
+ }
+}
+
+async function rejectDSA(uid,button){
+ if(!confirm("क्या इस DSA Registration को Reject करना है?")) return;
+ button.disabled=true;
+ try{
+  await runTransaction(db,async transaction=>{
+   const ref=doc(db,"dsas",uid);
+   const snap=await transaction.get(ref);
+   if(!snap.exists()) throw new Error("DSA रिकॉर्ड नहीं मिला।");
+   transaction.update(ref,{
+    status:"rejected",
+    rejectedAt:serverTimestamp()
+   });
+  });
+  message("DSA Registration Reject कर दिया गया।","#168344");
+  await loadDSAs();
+ }catch(error){
+  message("Error: "+error.message);
+  button.disabled=false;
+ }
+}
+
+$("refresh").addEventListener("click",loadDSAs);
+$("logout").addEventListener("click",async()=>{
+ await signOut(auth);
+ window.location.href="../index.html";
+});
+</script>
+</body>
+</html>
