@@ -1,4 +1,4 @@
-x
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -26,6 +26,8 @@ justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap
 background:#fff;color:#073b7a;border:0;padding:10px 13px;
 border-radius:8px;font-size:20px;cursor:pointer
 }
+
+/* MENU - corrected */
 nav{
 display:none;background:#fff;padding:12px;position:absolute;
 right:15px;top:65px;border-radius:12px;
@@ -115,9 +117,7 @@ color:white;border:0;border-radius:12px;
 font-size:18px;font-weight:bold;cursor:pointer;
 text-align:center
 }
-.inquiry-content{
-margin-top:18px
-}
+.inquiry-content{margin-top:18px}
 
 form{
 background:white;padding:22px;border-radius:18px;
@@ -141,11 +141,37 @@ border-radius:10px;font-size:17px;font-weight:bold;cursor:pointer
 .form-submit:disabled{opacity:.6}
 #status{margin-top:15px;text-align:center;font-weight:bold;line-height:1.8}
 
+#faq{
+padding:30px 15px;background:#f1f5f9;color:#172554;
+border-radius:16px;margin:25px 0
+}
+#faq h2{text-align:center;color:#073b7a;margin-bottom:20px}
+#faq details{
+background:white;padding:15px;margin:10px auto;
+max-width:850px;border-radius:8px
+}
+#faq summary{cursor:pointer;color:#073b7a}
+#faq details p{margin-top:10px;line-height:1.7;color:#475569}
+#faq .faq-contact{text-align:center;margin-top:20px}
+#faq a{color:#087e45;font-weight:bold}
+
 footer{
 background:#071952;color:white;padding:30px 20px;
 text-align:center;margin-top:30px
 }
 footer a{color:#ffd166;text-decoration:none}
+footer .footer-box{
+max-width:900px;margin:20px auto;padding:20px;
+background:#fff;color:#172554;border-radius:12px;text-align:left
+}
+footer .footer-box h3{margin-bottom:12px}
+footer .footer-box li{margin:8px 0;line-height:1.6}
+footer .footer-disclaimer{
+max-width:900px;margin:20px auto;padding:20px;
+background:#fff;color:#333;border-radius:10px;text-align:left
+}
+footer .footer-disclaimer p{line-height:1.7;margin-top:10px}
+
 .contact-buttons{
 display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:20px 0
 }
@@ -186,6 +212,7 @@ MONEY SOLUTION
 <a href="#partners" onclick="toggleMenu()">🤝 Partner Companies</a>
 <a href="#inquiry" onclick="toggleMenu()">📋 Customer Inquiry</a>
 <a href="#login-register" onclick="toggleMenu()">🔐 Login & Registration</a>
+<a href="#faq" onclick="toggleMenu()">❓ FAQ</a>
 <a href="#contact" onclick="toggleMenu()">📞 Contact</a>
 <a href="privacy-policy.html">🔒 Privacy Policy</a>
 </nav>
@@ -331,7 +358,7 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 </div>
 </section>
 
-<!-- CUSTOMER INQUIRY BUTTON AND FORM -->
+<!-- CUSTOMER INQUIRY -->
 <section class="section" id="inquiry">
 <h2 class="section-title">Customer Inquiry</h2>
 <p class="section-desc">Inquiry भेजने के लिए नीचे बटन दबाएँ</p>
@@ -413,7 +440,7 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 </div>
 </section>
 
-<!-- LOGIN AND REGISTRATION: PARTNERS के नीचे और CONTACT के ऊपर -->
+<!-- LOGIN AND REGISTRATION -->
 <section class="section" id="login-register">
 <h2 class="section-title">DSA / Agent / Admin Login</h2>
 <p class="section-desc">DSA, Agent एवं Admin के लिए लॉगिन और रजिस्ट्रेशन</p>
@@ -453,38 +480,39 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 </div>
 </section>
 
-<section id="faq" style="padding:30px 15px;background:#f1f5f9;color:#172554;">
-  <h2 style="text-align:center;">FAQ – अक्सर पूछे जाने वाले सवाल</h2>
+<!-- FAQ -->
+<section id="faq">
+<h2>FAQ – अक्सर पूछे जाने वाले सवाल</h2>
 
-  <details style="background:white;padding:15px;margin:10px auto;max-width:850px;border-radius:8px;">
-    <summary><b>लोन के लिए कौन-कौन से दस्तावेज जरूरी हैं?</b></summary>
-    <p>आमतौर पर आधार कार्ड, पैन कार्ड, बैंक स्टेटमेंट, फोटो और आय से संबंधित दस्तावेज मांगे जा सकते हैं। दस्तावेज लोन और बैंक/NBFC के अनुसार अलग हो सकते हैं।</p>
-  </details>
+<details>
+<summary><b>लोन के लिए कौन-कौन से दस्तावेज जरूरी हैं?</b></summary>
+<p>आमतौर पर आधार कार्ड, पैन कार्ड, बैंक स्टेटमेंट, फोटो और आय से संबंधित दस्तावेज मांगे जा सकते हैं। दस्तावेज लोन और बैंक/NBFC के अनुसार अलग हो सकते हैं।</p>
+</details>
 
-  <details style="background:white;padding:15px;margin:10px auto;max-width:850px;border-radius:8px;">
-    <summary><b>लोन कितने दिनों में मिलता है?</b></summary>
-    <p>लोन की प्रक्रिया और समय संबंधित बैंक/NBFC की जांच और स्वीकृति पर निर्भर करता है।</p>
-  </details>
+<details>
+<summary><b>लोन कितने दिनों में मिलता है?</b></summary>
+<p>लोन की प्रक्रिया और समय संबंधित बैंक/NBFC की जांच और स्वीकृति पर निर्भर करता है।</p>
+</details>
 
-  <details style="background:white;padding:15px;margin:10px auto;max-width:850px;border-radius:8px;">
-    <summary><b>क्या लोन की गारंटी है?</b></summary>
-    <p>नहीं। लोन स्वीकृत या अस्वीकृत करने का अंतिम निर्णय संबंधित बैंक/NBFC का होता है।</p>
-  </details>
+<details>
+<summary><b>क्या लोन की गारंटी है?</b></summary>
+<p>नहीं। लोन स्वीकृत या अस्वीकृत करने का अंतिम निर्णय संबंधित बैंक/NBFC का होता है।</p>
+</details>
 
-  <details style="background:white;padding:15px;margin:10px auto;max-width:850px;border-radius:8px;">
-    <summary><b>क्या ऑनलाइन आवेदन कर सकते हैं?</b></summary>
-    <p>जी हाँ। आप हमारी वेबसाइट पर Customer Inquiry फॉर्म भरकर जानकारी भेज सकते हैं।</p>
-  </details>
+<details>
+<summary><b>क्या ऑनलाइन आवेदन कर सकते हैं?</b></summary>
+<p>जी हाँ। आप हमारी वेबसाइट पर Customer Inquiry फॉर्म भरकर जानकारी भेज सकते हैं।</p>
+</details>
 
-  <details style="background:white;padding:15px;margin:10px auto;max-width:850px;border-radius:8px;">
-    <summary><b>क्या लोन के लिए कोई फीस लगती है?</b></summary>
-    <p>यदि कोई प्रोसेसिंग फीस या अन्य शुल्क लागू होता है, तो उसकी जानकारी संबंधित बैंक/NBFC देगा। किसी भी भुगतान से पहले आधिकारिक जानकारी अवश्य लें।</p>
-  </details>
+<details>
+<summary><b>क्या लोन के लिए कोई फीस लगती है?</b></summary>
+<p>यदि कोई प्रोसेसिंग फीस या अन्य शुल्क लागू होता है, तो उसकी जानकारी संबंधित बैंक/NBFC देगा। किसी भी भुगतान से पहले आधिकारिक जानकारी अवश्य लें।</p>
+</details>
 
-  <p style="text-align:center;">
-    अधिक जानकारी के लिए WhatsApp करें:
-    <a href="https://wa.me/9450933936">9450933936</a>
-  </p>
+<p class="faq-contact">
+अधिक जानकारी के लिए WhatsApp करें:
+<a href="https://wa.me/9450933936">9450933936</a>
+</p>
 </section>
 
 <!-- CONTACT -->
@@ -506,7 +534,7 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 
 </main>
 
-
+<!-- FOOTER -->
 <footer>
 <h3>Money Solution Finance Services DSA Office</h3>
 <p>Loan • Insurance • Banking • Finance Services</p>
@@ -519,11 +547,10 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 </p>
 
 <p style="margin-top:10px">
-<a href="#terms" style="color:#ffd166">📋 Terms & Conditions | नियम एवं शर्तें</a>
+<a href="#terms">📋 Terms & Conditions | नियम एवं शर्तें</a>
 </p>
 
-<div id="terms" style="max-width:900px;margin:20px auto;padding:20px;background:#fff;color:#172554;border-radius:12px;text-align:left">
-
+<div id="terms" class="footer-box">
 <h3>Terms & Conditions | नियम एवं शर्तें</h3>
 
 <h4>हिंदी</h4>
@@ -535,19 +562,7 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 <li>ग्राहक की जानकारी उसकी सहमति से संबंधित वित्तीय संस्था के साथ साझा की जा सकती है।</li>
 <li>ग्राहक अपना OTP, ATM PIN या पासवर्ड किसी के साथ साझा न करें।</li>
 </ol>
-<div style="max-width:900px;margin:20px auto;padding:20px;background:#fff;color:#333;border-radius:10px;text-align:left">
 
-<h3>Disclaimer | अस्वीकरण</h3>
-
-<p>
-<strong>हिंदी:</strong> Money Solution Finance Services एक DSA/Connector के रूप में विभिन्न बैंक एवं NBFC की वित्तीय सेवाओं के लिए ग्राहकों को सहायता प्रदान करता है। हम किसी भी लोन की स्वीकृति की गारंटी नहीं देते। लोन स्वीकृति, ब्याज दर, प्रोसेसिंग फीस एवं अन्य शर्तें संबंधित बैंक/NBFC के नियमों के अनुसार निर्धारित होंगी।
-</p>
-
-<p>
-<strong>English:</strong> Money Solution Finance Services acts as a DSA/Connector and assists customers with financial services offered by banks and NBFCs. We do not guarantee loan approval. Loan approval, interest rates, processing fees and other terms are subject to the respective bank/NBFC policies.
-</p>
-
-</div>
 <h4>English</h4>
 <ol>
 <li>Money Solution Finance Services provides assistance for bank and NBFC loans as a DSA/Connector.</li>
@@ -557,14 +572,20 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 <li>Customer information may be shared with the concerned financial institution with the customer's consent.</li>
 <li>Customers should never share their OTP, ATM PIN or password with anyone.</li>
 </ol>
+</div>
 
+<div class="footer-disclaimer">
+<h3>Disclaimer | अस्वीकरण</h3>
+
+<p><strong>हिंदी:</strong> Money Solution Finance Services एक DSA/Connector के रूप में विभिन्न बैंक एवं NBFC की वित्तीय सेवाओं के लिए ग्राहकों को सहायता प्रदान करता है। हम किसी भी लोन की स्वीकृति की गारंटी नहीं देते। लोन स्वीकृति, ब्याज दर, प्रोसेसिंग फीस एवं अन्य शर्तें संबंधित बैंक/NBFC के नियमों के अनुसार निर्धारित होंगी।</p>
+
+<p><strong>English:</strong> Money Solution Finance Services acts as a DSA/Connector and assists customers with financial services offered by banks and NBFCs. We do not guarantee loan approval. Loan approval, interest rates, processing fees and other terms are subject to the respective bank/NBFC policies.</p>
 </div>
 
 <p style="margin-top:15px">
 © 2026 Money Solution Finance Services
 </p>
 </footer>
-
 
 <a class="whatsapp-float" href="https://wa.me/9450933936" aria-label="WhatsApp">💬</a>
 
