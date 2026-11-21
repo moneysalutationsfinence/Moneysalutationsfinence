@@ -1,51 +1,161 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isAdmin() {
-      return request.auth != null && request.auth.uid == "mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+
+    function signedIn() {
+      return request.auth != null;
     }
+
+    function isAdmin() {
+      return signedIn()
+        && request.auth.uid == "mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+    }
+
+    function isApprovedDSA() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/dsas/$(request.auth.uid))
+        && get(/databases/$(database)/documents/dsas/$(request.auth.uid)).data.status == "approved";
+    }
+
     function isApprovedAgent() {
-      return request.auth != null
+      return signedIn()
         && exists(/databases/$(database)/documents/agents/$(request.auth.uid))
         && get(/databases/$(database)/documents/agents/$(request.auth.uid)).data.status == "approved";
     }
+
+    function isMyDSAAgent(agentUid) {
+      return isApprovedDSA()
+        && exists(/databases/$(database)/documents/agents/$(agentUid))
+        && get(/databases/$(database)/documents/agents/$(agentUid)).data.dsaUid == request.auth.uid;
+    }
+
+    // Customer inquiries: public submission, Admin-only access.
     match /inquiries/{id} {
-      // Backward-compatible: existing homepage inquiry form fields/data remain usable.
-      // New homepage form should send customerConsent=true; if supplied, it must be true.
       allow create: if request.resource.data.keys().size() > 0
         && request.resource.data.keys().size() <= 25
         && (!('customerConsent' in request.resource.data.keys())
             || request.resource.data.customerConsent == true);
+
       allow read, update, delete: if isAdmin();
     }
+
+    // DSA profiles.
+    match /dsas/{dsaUid} {
+      allow create: if signedIn()
+        && request.auth.uid == dsaUid
+        && request.resource.data.uid == dsaUid
+        && request.resource.data.status == "pending"
+        && request.resource.data.memberType == "dsa";
+
+      allow get: if isAdmin()
+        || (signedIn() && request.auth.uid == dsaUid);
+
+      allow list: if isAdmin();
+
+      // Only Admin can approve, reject, edit or delete a DSA.
+      allow update, delete: if isAdmin();
+    }
+
+    // Agent profiles, including old Agents without a DSA.
     match /agents/{agentId} {
-      allow create: if request.auth != null && request.auth.uid == agentId
+
+      // Old self-registration OR creation by an approved DSA.
+      allow create: if signedIn()
         && request.resource.data.uid == agentId
         && request.resource.data.status == "pending"
         && request.resource.data.memberType == "referral_agent"
-        && request.resource.data.keys().hasAll(["uid","name","fatherName","address","city","district","pin","mobile","whatsapp","email","status","memberType","createdAt"])
-        && request.resource.data.keys().hasOnly(["uid","name","fatherName","address","city","district","pin","mobile","whatsapp","email","status","memberType","createdAt"]);
-      allow get: if isAdmin() || (request.auth != null && request.auth.uid == agentId);
-      allow list: if isAdmin();
+        && request.resource.data.keys().hasAll([
+          "uid", "name", "fatherName", "address", "city",
+          "district", "pin", "mobile", "whatsapp", "email",
+          "status", "memberType", "createdAt"
+        ])
+        && request.resource.data.keys().hasOnly([
+          "uid", "name", "fatherName", "address", "city",
+          "district", "pin", "mobile", "whatsapp", "email",
+          "status", "memberType", "createdAt",
+          "dsaUid", "dsaId", "agentId", "agentCode"
+        ])
+        && (
+          request.auth.uid == agentId
+          ||
+          (isApprovedDSA()
+            && request.resource.data.dsaUid == request.auth.uid
+            && request.resource.data.dsaId
+              == get(/databases/$(database)/documents/dsas/$(request.auth.uid)).data.dsaId)
+        );
+
+      allow get: if isAdmin()
+        || (signedIn() && request.auth.uid == agentId)
+        || (isApprovedDSA()
+            && resource.data.dsaUid == request.auth.uid);
+
+      // DSA queries must include where("dsaUid", "==", current DSA UID).
+      allow list: if isAdmin()
+        || (isApprovedDSA()
+            && resource.data.dsaUid == request.auth.uid);
+
+      // Only Admin can approve, reject, edit or delete Agents.
       allow update, delete: if isAdmin();
     }
+
+    // Customer leads submitted by Agents.
     match /leads/{leadId} {
+
       allow create: if isApprovedAgent()
         && request.resource.data.agentUid == request.auth.uid
         && request.resource.data.customerConsent == true
         && request.resource.data.status == "New"
-        && request.resource.data.keys().hasAll(["agentUid","agentName","agentMobile","customerName","mobile","address","district","pin","loanType","loanAmount","customerConsent","status","createdAt"])
-        && request.resource.data.keys().hasOnly(["agentUid","agentName","agentMobile","customerName","mobile","address","district","pin","loanType","loanAmount","customerConsent","status","createdAt"])
-        && request.resource.data.mobile is string && request.resource.data.mobile.matches('^[0-9]{10}$')
-        && request.resource.data.pin is string && request.resource.data.pin.matches('^[0-9]{6}$')
-        && request.resource.data.customerConsent == true;
-      allow read: if isAdmin() || (isApprovedAgent() && resource.data.agentUid == request.auth.uid);
+        && request.resource.data.keys().hasAll([
+          "agentUid", "agentName", "agentMobile",
+          "customerName", "mobile", "address",
+          "district", "pin", "loanType", "loanAmount",
+          "customerConsent", "status", "createdAt"
+        ])
+        && request.resource.data.keys().hasOnly([
+          "agentUid", "agentName", "agentMobile",
+          "customerName", "mobile", "address",
+          "district", "pin", "loanType", "loanAmount",
+          "customerConsent", "status", "createdAt"
+        ])
+        && request.resource.data.mobile is string
+        && request.resource.data.mobile.matches('^[0-9]{10}$')
+        && request.resource.data.pin is string
+        && request.resource.data.pin.matches('^[0-9]{6}$');
+
+      // Admin, the submitting Agent, or that Agent's approved DSA.
+      allow read: if isAdmin()
+        || (isApprovedAgent()
+            && resource.data.agentUid == request.auth.uid)
+        || isMyDSAAgent(resource.data.agentUid);
+
       allow update, delete: if isAdmin();
     }
+
+    // Commission records.
     match /commissions/{id} {
-      allow read: if isAdmin() || (isApprovedAgent() && resource.data.agentUid == request.auth.uid);
+      allow read: if isAdmin()
+        || (isApprovedAgent()
+            && resource.data.agentUid == request.auth.uid)
+        || isMyDSAAgent(resource.data.agentUid);
+
       allow create, update, delete: if isAdmin();
     }
-    match /{document=**} { allow read, write: if false; }
+
+    // Partner links: public viewing, Admin management.
+    match /partnerLinks/{id} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Existing serial counters are Admin-only.
+    match /counters/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    // All other collections are blocked unless explicitly allowed above.
+    match /{document=**} {
+      allow read, write: if false;
+    }
   }
 }
