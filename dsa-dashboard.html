@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DSA Dashboard - Money Solution Finance Services</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f1f4f9;font-family:Arial,sans-serif;color:#222}
+header{background:#123d72;color:white;padding:18px;text-align:center}
+header h2{margin:0 0 8px}
+.container{max-width:1000px;margin:20px auto;padding:12px}
+.card{background:white;padding:18px;margin-bottom:18px;border-radius:12px;box-shadow:0 2px 10px #0001}
+h3{color:#123d72;margin-top:0}
+input{width:100%;padding:12px;margin:7px 0;border:1px solid #ccc;border-radius:7px;font-size:15px}
+button{padding:12px 16px;background:#123d72;color:white;border:0;border-radius:7px;cursor:pointer;margin:5px 3px}
+button:disabled{opacity:.6}
+.logout{background:#b3261e}
+.item{padding:12px;border:1px solid #ddd;border-radius:8px;margin:9px 0;overflow-wrap:anywhere}
+.small{color:#666;font-size:13px}
+#message,#agentMessage{font-weight:bold;margin-top:10px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:9px;border:1px solid #ddd;text-align:left;font-size:14px}
+.tablewrap{overflow-x:auto}
+</style>
+</head>
+<body>
+
+<header>
+<h2>Money Solution Finance Services</h2>
+<div>DSA Dashboard</div>
+<button class="logout" id="logoutBtn">Logout</button>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h3>DSA की जानकारी</h3>
+<p><b>नाम:</b> <span id="dsaName">लोड हो रहा है...</span></p>
+<p><b>DSA ID:</b> <span id="dsaId">लोड हो रहा है...</span></p>
+<p><b>मोबाइल:</b> <span id="dsaMobile">-</span></p>
+<p><b>Status:</b> <span id="dsaStatus">-</span></p>
+<div id="message"></div>
+</div>
+
+<div class="card">
+<h3>नया Agent बनाएँ</h3>
+<p class="small">यहाँ से बनाया गया Agent आपके DSA अकाउंट से जुड़ेगा। Agent को Admin Approval के बाद Login मिलेगा।</p>
+
+<form id="agentForm">
+<input id="agentName" placeholder="Agent का पूरा नाम" required>
+<input id="fatherName" placeholder="पिता का नाम" required>
+<input id="agentMobile" type="tel" maxlength="10" placeholder="मोबाइल नंबर (10 अंक)" required>
+<input id="whatsapp" type="tel" maxlength="10" placeholder="WhatsApp नंबर (10 अंक)" required>
+<input id="address" placeholder="पूरा पता" required>
+<input id="city" placeholder="शहर" required>
+<input id="district" placeholder="जिला" required>
+<input id="pin" maxlength="6" placeholder="पिन कोड (6 अंक)" required>
+<input id="agentEmail" type="email" placeholder="Agent का Email" required>
+<input id="agentPassword" type="password" minlength="6" placeholder="Agent का Login Password (कम से कम 6 अक्षर)" required>
+<button type="submit" id="createAgentBtn">Agent Registration करें</button>
+</form>
+<div id="agentMessage"></div>
+</div>
+
+<div class="card">
+<h3>मेरे Agents</h3>
+<button id="refreshAgents">Agents Refresh करें</button>
+<div id="agentsList">लोड हो रहा है...</div>
+</div>
+
+<div class="card">
+<h3>मेरे Agents की Customer Leads</h3>
+<button id="refreshLeads">Leads Refresh करें</button>
+<div id="leadsList">लोड हो रहा है...</div>
+</div>
+
+</div>
+
+<script type="module">
+import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+ getAuth, onAuthStateChanged, signOut,
+ createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+ getFirestore, doc, getDoc, collection, query, where,
+ getDocs, setDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+ apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+ authDomain:"money-salutations-fainence.firebaseapp.com",
+ projectId:"money-salutations-fainence",
+ storageBucket:"money-salutations-fainence.firebasestorage.app",
+ messagingSenderId:"891890606664",
+ appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
+ measurementId:"G-HX6NBT529M"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+let currentUser=null;
+let dsaData=null;
+let myAgents=[];
+
+const $=id=>document.getElementById(id);
+
+function showMessage(id,text,color="red"){
+ $(id).style.color=color;
+ $(id).textContent=text;
+}
+
+onAuthStateChanged(auth,async(user)=>{
+ if(!user){
+  window.location.href="dsa-login.html";
+  return;
+ }
+
+ currentUser=user;
+
+ try{
+  const snap=await getDoc(doc(db,"dsas",user.uid));
+
+  if(!snap.exists()){
+   await signOut(auth);
+   alert("DSA प्रोफाइल नहीं मिली।");
+   window.location.href="dsa-login.html";
+   return;
+  }
+
+  dsaData=snap.data();
+
+  if(dsaData.status!=="approved"){
+   await signOut(auth);
+   alert("आपका DSA अकाउंट अभी Admin Approval के लिए Pending है।");
+   window.location.href="dsa-login.html";
+   return;
+  }
+
+  $("dsaName").textContent=dsaData.name || "-";
+  $("dsaId").textContent=dsaData.dsaId || "Admin से DSA ID जारी होना बाकी है";
+  $("dsaMobile").textContent=dsaData.mobile || "-";
+  $("dsaStatus").textContent=dsaData.status || "-";
+
+  await loadAgents();
+
+ }catch(error){
+  showMessage("message","लोड करने में समस्या: "+error.message);
+ }
+});
+
+async function loadAgents(){
+ $("agentsList").textContent="Agents लोड हो रहे हैं...";
+ try{
+  const q=query(collection(db,"agents"),where("dsaUid","==",currentUser.uid));
+  const snap=await getDocs(q);
+  myAgents=snap.docs.map(d=>({uid:d.id,...d.data()}));
+
+  if(myAgents.length===0){
+   $("agentsList").textContent="अभी आपके DSA अकाउंट में कोई Agent नहीं है।";
+   $("leadsList").textContent="अभी कोई Lead नहीं है।";
+   return;
+  }
+
+  $("agentsList").innerHTML="";
+  myAgents.forEach(agent=>{
+   const div=document.createElement("div");
+   div.className="item";
+   const title=document.createElement("b");
+   title.textContent=agent.name || "Agent";
+   const details=document.createElement("div");
+   details.textContent="Agent ID: "+(agent.agentId || agent.agentCode || "Approval बाकी")
+     +" | मोबाइल: "+(agent.mobile || "-")
+     +" | Status: "+(agent.status || "-");
+   div.append(title,details);
+   $("agentsList").appendChild(div);
+  });
+
+  await loadLeads();
+ }catch(error){
+  $("agentsList").textContent="Agents लोड नहीं हुए: "+error.message;
+ }
+}
+
+async function loadLeads(){
+ $("leadsList").textContent="Leads लोड हो रही हैं...";
+ try{
+  let allLeads=[];
+
+  // हर Agent की Leads अलग query से पढ़ी जाती हैं।
+  for(const agent of myAgents){
+   const q=query(collection(db,"leads"),where("agentUid","==",agent.uid));
+   const snap=await getDocs(q);
+   snap.forEach(d=>{
+    allLeads.push({id:d.id,...d.data()});
+   });
+  }
+
+  if(allLeads.length===0){
+   $("leadsList").textContent="अभी आपके Agents की कोई Customer Lead नहीं है।";
+   return;
+  }
+
+  $("leadsList").innerHTML="";
+  allLeads.sort((a,b)=>{
+   const ta=a.createdAt?.toMillis?.() || 0;
+   const tb=b.createdAt?.toMillis?.() || 0;
+   return tb-ta;
+  });
+
+  allLeads.forEach(lead=>{
+   const div=document.createElement("div");
+   div.className="item";
+   const title=document.createElement("b");
+   title.textContent=lead.customerName || "Customer";
+   const details=document.createElement("div");
+   details.textContent=
+    "मोबाइल: "+(lead.mobile || "-")+
+    " | Agent: "+(lead.agentName || "-")+
+    " | Loan: "+(lead.loanType || "-")+
+    " | राशि: "+(lead.loanAmount || "-")+
+    " | Status: "+(lead.status || "-");
+   div.append(title,details);
+   $("leadsList").appendChild(div);
+  });
+
+ }catch(error){
+  $("leadsList").textContent="Leads लोड नहीं हुईं: "+error.message;
+ }
+}
+
+$("agentForm").addEventListener("submit",async(e)=>{
+ e.preventDefault();
+
+ if(!currentUser || !dsaData) return;
+
+ if(!dsaData.dsaId){
+  showMessage("agentMessage","Admin से आपका DSA ID जारी होने के बाद ही Agent बना सकेंगे।");
+  return;
+ }
+
+ const name=$("agentName").value.trim();
+ const fatherName=$("fatherName").value.trim();
+ const mobile=$("agentMobile").value.trim();
+ const whatsapp=$("whatsapp").value.trim();
+ const address=$("address").value.trim();
+ const city=$("city").value.trim();
+ const district=$("district").value.trim();
+ const pin=$("pin").value.trim();
+ const email=$("agentEmail").value.trim();
+ const password=$("agentPassword").value;
+
+ if(!/^[0-9]{10}$/.test(mobile) || !/^[0-9]{10}$/.test(whatsapp)){
+  showMessage("agentMessage","मोबाइल और WhatsApp नंबर 10 अंकों के होने चाहिए।");
+  return;
+ }
+
+ if(!/^[0-9]{6}$/.test(pin)){
+  showMessage("agentMessage","पिन कोड 6 अंकों का होना चाहिए।");
+  return;
+ }
+
+ const btn=$("createAgentBtn");
+ btn.disabled=true;
+ btn.textContent="Agent बनाया जा रहा है...";
+ showMessage("agentMessage","कृपया इंतजार करें...","#123d72");
+
+ let secondaryApp=null;
+ let secondaryAuth=null;
+
+ try{
+  // Secondary Firebase Auth से Agent बनाया जाएगा।
+  // इससे DSA का Login बंद नहीं होगा।
+  secondaryApp=initializeApp(firebaseConfig,"agent-create-"+Date.now());
+  secondaryAuth=getAuth(secondaryApp);
+
+  const result=await createUserWithEmailAndPassword(
+   secondaryAuth,email,password
+  );
+
+  const agentUid=result.user.uid;
+
+  await setDoc(doc(db,"agents",agentUid),{
+   uid:agentUid,
+   name,
+   fatherName,
+   address,
+   city,
+   district,
+   pin,
+   mobile,
+   whatsapp,
+   email,
+   status:"pending",
+   memberType:"referral_agent",
+   dsaUid:currentUser.uid,
+   dsaId:dsaData.dsaId,
+   createdAt:serverTimestamp()
+  });
+
+  showMessage("agentMessage","Agent Registration सफल! Admin Approval के बाद Agent Login कर सकेगा।","green");
+  $("agentForm").reset();
+  await loadAgents();
+
+ }catch(error){
+  showMessage("agentMessage","Error: "+error.message);
+ }finally{
+  if(secondaryAuth){
+   try{await signOut(secondaryAuth);}catch(e){}
+  }
+  if(secondaryApp){
+   try{await deleteApp(secondaryApp);}catch(e){}
+  }
+  btn.disabled=false;
+  btn.textContent="Agent Registration करें";
+ }
+});
+
+$("refreshAgents").addEventListener("click",loadAgents);
+$("refreshLeads").addEventListener("click",loadLeads);
+
+$("logoutBtn").addEventListener("click",async()=>{
+ await signOut(auth);
+ window.location.href="dsa-login.html";
+});
+</script>
+</body>
+</html>
