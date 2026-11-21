@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Registration - Money Solution Finance Services</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#f1f4f9;font-family:Arial,sans-serif}
+.container{max-width:480px;margin:25px auto;background:white;padding:25px;border-radius:14px;box-shadow:0 4px 18px #0002}
+h2{text-align:center;color:#123d72}
+p{text-align:center;color:#555}
+input{width:100%;padding:13px;margin:8px 0;border:1px solid #ccc;border-radius:7px;font-size:16px}
+button{width:100%;padding:14px;background:#123d72;color:white;border:0;border-radius:7px;font-size:17px;margin-top:12px}
+#message{text-align:center;font-weight:bold;margin-top:15px}
+a{color:#123d72}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Money Solution Finance Services</h2>
+<p>DSA Registration Form</p>
+
+<form id="dsaForm">
+<input id="name" placeholder="पूरा नाम" required>
+<input id="father" placeholder="पिता का नाम" required>
+<input id="mobile" type="tel" maxlength="10" placeholder="मोबाइल नंबर (10 अंक)" required>
+<input id="address" placeholder="पूरा पता" required>
+<input id="district" placeholder="जिला" required>
+<input id="pin" maxlength="6" placeholder="पिन कोड" required>
+<input id="email" type="email" placeholder="ईमेल" required>
+<input id="password" type="password" minlength="6" placeholder="पासवर्ड (कम से कम 6 अक्षर)" required>
+<input id="confirmPassword" type="password" placeholder="पासवर्ड दोबारा लिखें" required>
+<button type="submit" id="submitBtn">DSA Registration करें</button>
+</form>
+
+<div id="message"></div>
+<p><a href="dsa-login.html">पहले से DSA हैं? Login करें</a></p>
+<p><a href="index.html">होम पेज पर जाएँ</a></p>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, doc, setDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+  authDomain: "money-salutations-fainence.firebaseapp.com",
+  projectId: "money-salutations-fainence",
+  storageBucket: "money-salutations-fainence.firebasestorage.app",
+  messagingSenderId: "891890606664",
+  appId: "1:891890606664:web:1d6df6ec8554d523176e7d",
+  measurementId: "G-HX6NBT529M"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const form = document.getElementById("dsaForm");
+const message = document.getElementById("message");
+const button = document.getElementById("submitBtn");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const name = document.getElementById("name").value.trim();
+  const father = document.getElementById("father").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const address = document.getElementById("address").value.trim();
+  const district = document.getElementById("district").value.trim();
+  const pin = document.getElementById("pin").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  if (!/^[0-9]{10}$/.test(mobile)) {
+    message.style.color = "red";
+    message.textContent = "सही 10 अंकों का मोबाइल नंबर लिखें।";
+    return;
+  }
+  if (!/^[0-9]{6}$/.test(pin)) {
+    message.style.color = "red";
+    message.textContent = "सही 6 अंकों का पिन कोड लिखें।";
+    return;
+  }
+  if (password !== confirmPassword) {
+    message.style.color = "red";
+    message.textContent = "दोनों पासवर्ड एक जैसे नहीं हैं।";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Registration हो रहा है...";
+  message.style.color = "#123d72";
+  message.textContent = "कृपया इंतजार करें...";
+
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    const uid = result.user.uid;
+
+    await setDoc(doc(db, "dsas", uid), {
+      uid,
+      name,
+      fatherName: father,
+      mobile,
+      address,
+      district,
+      pin,
+      email,
+      memberType: "dsa",
+      status: "pending",
+      createdAt: serverTimestamp()
+    });
+
+    message.style.color = "green";
+    message.textContent = "Registration सफल! Admin Approval के बाद आपका DSA Login चालू होगा।";
+    form.reset();
+  } catch (error) {
+    message.style.color = "red";
+    message.textContent = "Error: " + error.message;
+  } finally {
+    button.disabled = false;
+    button.textContent = "DSA Registration करें";
+  }
+});
+</script>
+</body>
+</html>
