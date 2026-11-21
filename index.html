@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Money Solution Finance Services</title>
-<meta name="description" content="Money Solution Finance Services - Loan, Insurance and Banking Services">
+<title>Money Solution Finance Services DSA Office</title>
+<meta name="description" content="Money Solution Finance Services DSA Office - Loan, Insurance and Banking Services">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -15,31 +16,16 @@ header{
 background:linear-gradient(120deg,#071952,#088395);
 color:white;padding:14px;position:sticky;top:0;z-index:100
 }
-
 .header-inner{
 max-width:1150px;margin:auto;display:flex;
-justify-content:space-between;align-items:center;
-gap:10px;flex-wrap:wrap
+justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap
 }
-
 .logo{font-size:22px;font-weight:bold}
 .logo small{display:block;font-size:10px;letter-spacing:2px;color:#ffd166;margin-top:4px}
-
-.header-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
-
-.dsa-btn{
-display:inline-block;padding:11px 13px;border-radius:9px;
-text-decoration:none;font-weight:bold;font-size:13px;color:white
-}
-
-.login-btn{background:#2563eb}
-.register-btn{background:#16a34a}
-
 .menu-btn{
 background:#fff;color:#073b7a;border:0;padding:10px 13px;
 border-radius:8px;font-size:20px;cursor:pointer
 }
-
 nav{
 display:none;background:#fff;padding:12px;position:absolute;
 right:15px;top:65px;border-radius:12px;
@@ -79,12 +65,10 @@ margin:8px 4px;cursor:pointer
 display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 gap:16px
 }
-
 .card{
 background:#fff;padding:22px;border-radius:16px;
 box-shadow:0 4px 14px #0b327a12;border:1px solid #e2e8f0
 }
-
 .card h3{margin-bottom:10px;color:#073b7a}
 .card p{color:#64748b;line-height:1.6}
 
@@ -124,31 +108,37 @@ box-shadow:0 4px 20px #0001
 .login-card:nth-child(4){border-top:4px solid #0891b2}
 .login-card:nth-child(5){border-top:4px solid #dc2626}
 
+.inquiry-toggle{
+display:block;width:100%;padding:17px;
+background:linear-gradient(120deg,#071952,#088395);
+color:white;border:0;border-radius:12px;
+font-size:18px;font-weight:bold;cursor:pointer;
+text-align:center
+}
+.inquiry-content{
+margin-top:18px
+}
+
 form{
 background:white;padding:22px;border-radius:18px;
 box-shadow:0 4px 20px #0001
 }
-
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
 .field{margin-bottom:15px}
 .field label{display:block;margin-bottom:7px;font-weight:bold;color:#334155}
-
 .field input:not([type=checkbox]),
 .field select,.field textarea{
 width:100%;padding:13px;border:1px solid #cbd5e1;
 border-radius:9px;font-size:16px
 }
-
 .field textarea{min-height:90px}
 .full{grid-column:1/-1}
-
 .form-submit{
 background:linear-gradient(90deg,#073b7a,#0891b2);
 color:white;width:100%;padding:15px;border:0;
 border-radius:10px;font-size:17px;font-weight:bold;cursor:pointer
 }
 .form-submit:disabled{opacity:.6}
-
 #status{margin-top:15px;text-align:center;font-weight:bold;line-height:1.8}
 
 footer{
@@ -156,11 +146,9 @@ background:#071952;color:white;padding:30px 20px;
 text-align:center;margin-top:30px
 }
 footer a{color:#ffd166;text-decoration:none}
-
 .contact-buttons{
 display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:20px 0
 }
-
 .whatsapp-float{
 position:fixed;bottom:18px;right:18px;background:#16a34a;
 color:white;padding:15px;border-radius:50%;font-size:23px;
@@ -170,8 +158,6 @@ text-decoration:none;box-shadow:0 4px 15px #0003;z-index:90
 @media(max-width:650px){
 .header-inner{align-items:center}
 .logo{font-size:18px}
-.header-actions{width:100%;order:3}
-.dsa-btn{flex:1;text-align:center;font-size:12px;padding:12px 5px}
 .menu-btn{margin-left:auto}
 .hero h1{font-size:25px}
 .container{padding:12px}
@@ -186,32 +172,23 @@ text-decoration:none;box-shadow:0 4px 15px #0003;z-index:90
 
 <header>
 <div class="header-inner">
-
 <div class="logo">
 MONEY SOLUTION
 <small>FINANCE SERVICES • DSA OFFICE</small>
 </div>
 
-<div class="header-actions">
 <button class="menu-btn" onclick="toggleMenu()">☰</button>
-</div>
 
 <nav id="menu">
 <a href="#home" onclick="toggleMenu()">🏠 Home</a>
 <a href="#poster" onclick="toggleMenu()">🖼️ Poster</a>
-<a href="#login-register" onclick="toggleMenu()">🔐 Login & Registration</a>
 <a href="#services" onclick="toggleMenu()">💰 Loan Services</a>
 <a href="#partners" onclick="toggleMenu()">🤝 Partner Companies</a>
 <a href="#inquiry" onclick="toggleMenu()">📋 Customer Inquiry</a>
+<a href="#login-register" onclick="toggleMenu()">🔐 Login & Registration</a>
 <a href="#contact" onclick="toggleMenu()">📞 Contact</a>
-<a href="dsa-register.html">📝 DSA Registration</a>
-<a href="dsa-login.html">👤 DSA Login</a>
-<a href="agent-register.html">📝 Agent Registration</a>
-<a href="agent-login.html">👤 Agent Login</a>
-<a href="admin/index.html">🔐 Admin Login</a>
 <a href="privacy-policy.html">🔒 Privacy Policy</a>
 </nav>
-
 </div>
 </header>
 
@@ -219,7 +196,7 @@ MONEY SOLUTION
 
 <!-- HOME -->
 <section class="hero" id="home">
-<h1>Money Solution Finance Services</h1>
+<h1>Money Solution Finance Services DSA Office</h1>
 <p>Loan • Insurance • Banking Services • Customer Inquiry</p>
 <p>आपकी वित्तीय जरूरतों के लिए एक ही स्थान पर सहायता</p>
 
@@ -231,52 +208,11 @@ MONEY SOLUTION
 <!-- POSTER -->
 <section class="section" id="poster">
 <h2 class="section-title">हमारा पोस्टर</h2>
-
 <div class="poster-box">
 <img
 src="assets/Money%20Solutions%20Finance%20Poster.png"
 alt="Money Solution Finance Services Poster"
 onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20Services%20Poster.png';">
-</div>
-</section>
-
-<!-- LOGIN AND REGISTRATION -->
-<section class="section" id="login-register">
-<h2 class="section-title">Login & Registration</h2>
-<p class="section-desc">DSA, Agent एवं Admin के लिए लॉगिन और रजिस्ट्रेशन</p>
-
-<div class="grid">
-
-<div class="card login-card">
-<h3>DSA Registration</h3>
-<p>नया DSA बनने के लिए रजिस्ट्रेशन करें</p>
-<a class="btn btn-green" href="dsa-register.html">DSA Registration</a>
-</div>
-
-<div class="card login-card">
-<h3>DSA Login</h3>
-<p>अपने DSA अकाउंट में लॉगिन करें</p>
-<a class="btn btn-blue" href="dsa-login.html">DSA Login</a>
-</div>
-
-<div class="card login-card">
-<h3>Agent Registration</h3>
-<p>नया Agent बनने के लिए रजिस्ट्रेशन करें</p>
-<a class="btn btn-green" href="agent-register.html">Agent Registration</a>
-</div>
-
-<div class="card login-card">
-<h3>Agent Login</h3>
-<p>अपने Agent अकाउंट में लॉगिन करें</p>
-<a class="btn btn-blue" href="agent-login.html">Agent Login</a>
-</div>
-
-<div class="card login-card">
-<h3>Admin Login</h3>
-<p>Admin Panel खोलने के लिए लॉगिन करें</p>
-<a class="btn btn-yellow" href="admin/index.html">Admin Login</a>
-</div>
-
 </div>
 </section>
 
@@ -395,13 +331,18 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 </div>
 </section>
 
-<!-- INQUIRY -->
+<!-- CUSTOMER INQUIRY BUTTON AND FORM -->
 <section class="section" id="inquiry">
-<h2 class="section-title">Customer Inquiry Form</h2>
-<p class="section-desc">अपनी जानकारी भरें, हमारी टीम आपसे संपर्क करेगी</p>
+<h2 class="section-title">Customer Inquiry</h2>
+<p class="section-desc">Inquiry भेजने के लिए नीचे बटन दबाएँ</p>
+
+<button type="button" class="inquiry-toggle" id="inquiryToggle" onclick="toggleInquiry()">
+📋 Customer Inquiry Form खोलें
+</button>
+
+<div class="inquiry-content" id="inquiryContent" hidden>
 
 <form id="inquiryForm">
-
 <div class="form-grid">
 
 <div class="field">
@@ -468,8 +409,48 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 
 <button class="form-submit" type="submit" id="submitBtn">📩 Submit Inquiry</button>
 <p id="status" aria-live="polite"></p>
-
 </form>
+</div>
+</section>
+
+<!-- LOGIN AND REGISTRATION: PARTNERS के नीचे और CONTACT के ऊपर -->
+<section class="section" id="login-register">
+<h2 class="section-title">DSA / Agent / Admin Login</h2>
+<p class="section-desc">DSA, Agent एवं Admin के लिए लॉगिन और रजिस्ट्रेशन</p>
+
+<div class="grid">
+
+<div class="card login-card">
+<h3>DSA Registration</h3>
+<p>नया DSA बनने के लिए रजिस्ट्रेशन करें</p>
+<a class="btn btn-green" href="dsa-register.html">DSA Registration</a>
+</div>
+
+<div class="card login-card">
+<h3>DSA Login</h3>
+<p>अपने DSA अकाउंट में लॉगिन करें</p>
+<a class="btn btn-blue" href="dsa-login.html">DSA Login</a>
+</div>
+
+<div class="card login-card">
+<h3>Agent Registration</h3>
+<p>नया Agent बनने के लिए रजिस्ट्रेशन करें</p>
+<a class="btn btn-green" href="agent-register.html">Agent Registration</a>
+</div>
+
+<div class="card login-card">
+<h3>Agent Login</h3>
+<p>अपने Agent अकाउंट में लॉगिन करें</p>
+<a class="btn btn-blue" href="agent-login.html">Agent Login</a>
+</div>
+
+<div class="card login-card">
+<h3>Admin Login</h3>
+<p>Admin Panel खोलने के लिए लॉगिन करें</p>
+<a class="btn btn-yellow" href="admin/index.html">Admin Login</a>
+</div>
+
+</div>
 </section>
 
 <!-- CONTACT -->
@@ -477,7 +458,7 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 <h2 class="section-title">Contact Us</h2>
 
 <div class="card" style="text-align:center">
-<h3>Money Solution Finance Services</h3>
+<h3>Money Solution Finance Services DSA Office</h3>
 <p>📞 Contact: 8881850249</p>
 <p>💬 WhatsApp: 9450933936</p>
 
@@ -491,21 +472,13 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 
 </main>
 
-<!-- FOOTER -->
 <footer>
-
-<h3>Money Solution Finance Services</h3>
+<h3>Money Solution Finance Services DSA Office</h3>
 <p>Loan • Insurance • Banking • Finance Services</p>
-
 <p>Call: <a href="tel:8881850249">8881850249</a></p>
 <p>WhatsApp: <a href="https://wa.me/9450933936">9450933936</a></p>
-
-<p style="margin-top:15px">
-<a href="privacy-policy.html">🔒 Privacy Policy</a>
-</p>
-
+<p style="margin-top:15px"><a href="privacy-policy.html">🔒 Privacy Policy</a></p>
 <p style="margin-top:15px">© 2026 Money Solution Finance Services</p>
-
 </footer>
 
 <a class="whatsapp-float" href="https://wa.me/9450933936" aria-label="WhatsApp">💬</a>
@@ -515,7 +488,6 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-
 const firebaseConfig={
 apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
 authDomain:"money-salutations-fainence.firebaseapp.com",
@@ -529,20 +501,38 @@ measurementId:"G-HX6NBT529M"
 if(!firebase.apps.length){
 firebase.initializeApp(firebaseConfig);
 }
-
 const db=firebase.firestore();
 
 function toggleMenu(){
 document.getElementById("menu").classList.toggle("show");
 }
 
+function toggleInquiry(){
+const content=document.getElementById("inquiryContent");
+const btn=document.getElementById("inquiryToggle");
+content.hidden=!content.hidden;
+btn.textContent=content.hidden
+?"📋 Customer Inquiry Form खोलें"
+:"✖ Customer Inquiry Form बंद करें";
+
+if(!content.hidden){
+setTimeout(()=>{
+content.scrollIntoView({behavior:"smooth",block:"start"});
+},100);
+}
+}
+
 function selectService(service){
 document.getElementById("service").value=service;
-document.getElementById("inquiry").scrollIntoView({behavior:"smooth"});
+const content=document.getElementById("inquiryContent");
+if(content.hidden){
+toggleInquiry();
+}else{
+content.scrollIntoView({behavior:"smooth",block:"start"});
+}
 }
 
 document.getElementById("inquiryForm").addEventListener("submit",async function(e){
-
 e.preventDefault();
 
 const status=document.getElementById("status");
@@ -573,7 +563,6 @@ createdAt:firebase.firestore.FieldValue.serverTimestamp()
 };
 
 try{
-
 await db.collection("inquiries").add(inquiry);
 
 status.style.color="green";
@@ -590,7 +579,6 @@ const waText=
 "Message: "+inquiry.message;
 
 const wa=document.createElement("a");
-
 wa.href="https://wa.me/9450933936?text="+encodeURIComponent(waText);
 wa.target="_blank";
 wa.rel="noopener";
@@ -603,17 +591,13 @@ status.appendChild(wa);
 document.getElementById("inquiryForm").reset();
 
 }catch(error){
-
 console.error(error);
 status.style.color="red";
 status.textContent="❌ Inquiry जमा नहीं हुई। Firebase सेटअप या इंटरनेट जाँचें।";
-
 }
 
 submitBtn.disabled=false;
-
 });
-
 </script>
 
 </body>
