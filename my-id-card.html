@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My ID Card - Money Solution Finance Services</title>
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;padding:20px;background:#eef2f7;
+      font-family:Arial,sans-serif;color:#172033
+    }
+    .page{max-width:650px;margin:20px auto;text-align:center}
+    h2{color:#123b70}
+    .message{background:white;padding:18px;border-radius:10px;margin:15px 0}
+    .card{
+      background:white;border:3px solid #123b70;border-radius:16px;
+      max-width:420px;margin:22px auto;padding:18px;
+      box-shadow:0 5px 18px #0002;text-align:left
+    }
+    .card-head{
+      text-align:center;background:#123b70;color:white;
+      padding:13px;border-radius:9px;margin-bottom:16px
+    }
+    .card-head h2{color:white;margin:0 0 5px;font-size:20px}
+    .card-head p{margin:0;font-size:12px}
+    .photo{
+      width:105px;height:120px;object-fit:cover;
+      border:2px solid #123b70;border-radius:8px;
+      display:block;margin:0 auto 15px;background:#eee
+    }
+    .detail{padding:8px 2px;border-bottom:1px solid #ddd;font-size:14px}
+    .detail b{display:inline-block;width:115px;color:#123b70}
+    .status{text-align:center;color:green;font-weight:bold;margin:14px 0}
+    .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px}
+    button,.login-link{
+      border:0;border-radius:7px;padding:12px 18px;
+      background:#123b70;color:white;font-size:15px;
+      text-decoration:none;cursor:pointer
+    }
+    .secondary{background:#16804a}
+    input{max-width:100%;margin:10px}
+    .note{font-size:12px;color:#555;text-align:center}
+    @media print{
+      body{background:white;padding:0}
+      .no-print,.page>h2,.message,.note{display:none!important}
+      .page{margin:0;width:100%;max-width:none}
+      .card{box-shadow:none;margin:20px auto;border:2px solid #123b70}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h2>My ID Card</h2>
+    <div id="message" class="message">आपका ID Card लोड हो रहा है...</div>
+
+    <section id="card" class="card" style="display:none">
+      <div class="card-head">
+        <h2>Money Solution Finance Services</h2>
+        <p id="memberType">MEMBER ID CARD</p>
+      </div>
+
+      <img id="photoPreview" class="photo"
+           src="https://placehold.co/105x120?text=PHOTO" alt="Member Photo">
+
+      <div class="detail"><b>Name:</b><span id="name"></span></div>
+      <div class="detail"><b>ID Number:</b><span id="memberId"></span></div>
+      <div class="detail"><b>Mobile:</b><span id="mobile"></span></div>
+      <div class="detail"><b>Address:</b><span id="address"></span></div>
+      <div class="detail"><b>District:</b><span id="district"></span></div>
+      <div class="status" id="status">APPROVED</div>
+      <p style="text-align:center;font-size:11px;margin-bottom:0">
+        This card belongs to the registered member only.
+      </p>
+    </section>
+
+    <div id="actions" class="actions no-print" style="display:none">
+      <label>
+        Photo चुनें:
+        <input type="file" id="photoInput" accept="image/*">
+      </label>
+      <button onclick="window.print()">Print / Save PDF</button>
+    </div>
+    <p class="note no-print" id="photoNote" style="display:none">
+      चुनी गई फोटो अभी इसी ब्राउज़र में दिखाई देगी। इसे Firestore में सेव नहीं किया जाएगा।
+    </p>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+      authDomain: "money-salutations-fainence.firebaseapp.com",
+      projectId: "money-salutations-fainence",
+      storageBucket: "money-salutations-fainence.firebasestorage.app",
+      messagingSenderId: "891890606664",
+      appId: "1:891890606664:web:1d6df6ec8554d523176e7d",
+      measurementId: "G-HX6NBT529M"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const el = id => document.getElementById(id);
+    const showMessage = message => { el("message").textContent = message; };
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        showMessage("पहले अपने DSA या Agent Login से लॉगिन करें।");
+        return;
+      }
+
+      try {
+        let data = null;
+        let type = "";
+        let idNumber = "";
+
+        const dsaSnap = await getDoc(doc(db, "dsas", user.uid));
+
+        if (dsaSnap.exists()) {
+          data = dsaSnap.data();
+          type = "DSA";
+          idNumber = data.dsaId || data.dsaCode || "";
+        } else {
+          const agentSnap = await getDoc(doc(db, "agents", user.uid));
+          if (agentSnap.exists()) {
+            data = agentSnap.data();
+            type = "AGENT";
+            idNumber = data.agentId || data.agentCode || "";
+          }
+        }
+
+        if (!data) {
+          showMessage("आपका सदस्य रिकॉर्ड नहीं मिला। कृपया Admin से संपर्क करें।");
+          return;
+        }
+
+        if (String(data.status || "").toLowerCase() !== "approved") {
+          showMessage("आपका आवेदन अभी Approved नहीं है। Approval के बाद ID Card उपलब्ध होगा।");
+          return;
+        }
+
+        if (!idNumber) {
+          showMessage("आपका ID Number अभी जारी नहीं हुआ है। कृपया Admin से संपर्क करें।");
+          return;
+        }
+
+        el("memberType").textContent = type + " ID CARD";
+        el("name").textContent = data.name || "—";
+        el("memberId").textContent = idNumber;
+        el("mobile").textContent = data.mobile || "—";
+        el("address").textContent = data.address || data.city || "—";
+        el("district").textContent = data.district || "—";
+        el("status").textContent = "APPROVED";
+
+        el("card").style.display = "block";
+        el("actions").style.display = "flex";
+        el("photoNote").style.display = "block";
+        el("message").style.display = "none";
+      } catch (error) {
+        console.error(error);
+        showMessage("ID Card लोड नहीं हो सका। Firebase Firestore Rules और इंटरनेट कनेक्शन जाँचें।");
+      }
+    });
+
+    el("photoInput").addEventListener("change", event => {
+      const file = event.target.files[0];
+      if (file) {
+        el("photoPreview").src = URL.createObjectURL(file);
+      }
+    });
+  </script>
+</body>
+</html>
