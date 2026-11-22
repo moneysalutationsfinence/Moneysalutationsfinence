@@ -5,48 +5,113 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DSA Dashboard - Money Solution Finance Services</title>
+
 <style>
+:root{
+ --navy:#102c59;
+ --blue:#1769aa;
+ --gold:#d6a63c;
+ --light:#f3f6fc;
+ --green:#16834a;
+ --text:#1d2b42;
+}
 *{box-sizing:border-box}
-body{margin:0;background:#f1f4f9;font-family:Arial,sans-serif;color:#222}
-header{background:#123d72;color:white;padding:18px;text-align:center}
-header h2{margin:0 0 8px}
-.container{max-width:1000px;margin:20px auto;padding:12px}
-.card{background:white;padding:18px;margin-bottom:18px;border-radius:12px;box-shadow:0 2px 10px #0001}
-h3{color:#123d72;margin-top:0}
-input{width:100%;padding:12px;margin:7px 0;border:1px solid #ccc;border-radius:7px;font-size:15px}
-button{padding:12px 16px;background:#123d72;color:white;border:0;border-radius:7px;cursor:pointer;margin:5px 3px}
+body{margin:0;background:var(--light);font-family:Arial,sans-serif;color:var(--text)}
+header{
+ background:linear-gradient(135deg,#102c59,#1769aa);
+ color:white;text-align:center;padding:25px 15px;
+ border-bottom:5px solid var(--gold)
+}
+header h2{margin:0 0 8px;font-size:23px}
+header p{margin:0;font-size:13px;color:#e4edff}
+.container{max-width:850px;margin:22px auto;padding:0 14px}
+.card{
+ background:white;padding:21px;margin-bottom:18px;
+ border-radius:15px;box-shadow:0 4px 18px #152d5012;
+ border:1px solid #e3eaf5
+}
+h3{color:var(--navy);margin-top:0;font-size:19px}
+input{
+ width:100%;padding:13px;margin:7px 0;
+ border:1px solid #ccd6e5;border-radius:9px;font-size:15px
+}
+button{
+ padding:13px 16px;background:var(--blue);color:white;
+ border:0;border-radius:9px;cursor:pointer;margin:6px 3px;
+ font-size:14px;font-weight:bold
+}
 button:disabled{opacity:.6}
-.logout{background:#b3261e}
-.item{padding:12px;border:1px solid #ddd;border-radius:8px;margin:9px 0;overflow-wrap:anywhere}
-.small{color:#666;font-size:13px}
-#message,#agentMessage{font-weight:bold;margin-top:10px}
-table{width:100%;border-collapse:collapse}
-th,td{padding:9px;border:1px solid #ddd;text-align:left;font-size:14px}
-.tablewrap{overflow-x:auto}
+.logout{background:#a72d35}
+.item{
+ padding:14px;background:#f5f8fd;
+ border:1px solid #e0e8f3;border-radius:10px;
+ margin:10px 0;overflow-wrap:anywhere;line-height:1.7
+}
+.small{color:#65738a;font-size:13px;line-height:1.6}
+.id-button{
+ display:block;text-align:center;text-decoration:none;
+ background:linear-gradient(135deg,#102c59,#1769aa);
+ color:white;padding:17px 12px;border-radius:12px;
+ border:2px solid var(--gold);font-size:17px;
+ font-weight:bold;margin-bottom:18px;
+ box-shadow:0 4px 12px #102c5930
+}
+.profile{
+ background:linear-gradient(135deg,#fff,#f0f5ff);
+ border:1px solid #dce6f5;border-left:5px solid var(--gold);
+ padding:17px;border-radius:12px
+}
+.profile p{margin:10px 0}
+.status{
+ display:inline-block;background:#dff6e8;color:#126b39;
+ padding:7px 13px;border-radius:25px;font-weight:bold;font-size:12px
+}
+.gold-line{height:3px;width:65px;background:var(--gold);margin:10px 0 18px}
+.section-heading{border-bottom:1px solid #e4eaf3;padding-bottom:12px;margin-bottom:15px}
+#message,#agentMessage{font-weight:bold;margin-top:12px;overflow-wrap:anywhere}
+.footer{text-align:center;padding:18px;color:#65738a;font-size:12px;line-height:1.7}
+a{color:var(--blue)}
+@media(max-width:560px){
+ .card{padding:16px}
+ header h2{font-size:20px}
+}
 </style>
 </head>
+
 <body>
 
 <header>
 <h2>Money Solution Finance Services</h2>
-<div>DSA Dashboard</div>
-<button class="logout" id="logoutBtn">Logout</button>
+<p>DSA PARTNER DASHBOARD</p>
 </header>
 
 <div class="container">
 
+<!-- DSA ID CARD SABSE UPAR -->
 <div class="card">
+<a href="my-id-card.html" class="id-button">
+🪪 मेरा DSA ID Card देखें
+</a>
+
+<div class="profile">
 <h3>DSA की जानकारी</h3>
+<div class="gold-line"></div>
 <p><b>नाम:</b> <span id="dsaName">लोड हो रहा है...</span></p>
 <p><b>DSA ID:</b> <span id="dsaId">लोड हो रहा है...</span></p>
 <p><b>मोबाइल:</b> <span id="dsaMobile">-</span></p>
-<p><b>Status:</b> <span id="dsaStatus">-</span></p>
+<p><b>Status:</b> <span id="dsaStatus" class="status">-</span></p>
 <div id="message"></div>
 </div>
 
+<button class="logout" id="logoutBtn">Logout</button>
+</div>
+
+<!-- NEW AGENT -->
 <div class="card">
-<h3>नया Agent बनाएँ</h3>
-<p class="small">यहाँ से बनाया गया Agent आपके DSA अकाउंट से जुड़ेगा। Agent को Admin Approval के बाद Login मिलेगा।</p>
+<div class="section-heading">
+<h3>➕ नया Agent बनाएँ</h3>
+<p class="small">यहाँ से बनाया गया Agent आपके DSA अकाउंट से जुड़ेगा। Agent को Admin Approval के बाद Login मिलेगा।</p>
+</div>
 
 <form id="agentForm">
 <input id="agentName" placeholder="Agent का पूरा नाम" required>
@@ -64,19 +129,31 @@ th,td{padding:9px;border:1px solid #ddd;text-align:left;font-size:14px}
 <div id="agentMessage"></div>
 </div>
 
+<!-- AGENT LIST -->
 <div class="card">
-<h3>मेरे Agents</h3>
-<button id="refreshAgents">Agents Refresh करें</button>
+<div class="section-heading">
+<h3>👥 मेरे Agents</h3>
+</div>
+<button id="refreshAgents">↻ Agents Refresh करें</button>
 <div id="agentsList">लोड हो रहा है...</div>
 </div>
 
+<!-- CUSTOMER LEADS -->
 <div class="card">
-<h3>मेरे Agents की Customer Leads</h3>
-<button id="refreshLeads">Leads Refresh करें</button>
+<div class="section-heading">
+<h3>📋 मेरे Agents की Customer Leads</h3>
+</div>
+<button id="refreshLeads">↻ Leads Refresh करें</button>
 <div id="leadsList">लोड हो रहा है...</div>
 </div>
 
 </div>
+
+<footer class="footer">
+Money Solution Finance Services<br>
+DSA Partner Dashboard
+<br><a href="index.html">Home Page</a>
+</footer>
 
 <script type="module">
 import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -146,7 +223,7 @@ onAuthStateChanged(auth,async(user)=>{
   $("dsaName").textContent=dsaData.name || "-";
   $("dsaId").textContent=dsaData.dsaId || "Admin से DSA ID जारी होना बाकी है";
   $("dsaMobile").textContent=dsaData.mobile || "-";
-  $("dsaStatus").textContent=dsaData.status || "-";
+  $("dsaStatus").textContent=(dsaData.status || "-").toUpperCase();
 
   await loadAgents();
 
@@ -157,8 +234,13 @@ onAuthStateChanged(auth,async(user)=>{
 
 async function loadAgents(){
  $("agentsList").textContent="Agents लोड हो रहे हैं...";
+
  try{
-  const q=query(collection(db,"agents"),where("dsaUid","==",currentUser.uid));
+  const q=query(
+   collection(db,"agents"),
+   where("dsaUid","==",currentUser.uid)
+  );
+
   const snap=await getDocs(q);
   myAgents=snap.docs.map(d=>({uid:d.id,...d.data()}));
 
@@ -169,20 +251,26 @@ async function loadAgents(){
   }
 
   $("agentsList").innerHTML="";
+
   myAgents.forEach(agent=>{
    const div=document.createElement("div");
    div.className="item";
+
    const title=document.createElement("b");
    title.textContent=agent.name || "Agent";
+
    const details=document.createElement("div");
-   details.textContent="Agent ID: "+(agent.agentId || agent.agentCode || "Approval बाकी")
-     +" | मोबाइल: "+(agent.mobile || "-")
-     +" | Status: "+(agent.status || "-");
+   details.textContent=
+    "Agent ID: "+(agent.agentId || agent.agentCode || "Approval बाकी")+
+    "\nमोबाइल: "+(agent.mobile || "-")+
+    "\nStatus: "+(agent.status || "-");
+
    div.append(title,details);
    $("agentsList").appendChild(div);
   });
 
   await loadLeads();
+
  }catch(error){
   $("agentsList").textContent="Agents लोड नहीं हुए: "+error.message;
  }
@@ -190,13 +278,18 @@ async function loadAgents(){
 
 async function loadLeads(){
  $("leadsList").textContent="Leads लोड हो रही हैं...";
+
  try{
   let allLeads=[];
 
-  // हर Agent की Leads अलग query से पढ़ी जाती हैं।
   for(const agent of myAgents){
-   const q=query(collection(db,"leads"),where("agentUid","==",agent.uid));
+   const q=query(
+    collection(db,"leads"),
+    where("agentUid","==",agent.uid)
+   );
+
    const snap=await getDocs(q);
+
    snap.forEach(d=>{
     allLeads.push({id:d.id,...d.data()});
    });
@@ -208,6 +301,7 @@ async function loadLeads(){
   }
 
   $("leadsList").innerHTML="";
+
   allLeads.sort((a,b)=>{
    const ta=a.createdAt?.toMillis?.() || 0;
    const tb=b.createdAt?.toMillis?.() || 0;
@@ -217,15 +311,18 @@ async function loadLeads(){
   allLeads.forEach(lead=>{
    const div=document.createElement("div");
    div.className="item";
+
    const title=document.createElement("b");
    title.textContent=lead.customerName || "Customer";
+
    const details=document.createElement("div");
    details.textContent=
     "मोबाइल: "+(lead.mobile || "-")+
-    " | Agent: "+(lead.agentName || "-")+
-    " | Loan: "+(lead.loanType || "-")+
-    " | राशि: "+(lead.loanAmount || "-")+
-    " | Status: "+(lead.status || "-");
+    "\nAgent: "+(lead.agentName || "-")+
+    "\nLoan: "+(lead.loanType || "-")+
+    "\nराशि: "+(lead.loanAmount || "-")+
+    "\nStatus: "+(lead.status || "-");
+
    div.append(title,details);
    $("leadsList").appendChild(div);
   });
@@ -238,7 +335,7 @@ async function loadLeads(){
 $("agentForm").addEventListener("submit",async(e)=>{
  e.preventDefault();
 
- if(!currentUser || !dsaData) return;
+ if(!currentUser || !dsaData)return;
 
  if(!dsaData.dsaId){
   showMessage("agentMessage","Admin से आपका DSA ID जारी होने के बाद ही Agent बना सकेंगे।");
@@ -275,8 +372,6 @@ $("agentForm").addEventListener("submit",async(e)=>{
  let secondaryAuth=null;
 
  try{
-  // Secondary Firebase Auth से Agent बनाया जाएगा।
-  // इससे DSA का Login बंद नहीं होगा।
   secondaryApp=initializeApp(firebaseConfig,"agent-create-"+Date.now());
   secondaryAuth=getAuth(secondaryApp);
 
@@ -304,7 +399,12 @@ $("agentForm").addEventListener("submit",async(e)=>{
    createdAt:serverTimestamp()
   });
 
-  showMessage("agentMessage","Agent Registration सफल! Admin Approval के बाद Agent Login कर सकेगा।","green");
+  showMessage(
+   "agentMessage",
+   "Agent Registration सफल! Admin Approval के बाद Agent Login कर सकेगा।",
+   "green"
+  );
+
   $("agentForm").reset();
   await loadAgents();
 
@@ -314,9 +414,11 @@ $("agentForm").addEventListener("submit",async(e)=>{
   if(secondaryAuth){
    try{await signOut(secondaryAuth);}catch(e){}
   }
+
   if(secondaryApp){
    try{await deleteApp(secondaryApp);}catch(e){}
   }
+
   btn.disabled=false;
   btn.textContent="Agent Registration करें";
  }
@@ -330,12 +432,6 @@ $("logoutBtn").addEventListener("click",async()=>{
  window.location.href="dsa-login.html";
 });
 </script>
+
 </body>
- <div style="text-align:center;margin:20px">
-  <a href="my-id-card.html"
-     style="background:#123b70;color:white;padding:12px 20px;
-     border-radius:8px;text-decoration:none;display:inline-block">
-    मेरा DSA ID Card देखें
-  </a>
-</div>
 </html>
