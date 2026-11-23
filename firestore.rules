@@ -25,6 +25,16 @@ service cloud.firestore {
     }
 
     function isMyDSAAgent(agentUid) {
+function isPhotoOnlyUpdate() {
+  return request.resource.data.diff(resource.data)
+    .affectedKeys().hasOnly(["photoData", "photoUpdatedAt"])
+    && request.resource.data.diff(resource.data)
+    .affectedKeys().hasAny(["photoData"])
+    && request.resource.data.photoData is string
+    && request.resource.data.photoData.size() <= 350000
+    && request.resource.data.photoUpdatedAt is timestamp;
+}
+
       return isApprovedDSA()
         && exists(/databases/$(database)/documents/agents/$(agentUid))
         && get(/databases/$(database)/documents/agents/$(agentUid)).data.dsaUid == request.auth.uid;
