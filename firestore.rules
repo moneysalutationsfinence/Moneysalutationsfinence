@@ -139,9 +139,13 @@ function isPhotoOnlyUpdate() {
             && resource.data.agentUid == request.auth.uid)
         || isMyDSAAgent(resource.data.agentUid);
 
-      allow update, delete: if isAdmin();
-    }
+      
+allow update: if isAdmin()
+  || (isApprovedDSA()
+      && request.auth.uid == dsaUid
+      && isPhotoOnlyUpdate());
 
+allow delete: if isAdmin();
     // Commission records.
     match /commissions/{id} {
       allow read: if isAdmin()
