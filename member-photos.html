@@ -1,60 +1,214 @@
+
 <!DOCTYPE html>
-<html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Member Photos | Money Solution</title>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Member Photos | Money Solution</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f1f5ff;color:#172554;font-family:Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:#f1f5ff;color:#172554;font-family:Arial,sans-serif}
 header{background:linear-gradient(120deg,#071952,#088395);color:white;padding:20px;text-align:center;border-bottom:4px solid #ffd166}
-.wrap{max-width:900px;margin:auto;padding:16px}.panel{background:white;margin:16px 0;padding:18px;border-radius:14px;box-shadow:0 4px 16px #0001}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.member{border:1px solid #dbe3ef;border-radius:12px;padding:14px;overflow-wrap:anywhere}
-.member img{width:100px;height:120px;object-fit:cover;border-radius:8px;background:#eee;display:block;margin:10px auto}
-button,input{font:inherit;padding:11px;border-radius:8px}button{background:#1769aa;color:white;border:0;width:100%;cursor:pointer;margin:6px 0}input{width:100%;border:1px solid #ccd6e5;margin:6px 0}.msg{padding:12px;background:#eef5ff;border-radius:8px;white-space:pre-wrap}
+.wrap{max-width:900px;margin:auto;padding:16px}
+.panel{background:white;margin:16px 0;padding:18px;border-radius:14px;box-shadow:0 4px 16px #0001}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.member{border:1px solid #dbe3ef;border-radius:12px;padding:14px;overflow-wrap:anywhere}
+.member img{width:110px;height:130px;object-fit:cover;border-radius:8px;background:#eee;display:block;margin:10px auto}
+button,input{font:inherit;padding:11px;border-radius:8px}
+button{background:#1769aa;color:white;border:0;width:100%;cursor:pointer;margin:6px 0}
+button:disabled{opacity:.5}
+input{width:100%;border:1px solid #ccd6e5;margin:6px 0}
+.msg{padding:12px;background:#eef5ff;border-radius:8px;white-space:pre-wrap}
 @media(max-width:500px){.wrap{padding:10px}.panel{padding:14px}}
-</style></head><body>
-<header><h1>Money Solution Finance Services</h1>Member Photo Management</header>
-<main class="wrap"><section class="panel"><div id="message" class="msg">लॉगिन जाँच रहे हैं...</div><button id="logout" style="display:none">Logout</button></section>
-<section class="panel"><h2>फोटो / ID Card Photo</h2><div id="members" class="grid"></div></section></main>
+</style>
+</head>
+<body>
+<header>
+<h1>Money Solution Finance Services</h1>
+Member Photo Management
+</header>
+
+<main class="wrap">
+<section class="panel">
+<div id="message" class="msg">लॉगिन जाँच रहे हैं...</div>
+<button id="logout" style="display:none">Logout</button>
+</section>
+<section class="panel">
+<h2>फोटो / ID Card Photo</h2>
+<div id="members" class="grid"></div>
+</section>
+</main>
+
 <script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getFirestore,doc,getDoc,collection,getDocs,query,where}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import{getStorage,ref,uploadBytes,getDownloadURL}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-const cfg={apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",authDomain:"money-salutations-fainence.firebaseapp.com",projectId:"money-salutations-fainence",storageBucket:"money-salutations-fainence.firebasestorage.app",messagingSenderId:"891890606664",appId:"1:891890606664:web:1d6df6ec8554d523176e7d"};
-const app=initializeApp(cfg),auth=getAuth(app),db=getFirestore(app),storage=getStorage(app);
-const adminUid="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3",msg=document.getElementById("message"),list=document.getElementById("members");
-function say(t){msg.textContent=t}
-function addCard(uid,type,data){
- const div=document.createElement("div");div.className="member";
- const title=document.createElement("h3");title.textContent=(type==="dsa"?"DSA: ":"Agent: ")+(data.name||"Member");
- const details=document.createElement("p");details.textContent=(type==="dsa"?(data.dsaId||""):(data.agentId||data.agentCode||""))+" • "+(data.mobile||"");
- const img=document.createElement("img");img.alt="Member photo";img.src="https://placehold.co/100x120?text=Photo";
- const file=document.createElement("input");file.type="file";file.accept="image/jpeg,image/png,image/webp";
- const upload=document.createElement("button");upload.textContent="Photo Upload / Update";
- const storageRef=ref(storage,"member-photos/"+uid+"/photo");
- getDownloadURL(storageRef).then(url=>img.src=url).catch(()=>{});
- upload.onclick=async()=>{const f=file.files?.[0];if(!f){say("पहले फोटो चुनें।");return}if(!["image/jpeg","image/png","image/webp"].includes(f.type)){say("JPG, PNG या WEBP फोटो चुनें।");return}if(f.size>5*1024*1024){say("फोटो 5 MB से छोटी रखें।");return}upload.disabled=true;say("फोटो अपलोड हो रही है...");try{await uploadBytes(storageRef,f,{contentType:f.type});img.src=await getDownloadURL(storageRef);say("फोटो सफलतापूर्वक सेव हो गई।")}catch(e){say("अपलोड नहीं हुई: "+e.message+" — Firebase Storage चालू और Rules सेट होने चाहिए।")}finally{upload.disabled=false}};
- div.append(title,details,img,file,upload);list.append(div)
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+ getFirestore,doc,getDoc,collection,getDocs,query,where,
+ updateDoc,serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const cfg={
+ apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
+ authDomain:"money-salutations-fainence.firebaseapp.com",
+ projectId:"money-salutations-fainence",
+ storageBucket:"money-salutations-fainence.firebasestorage.app",
+ messagingSenderId:"891890606664",
+ appId:"1:891890606664:web:1d6df6ec8554d523176e7d"
+};
+
+const app=initializeApp(cfg);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const adminUid="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+const msg=document.getElementById("message");
+const list=document.getElementById("members");
+
+function say(t){msg.textContent=t;}
+
+function compressPhoto(file){
+ return new Promise(async(resolve,reject)=>{
+  try{
+   const bitmap=await createImageBitmap(file);
+   let width=bitmap.width;
+   let height=bitmap.height;
+   const maxSide=640;
+   if(width>maxSide || height>maxSide){
+    const scale=Math.min(maxSide/width,maxSide/height);
+    width=Math.round(width*scale);
+    height=Math.round(height*scale);
+   }
+
+   const canvas=document.createElement("canvas");
+   const ctx=canvas.getContext("2d");
+   canvas.width=width;
+   canvas.height=height;
+   ctx.drawImage(bitmap,0,0,width,height);
+   bitmap.close();
+
+   let blob=null;
+   for(const quality of [0.72,0.60,0.48,0.38]){
+    blob=await new Promise(r=>canvas.toBlob(r,"image/jpeg",quality));
+    if(blob && blob.size<=250*1024)break;
+   }
+
+   if(!blob || blob.size>250*1024){
+    reject(new Error("फोटो का आकार कम नहीं हुआ। छोटी फोटो चुनें।"));
+    return;
+   }
+
+   const reader=new FileReader();
+   reader.onload=()=>resolve(reader.result);
+   reader.onerror=()=>reject(new Error("फोटो पढ़ी नहीं जा सकी।"));
+   reader.readAsDataURL(blob);
+  }catch(e){reject(e);}
+ });
 }
+
+function addCard(uid,type,data){
+ const div=document.createElement("div");
+ div.className="member";
+
+ const title=document.createElement("h3");
+ title.textContent=(type==="dsa"?"DSA: ":"Agent: ")+(data.name||"Member");
+
+ const details=document.createElement("p");
+ details.textContent=(type==="dsa"?(data.dsaId||""):(data.agentId||data.agentCode||""))+" • "+(data.mobile||"");
+
+ const img=document.createElement("img");
+ img.alt="Member photo";
+ img.src=data.photoData||"https://placehold.co/110x130?text=Photo";
+
+ const file=document.createElement("input");
+ file.type="file";
+ file.accept="image/jpeg,image/png,image/webp";
+
+ const upload=document.createElement("button");
+ upload.textContent="Photo Upload / Update";
+
+ upload.onclick=async()=>{
+  const f=file.files?.[0];
+  if(!f){say("पहले फोटो चुनें।");return;}
+  if(!["image/jpeg","image/png","image/webp"].includes(f.type)){
+   say("JPG, PNG या WEBP फोटो चुनें।");return;
+  }
+  if(f.size>8*1024*1024){
+   say("मूल फोटो 8 MB से छोटी रखें।");return;
+  }
+
+  upload.disabled=true;
+  say("फोटो छोटी की जा रही है...");
+
+  try{
+   const photoData=await compressPhoto(f);
+   say("फोटो Firestore में सेव हो रही है...");
+
+   const path=type==="dsa"?"dsas":"agents";
+   await updateDoc(doc(db,path,uid),{
+    photoData:photoData,
+    photoUpdatedAt:serverTimestamp()
+   });
+
+   img.src=photoData;
+   file.value="";
+   say("फोटो सफलतापूर्वक सेव हो गई।");
+  }catch(e){
+   say("फोटो सेव नहीं हुई: "+e.message);
+  }finally{
+   upload.disabled=false;
+  }
+ };
+
+ div.append(title,details,img,file,upload);
+ list.append(div);
+}
+
+document.getElementById("logout").onclick=()=>signOut(auth);
+
 onAuthStateChanged(auth,async user=>{
- if(!user){say("पहले Admin, DSA या Agent Login करें।");return}
- document.getElementById("logout").style.display="block";document.getElementById("logout").onclick=()=>signOut(auth);
+ if(!user){
+  say("पहले Admin, DSA या Agent Login करें।");
+  return;
+ }
+
+ document.getElementById("logout").style.display="block";
  list.innerHTML="";
+
  try{
   if(user.uid===adminUid){
    say("Admin Login — सभी सदस्य");
-   for(const c of ["dsas","agents"]){const s=await getDocs(collection(db,c));s.forEach(d=>addCard(d.id,c==="dsas"?"dsa":"agent",d.data()))}
+   for(const c of ["dsas","agents"]){
+    const snap=await getDocs(collection(db,c));
+    snap.forEach(d=>addCard(d.id,c==="dsas"?"dsa":"agent",d.data()));
+   }
   }else{
    const ds=await getDoc(doc(db,"dsas",user.uid));
-   if(ds.exists()&&ds.data().status==="approved"){
+
+   if(ds.exists() && ds.data().status==="approved"){
     addCard(user.uid,"dsa",ds.data());
-    const q=await getDocs(query(collection(db,"agents"),where("dsaUid","==",user.uid)));
+
+    const q=await getDocs(
+     query(collection(db,"agents"),where("dsaUid","==",user.uid))
+    );
     q.forEach(d=>addCard(d.id,"agent",d.data()));
-    say("DSA: अपनी फोटो और अपने Agents की फोटो देखें/अपलोड करें।");
+
+    say("DSA: अपनी और अपने Agents की फोटो देखें/अपलोड करें।");
    }else{
     const ag=await getDoc(doc(db,"agents",user.uid));
-    if(ag.exists()&&ag.data().status==="approved"){addCard(user.uid,"agent",ag.data());say("Agent: अपनी फोटो यहाँ देखें/अपलोड करें।")}
-    else say("Profile नहीं मिली या Approval Pending है।")
+
+    if(ag.exists() && ag.data().status==="approved"){
+     addCard(user.uid,"agent",ag.data());
+     say("Agent: अपनी फोटो यहाँ देखें/अपलोड करें।");
+    }else{
+     say("Profile नहीं मिली या Approval Pending है।");
+    }
    }
   }
-  if(!list.children.length)say("कोई सदस्य नहीं मिला।")
- }catch(e){say("लोड करने में समस्या: "+e.message)}
+
+  if(!list.children.length)say("कोई सदस्य नहीं मिला।");
+ }catch(e){
+  say("लोड करने में समस्या: "+e.message);
+ }
 });
-</script></body></html>
+</script>
+</body>
+</html>
