@@ -12,16 +12,20 @@ header{background:#123d72;color:white;padding:18px;text-align:center}
 main{max-width:1000px;margin:20px auto;padding:12px}
 .card{background:white;padding:18px;border-radius:12px;margin-bottom:16px;box-shadow:0 2px 10px #0001}
 button{padding:10px 14px;border:0;border-radius:6px;color:white;background:#123d72;margin:4px;cursor:pointer}
+button:disabled{opacity:.5}
 .approve{background:#168344}
 .reject{background:#b3261e}
+.edit{background:#e18a00}
+.delete{background:#b3261e}
 #list{margin-top:15px}
 .item{background:#fff;border:1px solid #ddd;border-radius:9px;padding:14px;margin:12px 0;overflow-wrap:anywhere}
 .item p{margin:7px 0}
 .status{font-weight:bold}
-.small{color:#666;font-size:13px}
+#message{margin:12px 0;font-weight:bold}
 </style>
 </head>
 <body>
+
 <header>
 <h2>Money Solution Finance Services</h2>
 <div>Admin - DSA Management</div>
@@ -30,7 +34,7 @@ button{padding:10px 14px;border:0;border-radius:6px;color:white;background:#123d
 <main>
 <div class="card">
 <h3>DSA Registration Management</h3>
-<p>यहाँ सभी DSA Applications दिखाई देंगी। Approve करने पर DSA ID अपने-आप जारी होगी।</p>
+<p>यहाँ सभी DSA Applications दिखाई देंगी। आप Approve, Reject, Edit और Delete कर सकते हैं।</p>
 <button id="refresh">Refresh करें</button>
 <button id="logout">Admin Logout</button>
 <div id="message"></div>
@@ -39,13 +43,16 @@ button{padding:10px 14px;border:0;border-radius:6px;color:white;background:#123d
 </main>
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {initializeApp}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 import {
  getAuth,onAuthStateChanged,signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 import {
  getFirestore,collection,getDocs,doc,runTransaction,
- serverTimestamp
+ serverTimestamp,updateDoc,deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig={
@@ -59,6 +66,7 @@ const firebaseConfig={
 };
 
 const ADMIN_UID="mxqMPdrbN2Nmmqe6YWU3GYJM5GB3";
+
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
@@ -71,19 +79,22 @@ function message(text,color="red"){
 
 onAuthStateChanged(auth,async user=>{
  if(!user){
-  $("list").textContent="पहले अपने Admin Account से Login करें।";
+  $("list").textContent="पहले Admin Account से Login करें।";
   return;
  }
+
  if(user.uid!==ADMIN_UID){
   await signOut(auth);
   $("list").textContent="Access Denied: केवल Admin यह पेज खोल सकता है।";
   return;
  }
+
  await loadDSAs();
 });
 
 async function loadDSAs(){
  $("list").textContent="DSA सूची लोड हो रही है...";
+
  try{
   const snap=await getDocs(collection(db,"dsas"));
   $("list").innerHTML="";
@@ -93,7 +104,10 @@ async function loadDSAs(){
    return;
   }
 
-  const records=snap.docs.map(d=>({uid:d.id,...d.data()}));
+  const records=snap.docs.map(d=>({
+   uid:d.id,...d.data()
+  }));
+
   records.sort((a,b)=>{
    const ta=a.createdAt?.toMillis?.()||0;
    const tb=b.createdAt?.toMillis?.()||0;
@@ -108,7 +122,7 @@ async function loadDSAs(){
    heading.textContent=dsa.name||"DSA";
 
    const details=document.createElement("div");
-   details.innerHTML="";
+
    const fields=[
     ["पिता का नाम",dsa.fatherName],
     ["मोबाइल",dsa.mobile],
@@ -119,6 +133,7 @@ async function loadDSAs(){
     ["DSA ID",dsa.dsaId||"अभी जारी नहीं हुई"],
     ["Status",dsa.status||"unknown"]
    ];
+
    fields.forEach(([label,value])=>{
     const p=document.createElement("p");
     const b=document.createElement("b");
@@ -147,15 +162,114 @@ async function loadDSAs(){
     div.appendChild(reject);
    }
 
+   const edit=document.createElement("button");
+   edit.className="edit";
+   edit.textContent="Edit करें";
+   edit.addEventListener("click",()=>editDSA(dsa,edit));
+   div.appendChild(edit);
+
+   const del=document.createElement("button");
+   del.className="delete";
+   del.textContent="Delete करें";
+   del.addEventListener("click",()=>deleteDSA(dsa.uid,del));
+   div.appendChild(del);
+
    $("list").appendChild(div);
   });
+
  }catch(error){
   $("list").textContent="Error: "+error.message;
  }
 }
 
+// DSA Details Edit
+async function editDSA(dsa,button){
+ const ask=(label,value)=>{
+  return prompt(label,value||"");
+ };
+
+ const name=ask("DSA का नाम:",dsa.name);
+ if(name===null)return;
+
+ const fatherName=ask("पिता का नाम:",dsa.fatherName);
+ if(fatherName===null)return;
+
+ const mobile=ask("मोबाइल नंबर:",dsa.mobile);
+ if(mobile===null)return;
+
+ const email=ask("Email:",dsa.email);
+ if(email===null)return;
+
+ const address=ask("पूरा पता:",dsa.address);
+ if(address===null)return;
+
+ const district=ask("जिला:",dsa.district);
+ if(district===null)return;
+
+ const pin=ask("पिन कोड:",dsa.pin);
+ if(pin===null)return;
+
+ if(!name.trim()){
+  alert("DSA का नाम खाली नहीं हो सकता।");
+  return;
+ }
+
+ if(!mobile.trim()){
+  alert("मोबाइल नंबर खाली नहीं हो सकता।");
+  return;
+ }
+
+ button.disabled=true;
+ message("DSA Details अपडेट हो रही हैं...","#123d72");
+
+ try{
+  await updateDoc(doc(db,"dsas",dsa.uid),{
+   name:name.trim(),
+   fatherName:fatherName.trim(),
+   mobile:mobile.trim(),
+   email:email.trim(),
+   address:address.trim(),
+   district:district.trim(),
+   pin:pin.trim(),
+   updatedAt:serverTimestamp()
+  });
+
+  message("DSA Details सफलतापूर्वक अपडेट हो गईं।","#168344");
+  await loadDSAs();
+
+ }catch(error){
+  message("Edit Error: "+error.message);
+  button.disabled=false;
+ }
+}
+
+// DSA Record Delete
+async function deleteDSA(uid,button){
+ const confirmDelete=confirm(
+  "क्या आप सच में इस DSA का रिकॉर्ड Delete करना चाहते हैं? यह Firestore रिकॉर्ड हटाएगा।"
+ );
+
+ if(!confirmDelete)return;
+
+ button.disabled=true;
+ message("DSA रिकॉर्ड Delete हो रहा है...","#123d72");
+
+ try{
+  await deleteDoc(doc(db,"dsas",uid));
+
+  message("DSA रिकॉर्ड सफलतापूर्वक Delete हो गया।","#168344");
+  await loadDSAs();
+
+ }catch(error){
+  message("Delete Error: "+error.message);
+  button.disabled=false;
+ }
+}
+
+// Approve DSA
 async function approveDSA(uid,button){
- if(!confirm("क्या इस DSA को Approve करना है?")) return;
+ if(!confirm("क्या इस DSA को Approve करना है?"))return;
+
  button.disabled=true;
  message("DSA Approval हो रहा है...","#123d72");
 
@@ -165,15 +279,24 @@ async function approveDSA(uid,button){
 
   await runTransaction(db,async transaction=>{
    const dsaSnap=await transaction.get(dsaRef);
-   if(!dsaSnap.exists()) throw new Error("DSA रिकॉर्ड नहीं मिला।");
+
+   if(!dsaSnap.exists()){
+    throw new Error("DSA रिकॉर्ड नहीं मिला।");
+   }
 
    const data=dsaSnap.data();
    let dsaId=data.dsaId;
 
    if(!dsaId){
     const counterSnap=await transaction.get(counterRef);
-    const next=(counterSnap.exists()?Number(counterSnap.data().value||0):0)+1;
+    const next=(
+     counterSnap.exists()
+      ? Number(counterSnap.data().value||0)
+      : 0
+    )+1;
+
     dsaId="DSA-"+String(next).padStart(3,"0");
+
     transaction.set(counterRef,{
      value:next,
      updatedAt:serverTimestamp()
@@ -189,27 +312,37 @@ async function approveDSA(uid,button){
 
   message("DSA सफलतापूर्वक Approve हो गया।","#168344");
   await loadDSAs();
+
  }catch(error){
   message("Approval Error: "+error.message);
   button.disabled=false;
  }
 }
 
+// Reject DSA
 async function rejectDSA(uid,button){
- if(!confirm("क्या इस DSA Registration को Reject करना है?")) return;
+ if(!confirm("क्या इस DSA Registration को Reject करना है?"))return;
+
  button.disabled=true;
+
  try{
   await runTransaction(db,async transaction=>{
    const ref=doc(db,"dsas",uid);
    const snap=await transaction.get(ref);
-   if(!snap.exists()) throw new Error("DSA रिकॉर्ड नहीं मिला।");
+
+   if(!snap.exists()){
+    throw new Error("DSA रिकॉर्ड नहीं मिला।");
+   }
+
    transaction.update(ref,{
     status:"rejected",
     rejectedAt:serverTimestamp()
    });
   });
+
   message("DSA Registration Reject कर दिया गया।","#168344");
   await loadDSAs();
+
  }catch(error){
   message("Error: "+error.message);
   button.disabled=false;
@@ -217,6 +350,7 @@ async function rejectDSA(uid,button){
 }
 
 $("refresh").addEventListener("click",loadDSAs);
+
 $("logout").addEventListener("click",async()=>{
  await signOut(auth);
  window.location.href="../index.html";
