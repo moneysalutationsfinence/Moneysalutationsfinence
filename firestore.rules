@@ -1,4 +1,3 @@
-
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -24,6 +23,13 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/agents/$(request.auth.uid)).data.status == "approved";
     }
 
+    function isMyDSAAgent(agentUid) {
+      return isApprovedDSA()
+        && exists(/databases/$(database)/documents/agents/$(agentUid))
+        && get(/databases/$(database)/documents/agents/$(agentUid)).data.dsaUid == request.auth.uid;
+    }
+
+    // Photo-only update validation
     function isPhotoOnlyUpdate() {
       return request.resource.data.diff(resource.data)
         .affectedKeys().hasOnly(["photoData", "photoUpdatedAt"])
@@ -34,13 +40,7 @@ service cloud.firestore {
         && request.resource.data.photoUpdatedAt is timestamp;
     }
 
-    function isMyDSAAgent(agentUid) {
-      return isApprovedDSA()
-        && exists(/databases/$(database)/documents/agents/$(agentUid))
-        && get(/databases/$(database)/documents/agents/$(agentUid)).data.dsaUid == request.auth.uid;
-    }
-
-    // Customer inquiries: public submission, Admin-only access.
+    // Customer inquiries
     match /inquiries/{id} {
       allow create: if request.resource.data.keys().size() > 0
         && request.resource.data.keys().size() <= 25
@@ -50,7 +50,7 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
-    // DSA profiles.
+    // DSA profiles
     match /dsas/{dsaUid} {
       allow create: if signedIn()
         && request.auth.uid == dsaUid
@@ -63,14 +63,16 @@ service cloud.firestore {
 
       allow list: if isAdmin();
 
-      // Only Admin can approve, reject, edit or delete a DSA.
-      allow update, delete: if isAdmin();
+      allow update: if isAdmin()
+        || (isApprovedDSA()
+            && request.auth.uid == dsaUid
+            && isPhotoOnlyUpdate());
+
+      allow delete: if isAdmin();
     }
 
-    // Agent profiles, including old Agents without a DSA.
+    // Agent profiles
     match /agents/{agentId} {
-
-      // Old self-registration OR creation by an approved DSA.
       allow create: if signedIn()
         && request.resource.data.uid == agentId
         && request.resource.data.status == "pending"
@@ -100,24 +102,24 @@ service cloud.firestore {
         || (isApprovedDSA()
             && resource.data.dsaUid == request.auth.uid);
 
-      // DSA queries must include where("dsaUid", "==", current DSA UID).
       allow list: if isAdmin()
         || (isApprovedDSA()
             && resource.data.dsaUid == request.auth.uid);
 
-      // Admin can manage Agents; an approved Agent may update only their own photo.
       allow update: if isAdmin()
-        || (signedIn()
-            && request.auth.uid == agentId
-            && isApprovedAgent()
-            && isPhotoOnlyUpdate());
+        || (
+          (
+            (isApprovedAgent() && request.auth.uid == agentId)
+            || isMyDSAAgent(agentId)
+          )
+          && isPhotoOnlyUpdate()
+        );
 
       allow delete: if isAdmin();
     }
 
-    // Customer leads submitted by Agents.
+    // Customer leads
     match /leads/{leadId} {
-
       allow create: if isApprovedAgent()
         && request.resource.data.agentUid == request.auth.uid
         && request.resource.data.customerConsent == true
@@ -139,16 +141,15 @@ service cloud.firestore {
         && request.resource.data.pin is string
         && request.resource.data.pin.matches('^[0-9]{6}$');
 
-      // Admin, the submitting Agent, or that Agent's approved DSA.
       allow read: if isAdmin()
         || (isApprovedAgent()
             && resource.data.agentUid == request.auth.uid)
         || isMyDSAAgent(resource.data.agentUid);
 
-
-      // Only Admin can update or delete customer leads.
       allow update, delete: if isAdmin();
-    // Commission records.
+    }
+
+    // Commission records
     match /commissions/{id} {
       allow read: if isAdmin()
         || (isApprovedAgent()
@@ -158,18 +159,18 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
-    // Partner links: public viewing, Admin management.
+    // Partner links
     match /partnerLinks/{id} {
       allow read: if true;
       allow create, update, delete: if isAdmin();
     }
 
-    // Existing serial counters are Admin-only.
+    // Counters
     match /counters/{id} {
       allow read, write: if isAdmin();
     }
 
-    // All other collections are blocked unless explicitly allowed above.
+    // All other collections blocked
     match /{document=**} {
       allow read, write: if false;
     }
