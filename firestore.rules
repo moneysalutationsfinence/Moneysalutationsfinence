@@ -24,17 +24,17 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/agents/$(request.auth.uid)).data.status == "approved";
     }
 
-    function isMyDSAAgent(agentUid) {
-function isPhotoOnlyUpdate() {
-  return request.resource.data.diff(resource.data)
-    .affectedKeys().hasOnly(["photoData", "photoUpdatedAt"])
-    && request.resource.data.diff(resource.data)
-    .affectedKeys().hasAny(["photoData"])
-    && request.resource.data.photoData is string
-    && request.resource.data.photoData.size() <= 350000
-    && request.resource.data.photoUpdatedAt is timestamp;
-}
+    function isPhotoOnlyUpdate() {
+      return request.resource.data.diff(resource.data)
+        .affectedKeys().hasOnly(["photoData", "photoUpdatedAt"])
+        && request.resource.data.diff(resource.data)
+        .affectedKeys().hasAny(["photoData"])
+        && request.resource.data.photoData is string
+        && request.resource.data.photoData.size() <= 350000
+        && request.resource.data.photoUpdatedAt is timestamp;
+    }
 
+    function isMyDSAAgent(agentUid) {
       return isApprovedDSA()
         && exists(/databases/$(database)/documents/agents/$(agentUid))
         && get(/databases/$(database)/documents/agents/$(agentUid)).data.dsaUid == request.auth.uid;
@@ -105,8 +105,14 @@ function isPhotoOnlyUpdate() {
         || (isApprovedDSA()
             && resource.data.dsaUid == request.auth.uid);
 
-      // Only Admin can approve, reject, edit or delete Agents.
-      allow update, delete: if isAdmin();
+      // Admin can manage Agents; an approved Agent may update only their own photo.
+      allow update: if isAdmin()
+        || (signedIn()
+            && request.auth.uid == agentId
+            && isApprovedAgent()
+            && isPhotoOnlyUpdate());
+
+      allow delete: if isAdmin();
     }
 
     // Customer leads submitted by Agents.
@@ -139,13 +145,9 @@ function isPhotoOnlyUpdate() {
             && resource.data.agentUid == request.auth.uid)
         || isMyDSAAgent(resource.data.agentUid);
 
-      
-allow update: if isAdmin()
-  || (isApprovedDSA()
-      && request.auth.uid == dsaUid
-      && isPhotoOnlyUpdate());
 
-allow delete: if isAdmin();
+      // Only Admin can update or delete customer leads.
+      allow update, delete: if isAdmin();
     // Commission records.
     match /commissions/{id} {
       allow read: if isAdmin()
