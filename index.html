@@ -4,81 +4,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Money Solution Finance Services DSA Office</title>
+<title>Money Solution Finance Services | DSA Office</title>
 <meta name="description" content="Money Solution Finance Services DSA Office - Loan, Insurance and Banking Services">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:Arial,sans-serif;background:#f1f5ff;color:#172554}
-
-header{
-background:linear-gradient(120deg,#071952,#088395);
-color:white;padding:14px;position:sticky;top:0;z-index:100
-}
-.header-inner{
-max-width:1150px;margin:auto;display:flex;
-justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap
-}
+header{background:linear-gradient(120deg,#071952,#088395);color:white;padding:14px;position:sticky;top:0;z-index:100}
+.header-inner{max-width:1150px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .logo{font-size:22px;font-weight:bold}
 .logo small{display:block;font-size:10px;letter-spacing:2px;color:#ffd166;margin-top:4px}
-.menu-btn{
-background:#fff;color:#073b7a;border:0;padding:10px 13px;
-border-radius:8px;font-size:20px;cursor:pointer
-}
-
-nav{
-display:none;background:#fff;padding:12px;position:absolute;
-right:15px;top:65px;border-radius:12px;
-box-shadow:0 5px 25px #0003;min-width:220px
-}
+.menu-btn{background:white;color:#073b7a;border:0;padding:10px 13px;border-radius:8px;font-size:20px;cursor:pointer}
+nav{display:none;background:white;padding:12px;position:absolute;right:15px;top:65px;border-radius:12px;box-shadow:0 5px 25px #0003;min-width:220px}
 nav.show{display:block}
-nav a{
-display:block;padding:12px;text-decoration:none;
-color:#073b7a;border-bottom:1px solid #eee;font-weight:bold
-}
-
+nav a{display:block;padding:12px;text-decoration:none;color:#073b7a;border-bottom:1px solid #eee;font-weight:bold}
 .container{max-width:1150px;margin:auto;padding:20px}
-
-.hero{
-background:linear-gradient(135deg,#071952,#088395,#35a7ff);
-color:white;padding:45px 22px;border-radius:22px;
-text-align:center;margin-top:20px
-}
+.hero{background:linear-gradient(135deg,#071952,#088395,#35a7ff);color:white;padding:45px 22px;border-radius:22px;text-align:center;margin-top:20px}
 .hero h1{font-size:32px;margin-bottom:12px}
 .hero p{font-size:17px;line-height:1.7}
-
-.btn{
-display:inline-block;text-decoration:none;border:0;
-border-radius:10px;padding:13px 18px;font-weight:bold;
-margin:8px 4px;cursor:pointer
-}
+.btn{display:inline-block;text-decoration:none;border:0;border-radius:10px;padding:13px 18px;font-weight:bold;margin:8px 4px;cursor:pointer}
 .btn-yellow{background:#ffd166;color:#172554}
 .btn-white{background:white;color:#073b7a}
 .btn-green{background:#16a34a;color:white}
 .btn-blue{background:#2563eb;color:white}
-
 .section{padding:35px 0}
 .section-title{text-align:center;font-size:27px;color:#073b7a;margin-bottom:10px}
-.section-desc{text-align:center;color:#64748b;margin-bottom:25px}
-
-.grid{
-display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:16px
-}
-.card{
-background:#fff;padding:22px;border-radius:16px;
-box-shadow:0 4px 14px #0b327a12;border:1px solid #e2e8f0
-}
+.section-desc{text-align:center;color:#64748b;margin-bottom:25px;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:white;padding:22px;border-radius:16px;box-shadow:0 4px 14px #0b327a12;border:1px solid #e2e8f0}
 .card h3{margin-bottom:10px;color:#073b7a}
 .card p{color:#64748b;line-height:1.6}
-
-.service-card{
-cursor:pointer;transition:.2s;text-align:center;color:white!important;
-border:0!important;min-height:175px
-}
+.service-card{cursor:pointer;transition:.2s;text-align:center;color:white!important;border:0!important;min-height:175px}
 .service-card h3,.service-card p{color:white!important}
-.service-card:hover{transform:translateY(-4px);box-shadow:0 10px 25px #0003}
+.service-card:hover,.partner-card:hover{transform:translateY(-4px);box-shadow:0 10px 25px #0003}
 .service-card:nth-child(1){background:linear-gradient(135deg,#ff512f,#dd2476)}
 .service-card:nth-child(2){background:linear-gradient(135deg,#11998e,#38ef7d)}
 .service-card:nth-child(3){background:linear-gradient(135deg,#396afc,#2948ff)}
@@ -89,18 +48,14 @@ border:0!important;min-height:175px
 .service-card:nth-child(8){background:linear-gradient(135deg,#4568dc,#b06ab3)}
 .service-card:nth-child(9){background:linear-gradient(135deg,#134e5e,#71b280)}
 .service-card:nth-child(10){background:linear-gradient(135deg,#614385,#516395)}
-
 .service-icon{font-size:38px;margin-bottom:12px}
-
-.poster-box{
-text-align:center;background:white;border-radius:18px;padding:18px;
-box-shadow:0 4px 20px #0001
-}
+.poster-box{text-align:center;background:white;border-radius:18px;padding:18px;box-shadow:0 4px 20px #0001}
 .poster-box img{width:100%;max-width:650px;height:auto;border-radius:10px}
-
-.partner-card{text-align:center;border-top:4px solid #ffd166}
-.partner-card a{display:block;margin-top:15px}
-
+.partner-card{text-align:center;border-top:4px solid #ffd166;transition:.2s;min-height:205px}
+.partner-logo{width:78px;height:68px;margin:0 auto 15px;border-radius:14px;background:linear-gradient(135deg,#071952,#0891b2);color:white;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;letter-spacing:1px;box-shadow:0 4px 12px #0002}
+.partner-card h3{font-size:17px;min-height:40px}
+.partner-card a{display:inline-block;margin-top:12px}
+.partner-note{font-size:12px;color:#64748b;margin-top:7px}
 .login-card{text-align:center}
 .login-card .btn{width:100%;max-width:230px}
 .login-card:nth-child(1){border-top:4px solid #16a34a}
@@ -108,99 +63,40 @@ box-shadow:0 4px 20px #0001
 .login-card:nth-child(3){border-top:4px solid #f59e0b}
 .login-card:nth-child(4){border-top:4px solid #0891b2}
 .login-card:nth-child(5){border-top:4px solid #dc2626}
-
-.inquiry-toggle{
-display:block;width:100%;padding:17px;
-background:linear-gradient(120deg,#071952,#088395);
-color:white;border:0;border-radius:12px;
-font-size:18px;font-weight:bold;cursor:pointer;
-text-align:center
-}
+.inquiry-toggle{display:block;width:100%;padding:17px;background:linear-gradient(120deg,#071952,#088395);color:white;border:0;border-radius:12px;font-size:18px;font-weight:bold;cursor:pointer;text-align:center}
 .inquiry-content{margin-top:18px}
-
-form{
-background:white;padding:22px;border-radius:18px;
-box-shadow:0 4px 20px #0001
-}
+form{background:white;padding:22px;border-radius:18px;box-shadow:0 4px 20px #0001}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
 .field{margin-bottom:15px}
 .field label{display:block;margin-bottom:7px;font-weight:bold;color:#334155}
-.field input:not([type=checkbox]),
-.field select,.field textarea{
-width:100%;padding:13px;border:1px solid #cbd5e1;
-border-radius:9px;font-size:16px
-}
+.field input:not([type=checkbox]),.field select,.field textarea{width:100%;padding:13px;border:1px solid #cbd5e1;border-radius:9px;font-size:16px}
 .field textarea{min-height:90px}
 .full{grid-column:1/-1}
-.form-submit{
-background:linear-gradient(90deg,#073b7a,#0891b2);
-color:white;width:100%;padding:15px;border:0;
-border-radius:10px;font-size:17px;font-weight:bold;cursor:pointer
-}
+.form-submit{background:linear-gradient(90deg,#073b7a,#0891b2);color:white;width:100%;padding:15px;border:0;border-radius:10px;font-size:17px;font-weight:bold;cursor:pointer}
 .form-submit:disabled{opacity:.6}
 #status{margin-top:15px;text-align:center;font-weight:bold;line-height:1.8}
-
-#faq{
-padding:30px 15px;background:#f1f5f9;color:#172554;
-border-radius:16px;margin:25px 0
-}
+#faq{padding:30px 15px;background:#f1f5f9;color:#172554;border-radius:16px;margin:25px 0}
 #faq h2{text-align:center;color:#073b7a;margin-bottom:20px}
-#faq details{
-background:white;padding:15px;margin:10px auto;
-max-width:850px;border-radius:8px
-}
+#faq details{background:white;padding:15px;margin:10px auto;max-width:850px;border-radius:8px}
 #faq summary{cursor:pointer;color:#073b7a}
 #faq details p{margin-top:10px;line-height:1.7;color:#475569}
 #faq .faq-contact{text-align:center;margin-top:20px}
 #faq a{color:#087e45;font-weight:bold}
-
-footer{
-background:#071952;color:white;padding:30px 20px;
-text-align:center;margin-top:30px
-}
+footer{background:#071952;color:white;padding:30px 20px;text-align:center;margin-top:30px}
 footer a{color:#ffd166;text-decoration:none}
-
-/* Terms and Conditions - transparent background */
-footer .footer-box{
-max-width:900px;margin:20px auto;padding:20px;
-background:transparent;color:white;border-radius:0;text-align:left;
-box-shadow:none;border:none
-}
+footer .footer-box{max-width:900px;margin:20px auto;padding:20px;background:transparent;color:white;text-align:left}
 footer .footer-box h3{margin-bottom:12px}
 footer .footer-box li{margin:8px 0;line-height:1.6}
-
-footer .footer-disclaimer{
-max-width:900px;margin:20px auto;padding:20px;
-background:#fff;color:#333;border-radius:10px;text-align:left
-}
+footer .footer-disclaimer{max-width:900px;margin:20px auto;padding:20px;background:white;color:#333;border-radius:10px;text-align:left}
 footer .footer-disclaimer p{line-height:1.7;margin-top:10px}
-
-footer details.footer-box summary{
-cursor:pointer;font-size:18px;font-weight:bold;
-color:white;list-style-position:inside;
-padding:5px;background:transparent
-}
-footer details.footer-box[open] summary{
-margin-bottom:15px;border-bottom:1px solid #ffffff55;padding-bottom:12px
-}
-footer details.footer-box .terms-content{
-background:transparent;color:white
-}
+footer details.footer-box summary{cursor:pointer;font-size:18px;font-weight:bold;color:white;list-style-position:inside;padding:5px}
+footer details.footer-box[open] summary{margin-bottom:15px;border-bottom:1px solid #ffffff55;padding-bottom:12px}
+footer details.footer-box .terms-content{background:transparent;color:white}
 footer details.footer-box .terms-content h4{margin:15px 0 8px;color:white}
 footer details.footer-box .terms-content ol{padding-left:22px}
-footer details.footer-box .terms-content li{
-margin:8px 0;line-height:1.6;color:white;background:transparent
-}
-
-.contact-buttons{
-display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:20px 0
-}
-.whatsapp-float{
-position:fixed;bottom:18px;right:18px;background:#16a34a;
-color:white;padding:15px;border-radius:50%;font-size:23px;
-text-decoration:none;box-shadow:0 4px 15px #0003;z-index:90
-}
-
+footer details.footer-box .terms-content li{margin:8px 0;line-height:1.6;color:white}
+.contact-buttons{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:20px 0}
+.whatsapp-float{position:fixed;bottom:18px;right:18px;background:#16a34a;color:white;padding:15px;border-radius:50%;font-size:23px;text-decoration:none;box-shadow:0 4px 15px #0003;z-index:90}
 @media(max-width:650px){
 .header-inner{align-items:center}
 .logo{font-size:18px}
@@ -210,21 +106,17 @@ text-decoration:none;box-shadow:0 4px 15px #0003;z-index:90
 .form-grid{grid-template-columns:1fr}
 .full{grid-column:auto}
 .section-title{font-size:23px}
+.partner-card{min-height:190px}
 }
 </style>
 </head>
 
 <body>
-
 <header>
 <div class="header-inner">
-<div class="logo">
-MONEY SOLUTION
-<small>FINANCE SERVICES • DSA OFFICE</small>
-</div>
-
+<div class="logo">MONEY SOLUTION
+<small>FINANCE SERVICES • DSA OFFICE</small></div>
 <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
 <nav id="menu">
 <a href="#home" onclick="toggleMenu()">🏠 Home</a>
 <a href="#poster" onclick="toggleMenu()">🖼️ Poster</a>
@@ -241,12 +133,10 @@ MONEY SOLUTION
 </header>
 
 <main class="container">
-
 <section class="hero" id="home">
 <h1>Money Solution Finance Services DSA Office</h1>
 <p>Loan • Insurance • Banking Services • Customer Inquiry</p>
 <p>आपकी वित्तीय जरूरतों के लिए एक ही स्थान पर सहायता</p>
-
 <a class="btn btn-yellow" href="#inquiry">Apply Now / Inquiry</a>
 <a class="btn btn-white" href="tel:8881850249">📞 Call Now</a>
 <a class="btn btn-green" href="https://wa.me/9450933936">WhatsApp</a>
@@ -255,201 +145,87 @@ MONEY SOLUTION
 <section class="section" id="poster">
 <h2 class="section-title">हमारा पोस्टर</h2>
 <div class="poster-box">
-<img
-src="assets/Money%20Solutions%20Finance%20Poster.png"
-alt="Money Solution Finance Services Poster"
-onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20Services%20Poster.png';">
+<img src="assets/Money%20Solutions%20Finance%20Poster.png" alt="Money Solution Finance Services Poster" onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20Services%20Poster.png';">
 </div>
 </section>
 
 <section class="section" id="services">
 <h2 class="section-title">Loan & Finance Services</h2>
 <p class="section-desc">अपनी जरूरत की सेवा चुनें और Inquiry भेजें</p>
-
 <div class="grid">
-
-<div class="card service-card" onclick="selectService('Personal Loan')">
-<div class="service-icon">💰</div>
-<h3>Personal Loan</h3>
-<p>व्यक्तिगत जरूरतों के लिए लोन जानकारी</p>
-</div>
-
-<div class="card service-card" onclick="selectService('Business Loan')">
-<div class="service-icon">🏢</div>
-<h3>Business Loan</h3>
-<p>व्यापार एवं बिजनेस के लिए वित्तीय सहायता</p>
-</div>
-
-<div class="card service-card" onclick="selectService('Home Loan')">
-<div class="service-icon">🏠</div>
-<h3>Home Loan</h3>
-<p>घर खरीदने या निर्माण के लिए लोन</p>
-</div>
-
-<div class="card service-card" onclick="selectService('Loan Against Property')">
-<div class="service-icon">🏘️</div>
-<h3>Loan Against Property</h3>
-<p>प्रॉपर्टी के आधार पर लोन जानकारी</p>
-</div>
-
-<div class="card service-card" onclick="selectService('Vehicle Loan')">
-<div class="service-icon">🚗</div>
-<h3>Vehicle Loan</h3>
-<p>वाहन खरीदने के लिए वित्तीय सहायता</p>
-</div>
-
-<div class="card service-card" onclick="selectService('MSME Finance')">
-<div class="service-icon">🏭</div>
-<h3>MSME Finance</h3>
-<p>छोटे एवं मध्यम व्यवसायों के लिए फाइनेंस</p>
-</div>
-
-<div class="card service-card" onclick="selectService('Life Insurance')">
-<div class="service-icon">🛡️</div>
-<h3>Life Insurance</h3>
-<p>जीवन बीमा संबंधी जानकारी</p>
-</div>
-
-<div class="card service-card" onclick="selectService('Health Insurance')">
-<div class="service-icon">❤️</div>
-<h3>Health Insurance</h3>
-<p>स्वास्थ्य बीमा संबंधी जानकारी</p>
-</div>
-
-<div class="card service-card" onclick="selectService('Banking Services')">
-<div class="service-icon">🏦</div>
-<h3>Banking Services</h3>
-<p>बैंकिंग एवं वित्तीय सेवाओं की जानकारी</p>
-</div>
-
-<div class="card service-card" onclick="selectService('Credit Card')">
-<div class="service-icon">💳</div>
-<h3>Credit Card Inquiry</h3>
-<p>क्रेडिट कार्ड संबंधी जानकारी</p>
-</div>
-
+<div class="card service-card" onclick="selectService('Personal Loan')"><div class="service-icon">💰</div><h3>Personal Loan</h3><p>व्यक्तिगत जरूरतों के लिए लोन जानकारी</p></div>
+<div class="card service-card" onclick="selectService('Business Loan')"><div class="service-icon">🏢</div><h3>Business Loan</h3><p>व्यापार एवं बिजनेस के लिए वित्तीय सहायता</p></div>
+<div class="card service-card" onclick="selectService('Home Loan')"><div class="service-icon">🏠</div><h3>Home Loan</h3><p>घर खरीदने या निर्माण के लिए लोन</p></div>
+<div class="card service-card" onclick="selectService('Loan Against Property')"><div class="service-icon">🏘️</div><h3>Loan Against Property</h3><p>प्रॉपर्टी के आधार पर लोन जानकारी</p></div>
+<div class="card service-card" onclick="selectService('Vehicle Loan')"><div class="service-icon">🚗</div><h3>Vehicle Loan</h3><p>वाहन खरीदने के लिए वित्तीय सहायता</p></div>
+<div class="card service-card" onclick="selectService('MSME Finance')"><div class="service-icon">🏭</div><h3>MSME Finance</h3><p>छोटे एवं मध्यम व्यवसायों के लिए फाइनेंस</p></div>
+<div class="card service-card" onclick="selectService('Life Insurance')"><div class="service-icon">🛡️</div><h3>Life Insurance</h3><p>जीवन बीमा संबंधी जानकारी</p></div>
+<div class="card service-card" onclick="selectService('Health Insurance')"><div class="service-icon">❤️</div><h3>Health Insurance</h3><p>स्वास्थ्य बीमा संबंधी जानकारी</p></div>
+<div class="card service-card" onclick="selectService('Banking Services')"><div class="service-icon">🏦</div><h3>Banking Services</h3><p>बैंकिंग एवं वित्तीय सेवाओं की जानकारी</p></div>
+<div class="card service-card" onclick="selectService('Credit Card')"><div class="service-icon">💳</div><h3>Credit Card Inquiry</h3><p>क्रेडिट कार्ड संबंधी जानकारी</p></div>
 </div>
 </section>
 
 <section class="section" id="partners">
-<h2 class="section-title">Our Partner Platforms</h2>
-<p class="section-desc">Partner platform पर आवेदन करने के लिए नीचे क्लिक करें</p>
-
+<h2 class="section-title">Our Finance Partner Companies</h2>
+<p class="section-desc">हमारे Finance Partners एवं Platforms</p>
 <div class="grid">
 
-<div class="card partner-card">
-<div class="service-icon">🏦</div>
-<h3>Dhanmudra Capital Advisor</h3>
-<p>Loan Registration</p>
-<a class="btn btn-yellow" target="_blank" rel="noopener" href="https://dhanmudracapitaladvisor.com/register?ref=DM9P4PC">Register Now</a>
-</div>
+<div class="card partner-card"><div class="partner-logo">DM</div><h3>Dhanmudra Capital Advisor</h3><p>Loan Registration</p><a class="btn btn-yellow" target="_blank" rel="noopener" href="https://dhanmudracapitaladvisor.com/register?ref=DM9P4PC">Register Now</a></div>
 
-<div class="card partner-card">
-<div class="service-icon">💼</div>
-<h3>Aditya Birla</h3>
-<p>Finance Services</p>
-<a class="btn btn-yellow" target="_blank" rel="noopener" href="https://adityabirla-platform.finbox.in/signin-mobile">Apply Now</a>
-</div>
+<div class="card partner-card"><div class="partner-logo">AB</div><h3>Aditya Birla Capital</h3><p>Finance Services</p><a class="btn btn-yellow" target="_blank" rel="noopener" href="https://adityabirla-platform.finbox.in/signin-mobile">Apply Now</a></div>
 
-<div class="card partner-card">
-<div class="service-icon">💳</div>
-<h3>Moneycontrol Pay</h3>
-<p>Financial Services</p>
-<a class="btn btn-yellow" target="_blank" rel="noopener" href="https://www.moneycontrolpay.com/?utm_source=KMS&utm_campaign=AM_M_Solu_13">Visit Platform</a>
-</div>
+<div class="card partner-card"><div class="partner-logo">MC</div><h3>Moneycontrol Pay</h3><p>Financial Services</p><a class="btn btn-yellow" target="_blank" rel="noopener" href="https://www.moneycontrolpay.com/?utm_source=KMS&utm_campaign=AM_M_Solu_13">Visit Platform</a></div>
 
-<div class="card partner-card">
-<div class="service-icon">🏢</div>
-<h3>InCred</h3>
-<p>Loan Services</p>
-<a class="btn btn-yellow" target="_blank" rel="noopener" href="https://pl.incred.com/open-market-sales/registration">Register Now</a>
-</div>
+<div class="card partner-card"><div class="partner-logo">IC</div><h3>InCred</h3><p>Loan Services</p><a class="btn btn-yellow" target="_blank" rel="noopener" href="https://pl.incred.com/open-market-sales/registration">Register Now</a></div>
 
-<div class="card partner-card">
-<div class="service-icon">📈</div>
-<h3>FinBox Business Loan</h3>
-<p>Business Finance</p>
-<a class="btn btn-yellow" target="_blank" rel="noopener" href="https://creditlink.finbox.in/?partnerCode=DI_ZJXNSA&amp;agentCode=9450729590&amp;productType=business_loan">Apply Now</a>
-</div>
+<div class="card partner-card"><div class="partner-logo">FB</div><h3>FinBox Business Loan</h3><p>Business Finance</p><a class="btn btn-yellow" target="_blank" rel="noopener" href="https://creditlink.finbox.in/?partnerCode=DI_ZJXNSA&amp;agentCode=9450729590&amp;productType=business_loan">Apply Now</a></div>
+
+<div class="card partner-card"><div class="partner-logo">PF</div><h3>Piramal Finance</h3><p>Loan & Finance Services</p><a class="btn btn-blue" href="#inquiry">Customer Inquiry</a></div>
+
+<div class="card partner-card"><div class="partner-logo">CF</div><h3>Chola Finance</h3><p>Finance Services</p><a class="btn btn-blue" href="#inquiry">Customer Inquiry</a></div>
+
+<div class="card partner-card"><div class="partner-logo">IHL</div><h3>India Home Loan</h3><p>Home Loan Services</p><a class="btn btn-blue" href="#inquiry">Customer Inquiry</a></div>
+
+<div class="card partner-card"><div class="partner-logo">RU</div><h3>RuLoans</h3><p>Loan Services</p><a class="btn btn-blue" href="#inquiry">Customer Inquiry</a></div>
+
+<div class="card partner-card"><div class="partner-logo">FR</div><h3>Fast RuLoans</h3><p>Finance Services</p><a class="btn btn-blue" href="#inquiry">Customer Inquiry</a></div>
+
+<div class="card partner-card"><div class="partner-logo">UM</div><h3>Urban Money</h3><p>Loan & Finance Platform</p><a class="btn btn-blue" href="#inquiry">Customer Inquiry</a></div>
+
+<div class="card partner-card"><div class="partner-logo">KIFS</div><h3>KIFS Housing Finance</h3><p>Housing Finance</p><a class="btn btn-blue" href="#inquiry">Customer Inquiry</a></div>
+
+<div class="card partner-card"><div class="partner-logo">PNB</div><h3>PNB Roshni</h3><p>Finance Services</p><a class="btn btn-blue" href="#inquiry">Customer Inquiry</a></div>
+
+<div class="card partner-card"><div class="partner-logo">USF</div><h3>Utkarsh Small Finance Bank</h3><p>Banking & Finance Services</p><a class="btn btn-blue" href="#inquiry">Customer Inquiry</a></div>
+
+<div class="card partner-card"><div class="partner-logo">AHF</div><h3>Aadhar Housing Finance</h3><p>Housing Finance</p><a class="btn btn-blue" href="#inquiry">Customer Inquiry</a></div>
 
 </div>
+<p class="section-desc" style="margin-top:20px">लोन की पात्रता, स्वीकृति और शर्तें संबंधित वित्तीय संस्था के नियमों पर निर्भर हैं।</p>
 </section>
 
 <section class="section" id="inquiry">
 <h2 class="section-title">Customer Inquiry</h2>
 <p class="section-desc">Inquiry भेजने के लिए नीचे बटन दबाएँ</p>
-
-<button type="button" class="inquiry-toggle" id="inquiryToggle" onclick="toggleInquiry()">
-📋 Customer Inquiry Form खोलें
-</button>
-
+<button type="button" class="inquiry-toggle" id="inquiryToggle" onclick="toggleInquiry()">📋 Customer Inquiry Form खोलें</button>
 <div class="inquiry-content" id="inquiryContent" hidden>
-
 <form id="inquiryForm">
 <div class="form-grid">
-
-<div class="field">
-<label>Customer Name *</label>
-<input type="text" id="name" required placeholder="पूरा नाम">
-</div>
-
-<div class="field">
-<label>Mobile Number *</label>
-<input type="tel" id="phone" required pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10 अंकों का मोबाइल नंबर">
-</div>
-
-<div class="field">
-<label>District *</label>
-<input type="text" id="district" required placeholder="जिला">
-</div>
-
-<div class="field">
-<label>PIN Code</label>
-<input type="text" id="pin" maxlength="6" pattern="[0-9]{6}" placeholder="6 अंकों का PIN Code">
-</div>
-
-<div class="field">
-<label>Service Required *</label>
+<div class="field"><label>Customer Name *</label><input type="text" id="name" required placeholder="पूरा नाम"></div>
+<div class="field"><label>Mobile Number *</label><input type="tel" id="phone" required pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10 अंकों का मोबाइल नंबर"></div>
+<div class="field"><label>District *</label><input type="text" id="district" required placeholder="जिला"></div>
+<div class="field"><label>PIN Code</label><input type="text" id="pin" maxlength="6" pattern="[0-9]{6}" placeholder="6 अंकों का PIN Code"></div>
+<div class="field"><label>Service Required *</label>
 <select id="service" required>
 <option value="">Select Service</option>
-<option>Personal Loan</option>
-<option>Business Loan</option>
-<option>Home Loan</option>
-<option>Loan Against Property</option>
-<option>Vehicle Loan</option>
-<option>MSME Finance</option>
-<option>Life Insurance</option>
-<option>Health Insurance</option>
-<option>Banking Services</option>
-<option>Credit Card</option>
-<option>Other</option>
-</select>
+<option>Personal Loan</option><option>Business Loan</option><option>Home Loan</option><option>Loan Against Property</option><option>Vehicle Loan</option><option>MSME Finance</option><option>Life Insurance</option><option>Health Insurance</option><option>Banking Services</option><option>Credit Card</option><option>Other</option>
+</select></div>
+<div class="field"><label>Loan Amount (अगर लागू हो)</label><input type="text" id="loanAmount" placeholder="आवश्यक राशि"></div>
+<div class="field full"><label>Address</label><textarea id="address" placeholder="पूरा पता"></textarea></div>
+<div class="field full"><label>Message</label><textarea id="message" placeholder="अन्य जानकारी"></textarea></div>
+<div class="field full"><label><input type="checkbox" id="consent" required> मैं सहमत हूं कि मेरी जानकारी संपर्क करने के लिए उपयोग की जा सकती है।</label></div>
 </div>
-
-<div class="field">
-<label>Loan Amount (अगर लागू हो)</label>
-<input type="text" id="loanAmount" placeholder="आवश्यक राशि">
-</div>
-
-<div class="field full">
-<label>Address</label>
-<textarea id="address" placeholder="पूरा पता"></textarea>
-</div>
-
-<div class="field full">
-<label>Message</label>
-<textarea id="message" placeholder="अन्य जानकारी"></textarea>
-</div>
-
-<div class="field full">
-<label>
-<input type="checkbox" id="consent" required>
-मैं सहमत हूं कि मेरी जानकारी संपर्क करने के लिए उपयोग की जा सकती है।
-</label>
-</div>
-
-</div>
-
 <button class="form-submit" type="submit" id="submitBtn">📩 Submit Inquiry</button>
 <p id="status" aria-live="polite"></p>
 </form>
@@ -459,84 +235,31 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 <section class="section" id="login-register">
 <h2 class="section-title">DSA / Agent / Admin Login</h2>
 <p class="section-desc">DSA, Agent एवं Admin के लिए लॉगिन और रजिस्ट्रेशन</p>
-
 <div class="grid">
-
-<div class="card login-card">
-<h3>DSA Registration</h3>
-<p>नया DSA बनने के लिए रजिस्ट्रेशन करें</p>
-<a class="btn btn-green" href="dsa-register.html">DSA Registration</a>
-</div>
-
-<div class="card login-card">
-<h3>DSA Login</h3>
-<p>अपने DSA अकाउंट में लॉगिन करें</p>
-<a class="btn btn-blue" href="dsa-login.html">DSA Login</a>
-</div>
-
-<div class="card login-card">
-<h3>Agent Registration</h3>
-<p>नया Agent बनने के लिए रजिस्ट्रेशन करें</p>
-<a class="btn btn-green" href="agent-register.html">Agent Registration</a>
-</div>
-
-<div class="card login-card">
-<h3>Agent Login</h3>
-<p>अपने Agent अकाउंट में लॉगिन करें</p>
-<a class="btn btn-blue" href="agent-login.html">Agent Login</a>
-</div>
-
-<div class="card login-card">
-<h3>Admin Login</h3>
-<p>Admin Panel खोलने के लिए लॉगिन करें</p>
-<a class="btn btn-yellow" href="admin/index.html">Admin Login</a>
-</div>
-
+<div class="card login-card"><h3>DSA Registration</h3><p>नया DSA बनने के लिए रजिस्ट्रेशन करें</p><a class="btn btn-green" href="dsa-register.html">DSA Registration</a></div>
+<div class="card login-card"><h3>DSA Login</h3><p>अपने DSA अकाउंट में लॉगिन करें</p><a class="btn btn-blue" href="dsa-login.html">DSA Login</a></div>
+<div class="card login-card"><h3>Agent Registration</h3><p>नया Agent बनने के लिए रजिस्ट्रेशन करें</p><a class="btn btn-green" href="agent-register.html">Agent Registration</a></div>
+<div class="card login-card"><h3>Agent Login</h3><p>अपने Agent अकाउंट में लॉगिन करें</p><a class="btn btn-blue" href="agent-login.html">Agent Login</a></div>
+<div class="card login-card"><h3>Admin Login</h3><p>Admin Panel खोलने के लिए लॉगिन करें</p><a class="btn btn-yellow" href="admin/index.html">Admin Login</a></div>
 </div>
 </section>
 
 <section id="faq">
 <h2>FAQ – अक्सर पूछे जाने वाले सवाल</h2>
-
-<details>
-<summary><b>लोन के लिए कौन-कौन से दस्तावेज जरूरी हैं?</b></summary>
-<p>आमतौर पर आधार कार्ड, पैन कार्ड, बैंक स्टेटमेंट, फोटो और आय से संबंधित दस्तावेज मांगे जा सकते हैं। दस्तावेज लोन और बैंक/NBFC के अनुसार अलग हो सकते हैं।</p>
-</details>
-
-<details>
-<summary><b>लोन कितने दिनों में मिलता है?</b></summary>
-<p>लोन की प्रक्रिया और समय संबंधित बैंक/NBFC की जांच और स्वीकृति पर निर्भर करता है।</p>
-</details>
-
-<details>
-<summary><b>क्या लोन की गारंटी है?</b></summary>
-<p>नहीं। लोन स्वीकृत या अस्वीकृत करने का अंतिम निर्णय संबंधित बैंक/NBFC का होता है।</p>
-</details>
-
-<details>
-<summary><b>क्या ऑनलाइन आवेदन कर सकते हैं?</b></summary>
-<p>जी हाँ। आप हमारी वेबसाइट पर Customer Inquiry फॉर्म भरकर जानकारी भेज सकते हैं।</p>
-</details>
-
-<details>
-<summary><b>क्या लोन के लिए कोई फीस लगती है?</b></summary>
-<p>यदि कोई प्रोसेसिंग फीस या अन्य शुल्क लागू होता है, तो उसकी जानकारी संबंधित बैंक/NBFC देगा। किसी भी भुगतान से पहले आधिकारिक जानकारी अवश्य लें।</p>
-</details>
-
-<p class="faq-contact">
-अधिक जानकारी के लिए WhatsApp करें:
-<a href="https://wa.me/9450933936">9450933936</a>
-</p>
+<details><summary><b>लोन के लिए कौन-कौन से दस्तावेज जरूरी हैं?</b></summary><p>आमतौर पर आधार कार्ड, पैन कार्ड, बैंक स्टेटमेंट, फोटो और आय से संबंधित दस्तावेज मांगे जा सकते हैं। दस्तावेज लोन और बैंक/NBFC के अनुसार अलग हो सकते हैं।</p></details>
+<details><summary><b>लोन कितने दिनों में मिलता है?</b></summary><p>लोन की प्रक्रिया और समय संबंधित बैंक/NBFC की जांच और स्वीकृति पर निर्भर करता है।</p></details>
+<details><summary><b>क्या लोन की गारंटी है?</b></summary><p>नहीं। लोन स्वीकृत या अस्वीकृत करने का अंतिम निर्णय संबंधित बैंक/NBFC का होता है।</p></details>
+<details><summary><b>क्या ऑनलाइन आवेदन कर सकते हैं?</b></summary><p>जी हाँ। आप हमारी वेबसाइट पर Customer Inquiry फॉर्म भरकर जानकारी भेज सकते हैं।</p></details>
+<details><summary><b>क्या लोन के लिए कोई फीस लगती है?</b></summary><p>यदि कोई प्रोसेसिंग फीस या अन्य शुल्क लागू होता है, तो उसकी जानकारी संबंधित बैंक/NBFC देगा। किसी भी भुगतान से पहले आधिकारिक जानकारी अवश्य लें।</p></details>
+<p class="faq-contact">अधिक जानकारी के लिए WhatsApp करें: <a href="https://wa.me/9450933936">WhatsApp</a></p>
 </section>
 
 <section class="section" id="contact">
 <h2 class="section-title">Contact Us</h2>
-
 <div class="card" style="text-align:center">
 <h3>Money Solution Finance Services DSA Office</h3>
 <p>📞 Contact: 8881850249</p>
 <p>💬 WhatsApp: 9450933936</p>
-
 <div class="contact-buttons">
 <a class="btn btn-yellow" href="tel:8881850249">Call Now</a>
 <a class="btn btn-green" href="https://wa.me/9450933936">WhatsApp</a>
@@ -544,27 +267,18 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 </div>
 </div>
 </section>
-
 </main>
 
 <footer>
 <h3>Money Solution Finance Services DSA Office</h3>
 <p>Loan • Insurance • Banking • Finance Services</p>
-
 <p>Call: <a href="tel:8881850249">8881850249</a></p>
 <p>WhatsApp: <a href="https://wa.me/9450933936">9450933936</a></p>
-
-<p style="margin-top:15px">
-<a href="privacy-policy.html">🔒 Privacy Policy</a>
-</p>
-
-<p style="margin-top:10px">
-<a href="#terms" onclick="document.getElementById('terms').open=true">📋 Terms & Conditions | नियम एवं शर्तें</a>
-</p>
+<p style="margin-top:15px"><a href="privacy-policy.html">🔒 Privacy Policy</a></p>
+<p style="margin-top:10px"><a href="#terms" onclick="document.getElementById('terms').open=true">📋 Terms & Conditions | नियम एवं शर्तें</a></p>
 
 <details id="terms" class="footer-box">
 <summary>📋 Terms & Conditions | नियम एवं शर्तें</summary>
-
 <div class="terms-content">
 <h4>हिंदी</h4>
 <ol>
@@ -575,7 +289,6 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 <li>ग्राहक की जानकारी उसकी सहमति से संबंधित वित्तीय संस्था के साथ साझा की जा सकती है।</li>
 <li>ग्राहक अपना OTP, ATM PIN या पासवर्ड किसी के साथ साझा न करें।</li>
 </ol>
-
 <h4>English</h4>
 <ol>
 <li>Money Solution Finance Services provides assistance for bank and NBFC loans as a DSA/Connector.</li>
@@ -590,22 +303,16 @@ onerror="this.onerror=null;this.src='assets/Money%20Solution%20Finance%20Loan%20
 
 <div class="footer-disclaimer">
 <h3>Disclaimer | अस्वीकरण</h3>
-
 <p><strong>हिंदी:</strong> Money Solution Finance Services एक DSA/Connector के रूप में विभिन्न बैंक एवं NBFC की वित्तीय सेवाओं के लिए ग्राहकों को सहायता प्रदान करता है। हम किसी भी लोन की स्वीकृति की गारंटी नहीं देते। लोन स्वीकृति, ब्याज दर, प्रोसेसिंग फीस एवं अन्य शर्तें संबंधित बैंक/NBFC के नियमों के अनुसार निर्धारित होंगी।</p>
-
 <p><strong>English:</strong> Money Solution Finance Services acts as a DSA/Connector and assists customers with financial services offered by banks and NBFCs. We do not guarantee loan approval. Loan approval, interest rates, processing fees and other terms are subject to the respective bank/NBFC policies.</p>
 </div>
-
-<p style="margin-top:15px">
-© 2026 Money Solution Finance Services
-</p>
+<p style="margin-top:15px">© 2026 Money Solution Finance Services</p>
 </footer>
 
 <a class="whatsapp-float" href="https://wa.me/9450933936" aria-label="WhatsApp">💬</a>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
 <script>
 const firebaseConfig={
 apiKey:"AIzaSyClTK1ZFegP_VMs0CO2n2ccyv5oWPqb2xo",
@@ -617,9 +324,7 @@ appId:"1:891890606664:web:1d6df6ec8554d523176e7d",
 measurementId:"G-HX6NBT529M"
 };
 
-if(!firebase.apps.length){
-firebase.initializeApp(firebaseConfig);
-}
+if(!firebase.apps.length){firebase.initializeApp(firebaseConfig)}
 const db=firebase.firestore();
 
 function toggleMenu(){
@@ -630,30 +335,21 @@ function toggleInquiry(){
 const content=document.getElementById("inquiryContent");
 const btn=document.getElementById("inquiryToggle");
 content.hidden=!content.hidden;
-btn.textContent=content.hidden
-?"📋 Customer Inquiry Form खोलें"
-:"✖ Customer Inquiry Form बंद करें";
-
+btn.textContent=content.hidden?"📋 Customer Inquiry Form खोलें":"✖ Customer Inquiry Form बंद करें";
 if(!content.hidden){
-setTimeout(()=>{
-content.scrollIntoView({behavior:"smooth",block:"start"});
-},100);
+setTimeout(()=>content.scrollIntoView({behavior:"smooth",block:"start"}),100);
 }
 }
 
 function selectService(service){
 document.getElementById("service").value=service;
 const content=document.getElementById("inquiryContent");
-if(content.hidden){
-toggleInquiry();
-}else{
-content.scrollIntoView({behavior:"smooth",block:"start"});
-}
+if(content.hidden){toggleInquiry()}
+else{content.scrollIntoView({behavior:"smooth",block:"start"})}
 }
 
 document.getElementById("inquiryForm").addEventListener("submit",async function(e){
 e.preventDefault();
-
 const status=document.getElementById("status");
 const submitBtn=document.getElementById("submitBtn");
 
@@ -683,12 +379,10 @@ createdAt:firebase.firestore.FieldValue.serverTimestamp()
 
 try{
 await db.collection("inquiries").add(inquiry);
-
 status.style.color="green";
 status.textContent="✅ Inquiry जमा हो गई। WhatsApp पर संदेश भेजने के लिए नीचे क्लिक करें।";
 
-const waText=
-"New Customer Inquiry\n"+
+const waText="New Customer Inquiry\n"+
 "Name: "+inquiry.name+"\n"+
 "Mobile: "+inquiry.phone+"\n"+
 "District: "+inquiry.district+"\n"+
@@ -703,10 +397,8 @@ wa.target="_blank";
 wa.rel="noopener";
 wa.className="btn btn-green";
 wa.textContent="📲 WhatsApp पर Inquiry भेजें";
-
 status.appendChild(document.createElement("br"));
 status.appendChild(wa);
-
 document.getElementById("inquiryForm").reset();
 
 }catch(error){
@@ -714,10 +406,8 @@ console.error(error);
 status.style.color="red";
 status.textContent="❌ Inquiry जमा नहीं हुई। Firebase सेटअप या इंटरनेट जाँचें।";
 }
-
 submitBtn.disabled=false;
 });
 </script>
-
 </body>
 </html>
